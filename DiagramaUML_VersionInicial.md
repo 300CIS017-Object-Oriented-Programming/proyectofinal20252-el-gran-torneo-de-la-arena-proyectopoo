@@ -10,7 +10,7 @@ classDiagram
     class Torneo{
         -string nombreTorneo
         -Guild* guild
-        -unordered_map< string, Oponente* > oponentes
+        -unordered_map< string, Personaje* > personajes
         -Inventario* inventario
         -Arena* arena
         
@@ -19,7 +19,7 @@ classDiagram
         
         +void inicializarTorneo()
         +void inicializarGuild()
-        +void inicializarOponentes()
+        +void inicializarGuildEnemiga() 
         +void inicializarInventario()
         
         +void gestionarGuild()
@@ -32,24 +32,24 @@ classDiagram
     %% Gestiona los héroes del jugador
     class Guild{
         -string nombreGuild
-        -unordered_map < string, Heroe* > heroes
+        -unordered_map < string, Personaje* > personajes
         
         +Guild(string nombre)
         +~Guild()
         
-        +void cargarHeroesIniciales()
-        +void agregarHeroe(Heroe* heroe)
-        +void consultarHeroe(string nombre)
-        +void listarHeroes()
-        +void retirarHeroe(string nombre)
-        +Heroe* buscarHeroe(string nombre)
+        +void cargarPersonajeIniciales()
+        +void agregarPersonaje(Personaje* personajes)
+        +void consultarPersonaje(string nombre)
+        +void listarPersonaje()
+        +void retirarPersonaje(string nombre)
+        +Personaje* buscarPersonaje(string nombre)
         
-        +vector< Heroe* > getHeroesVivos()
-        +int getCantidadHeroes()
+        +vector< Personaje* > getPersonajeVivos()
+        +int getCantidadPersonajes()
     }
 
     %% Clase base para todos los héroes
-    class Heroe{
+    class Personaje{
         #string nombre
         #string rol
         #int nivel
@@ -60,10 +60,10 @@ classDiagram
         #vector < ObjetoMagico*> objetosEquipados
         #bool estaVivo
         
-        +Heroe(string nombre, string rol, int nivel, int vida, int ataque, int defensa)
-        +virtual ~Heroe()
+        +Personaje(string nombre, string rol, int nivel, int vida, int ataque, int defensa)
+        +virtual ~Personaje()
         
-        +virtual void realizarAccion(Heroe* objetivo) 
+        +virtual void realizarAccion(Personaje* objetivo) 
         +virtual void mostrarInformacion()
         
         +void recibirDanio(int danio)
@@ -90,7 +90,7 @@ classDiagram
         +Guerrero(string nombre, int nivel, int vida, int ataque, int defensa)
         +~Guerrero()
         
-        +void realizarAccion(Heroe* objetivo) override
+        +void realizarAccion(Personaje* objetivo) override
         +void mostrarInformacion() override
         
         -int calcularDanioCritico(int danioBase)
@@ -105,7 +105,7 @@ classDiagram
         +Mago(string nombre, int nivel, int vida, int ataque, int defensa)
         +~Mago()
         
-        +void realizarAccion(Heroe* objetivo) override
+        +void realizarAccion(Personaje* objetivo) override
         +void mostrarInformacion() override
         
         -int calcularDanioMagico()
@@ -119,34 +119,12 @@ classDiagram
         +Sanador(string nombre, int nivel, int vida, int ataque, int defensa)
         +~Sanador()
         
-        +void realizarAccion(Heroe* objetivo) override
+        +void realizarAccion(Personaje* objetivo) override
         +void mostrarInformacion() override
         
         -int calcularCuracion()
     }
 
-    %% Enemigos de la guild rival
-    class Oponente{
-        -string nombre
-        -string rol
-        -int nivel
-        -int vida
-        -int vidaMaxima
-        -int ataque
-        -int defensa
-        -bool estaVivo
-        
-        +Oponente(string nombre, string rol, int nivel, int vida, int ataque, int defensa)
-        +~Oponente()
-        
-        +void realizarAccion(Heroe* objetivo)
-        +void recibirDanio(int danio)
-        +void mostrarInformacion()
-        
-        +string getNombre()
-        +int getVida()
-        +bool getEstaVivo()
-    }
 
     %% Gestiona los objetos mágicos del torneo
     class Inventario{
@@ -161,8 +139,8 @@ classDiagram
         +void consultarObjeto(string nombre)
         +void actualizarStock(string nombre, int nuevoStock)
         +void eliminarObjeto(string nombre)
-        +void asignarObjetoAHeroe(Heroe* heroe)
-        +void retirarObjetoDeHeroe(Heroe* heroe, int indice)
+        +void asignarObjetoAPersonaje(Personaje* personaje)
+        +void retirarObjetoDePersonaje(Personaje* personaje, int indice)
         
         +ObjetoMagico* buscarObjeto(string nombre)
         +int getStockTotal()
@@ -178,7 +156,7 @@ classDiagram
         +ObjetoMagico(string nombre, string descripcion, int stock)
         +virtual ~ObjetoMagico()
         
-        +virtual void aplicarEfecto(Heroe* heroe)
+        +virtual void aplicarEfecto(Personaje* personaje)
         +virtual void mostrarInformacion()
         
         +void decrementarStock()
@@ -198,7 +176,7 @@ classDiagram
         +PocionVida()
         +~PocionVida()
         
-        +void aplicarEfecto(Heroe* heroe) override
+        +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
     }
 
@@ -211,7 +189,7 @@ classDiagram
         +AmuletoFuria()
         +~AmuletoFuria()
         
-        +void aplicarEfecto(Heroe* heroe) override
+        +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
     }
 
@@ -224,20 +202,19 @@ classDiagram
         +EscudoBendito()
         +~EscudoBendito()
         
-        +void aplicarEfecto(Heroe* heroe) override
+        +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
     }
 
     %% Controla los combates por turnos
     class Arena{
-        -vector < Heroe* > equipoGuild
-        -vector < Oponente* > equipoOponente
+        -vector < Personaje* > equipoGuild
         -int turnoActual
         
         +Arena()
         +~Arena()
         
-        +void iniciarCombate(vector < Heroe* > heroes, vector< Oponente* > oponentes)
+        +void iniciarCombate(vector < Personaje* > personajes)
         +void ejecutarTurno()
         +bool verificarFinCombate()
         +void mostrarEstadoCombate()
@@ -249,16 +226,15 @@ classDiagram
     
     Torneo "Compone" o-- Guild 
     Torneo "Compone" <-- Inventario 
-    Torneo  "Compone" o-- Oponente 
     Torneo "Compone" <-- Arena 
     
-    Guild o-- Heroe : Tiene muchos
+    Guild o-- Personaje : Tiene muchos
     
-    Heroe <|-- "Es" Guerrero 
-    Heroe <|-- "Es" Mago 
-    Heroe <|--  "Es" Sanador 
+    Personaje <|-- "Es" Guerrero 
+   Personaje <|-- "Es" Mago 
+    Personaje <|--  "Es" Sanador 
     
-    Heroe o-- ObjetoMagico : Usa
+    Personaje o-- ObjetoMagico : Usa
     
     Inventario "Gestiona" o-- ObjetoMagico 
     
@@ -266,11 +242,7 @@ classDiagram
     ObjetoMagico <|-- "Es" AmuletoFuria 
     ObjetoMagico <|-- "Es" EscudoBendito 
     
-    Arena "Usa"..> Heroe 
-    Arena "Usa"..> Oponente 
+    Arena "Usa"..> Personaje
 
-
-
-
-
+    Inventario "Usa"..> Personaje
 ```
