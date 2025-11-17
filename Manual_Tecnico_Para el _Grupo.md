@@ -140,61 +140,136 @@ Controlador principal del sistema que coordina guilds y menús.
 **Nota:** Este es el diseño inicial antes de programar. Durante el desarrollo se agregaron métodos auxiliares privados no mostrados aquí.
 ```mermaid
 classDiagram
-    class Torneo{
+class Torneo{
         -string nombreTorneo
         -Guild* guildJugador
-        -vector~Guild*~ guildsEnemigas
-        +inicializarTorneo()
-        +gestionarGuild()
-        +menuPrincipal()
+        -vector< Guild* > guildsEnemigas  
+        -Inventario* inventario
+        -Arena* arena
+        
+        +Torneo(string nombre)
+        +~Torneo()
+        
+        +void inicializarTorneo()
+        +void inicializarGuilds()
+        +void inicializarInventario()
+        
+        +void gestionarGuild()
+        +void gestionarInventario()
+        +void iniciarArena()
+        
+        +void menuPrincipal()
     }
 
+    %% Gestiona personajes de un equipo
     class Guild{
         -string nombreGuild
-        -unordered_map~string, Personaje*~ personajes
-        +agregarPersonaje(Personaje*)
-        +consultarPersonaje(string)
-        +listarPersonajes()
-        +retirarPersonaje(string)
-        +buscarPersonaje(string)
+        -unordered_map< string, Personaje* > personajes
+        
+        +Guild(string nombre)
+        +~Guild()
+        
+        +void cargarPersonajesIniciales()
+        +void agregarPersonaje(Personaje* personaje)
+        +void consultarPersonaje(string nombre)
+        +void listarPersonajes()
+        +void retirarPersonaje(string nombre)
+        +Personaje* buscarPersonaje(string nombre)
+        
+        +vector<Personaje*> getPersonajesVivos()
+        +int getCantidadPersonajes()
     }
 
+    %% Clase base para personajes
     class Personaje{
         #string nombre
         #string rol
+        #string bando
+        #int nivel
         #int vida
+        #int vidaMaxima
         #int ataque
         #int defensa
-        +realizarAccion(Personaje*)
-        +mostrarInformacion()
-        +recibirDanio(int)
+        #vector<ObjetoAsignado*> objetosEquipados
+        #bool estaVivo
+        
+        +Personaje(string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa)
+        +virtual ~Personaje()
+        
+        +virtual void realizarAccion(Personaje* objetivo) 
+        +virtual void mostrarInformacion()
+        
+        +void recibirDanio(int danio)
+        +void equiparObjeto(ObjetoAsignado* objeto)
+        +void usarObjeto(int indice)
+        +bool puedeEquiparObjeto()
+        +ObjetoAsignado* getObjetoEquipado(int indice)
+        +void retirarObjeto(int indice)
+        
+        +string getNombre()
+        +string getRol()
+        +string getBando()
+        +int getVida()
+        +int getAtaque()
+        +int getDefensa()
+        +bool getEstaVivo()
+        
+        +void setVida(int vida)
+        +void setAtaque(int ataque)
+        +void setDefensa(int defensa)
     }
 
+    %% Especializado en ataques físicos
     class Guerrero{
         -double probabilidadCritico
-        +realizarAccion(Personaje*)
-        +mostrarInformacion()
+        
+        +Guerrero(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
+        +~Guerrero()
+        
+        +void realizarAccion(Personaje* objetivo) override
+        +void mostrarInformacion() override
+        
+        -int calcularDanioCritico(int danioBase)
+        -bool esCritico()
     }
 
+    %% Especializado en magia
     class Mago{
         -int poderMagico
         -double factorIgnorarDefensa
-        +realizarAccion(Personaje*)
-        +mostrarInformacion()
+        
+        +Mago(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
+        +~Mago()
+        
+        +void realizarAccion(Personaje* objetivo) override
+        +void mostrarInformacion() override
+        
+        -int calcularDanioMagico()
     }
 
+    %% Especializado en curación
     class Sanador{
         -int poderCuracion
         -double efectividadCuracion
-        +realizarAccion(Personaje*)
-        +mostrarInformacion()
+        
+        +Sanador(string nombre, string bando, int nivel, int vida, int defensa)
+        +~Sanador()
+        
+        +void realizarAccion(Personaje* objetivo) override
+        +void mostrarInformacion() override
+        
+        -int calcularCuracion()
     }
-
-    Torneo --> Guild
-    Guild o-- Personaje
-    Personaje <|-- Guerrero
-    Personaje <|-- Mago
-    Personaje <|-- Sanador
+    Main ..> Torneo : Usa
+    
+    Torneo --> Guild : Tiene
+    Torneo o--  Guild : guilds rivales
+    
+    Guild o-- Personaje : Tiene muchos
+    
+    Personaje <|-- Guerrero : Es
+    Personaje <|-- Mago : Es
+    Personaje <|-- Sanador : Es
 ```
 
 ---
