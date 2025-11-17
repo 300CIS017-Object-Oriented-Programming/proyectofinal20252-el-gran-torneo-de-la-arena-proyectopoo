@@ -9,8 +9,8 @@ classDiagram
     %% Controlador principal del torneo
     class Torneo{
         -string nombreTorneo
-        -Guild* guild
-        -unordered_map< string, Personaje* > personajes
+        -Guild* guildJugador
+        -vector< Guild* > guildsEnemigas  
         -Inventario* inventario
         -Arena* arena
         
@@ -18,8 +18,7 @@ classDiagram
         +~Torneo()
         
         +void inicializarTorneo()
-        +void inicializarGuild()
-        +void inicializarGuildEnemiga() 
+        +void inicializarGuilds()
         +void inicializarInventario()
         
         +void gestionarGuild()
@@ -29,50 +28,54 @@ classDiagram
         +void menuPrincipal()
     }
 
-    %% Gestiona los héroes del jugador
+    %% Gestiona personajes de un equipo
     class Guild{
         -string nombreGuild
-        -unordered_map < string, Personaje* > personajes
+        -unordered_map< string, Personaje* > personajes
         
         +Guild(string nombre)
         +~Guild()
         
-        +void cargarPersonajeIniciales()
-        +void agregarPersonaje(Personaje* personajes)
+        +void cargarPersonajesIniciales()
+        +void agregarPersonaje(Personaje* personaje)
         +void consultarPersonaje(string nombre)
-        +void listarPersonaje()
+        +void listarPersonajes()
         +void retirarPersonaje(string nombre)
         +Personaje* buscarPersonaje(string nombre)
         
-        +vector< Personaje* > getPersonajeVivos()
+        +vector<Personaje*> getPersonajesVivos()
         +int getCantidadPersonajes()
     }
 
-    %% Clase base para todos los héroes
+    %% Clase base para personajes
     class Personaje{
         #string nombre
         #string rol
+        #string bando
         #int nivel
         #int vida
         #int vidaMaxima
         #int ataque
         #int defensa
-        #vector < ObjetoMagico*> objetosEquipados
+        #vector<ObjetoAsignado*> objetosEquipados
         #bool estaVivo
         
-        +Personaje(string nombre, string rol, int nivel, int vida, int ataque, int defensa)
+        +Personaje(string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa)
         +virtual ~Personaje()
         
         +virtual void realizarAccion(Personaje* objetivo) 
         +virtual void mostrarInformacion()
         
         +void recibirDanio(int danio)
-        +void equiparObjeto(ObjetoMagico* objeto)
+        +void equiparObjeto(ObjetoAsignado* objeto)
         +void usarObjeto(int indice)
         +bool puedeEquiparObjeto()
+        +ObjetoAsignado* getObjetoEquipado(int indice)
+        +void retirarObjeto(int indice)
         
         +string getNombre()
         +string getRol()
+        +string getBando()
         +int getVida()
         +int getAtaque()
         +int getDefensa()
@@ -83,11 +86,11 @@ classDiagram
         +void setDefensa(int defensa)
     }
 
-    %% Héroe especializado en ataques físicos
+    %% Especializado en ataques físicos
     class Guerrero{
         -double probabilidadCritico
         
-        +Guerrero(string nombre, int nivel, int vida, int ataque, int defensa)
+        +Guerrero(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
         +~Guerrero()
         
         +void realizarAccion(Personaje* objetivo) override
@@ -97,12 +100,12 @@ classDiagram
         -bool esCritico()
     }
 
-    %% Héroe especializado en magia
+    %% Especializado en magia
     class Mago{
         -int poderMagico
         -double factorIgnorarDefensa
         
-        +Mago(string nombre, int nivel, int vida, int ataque, int defensa)
+        +Mago(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
         +~Mago()
         
         +void realizarAccion(Personaje* objetivo) override
@@ -111,12 +114,12 @@ classDiagram
         -int calcularDanioMagico()
     }
 
-    %% Héroe especializado en curación
+    %% Especializado en curación
     class Sanador{
         -int poderCuracion
         -double efectividadCuracion
         
-        +Sanador(string nombre, int nivel, int vida, int ataque, int defensa)
+        +Sanador(string nombre, string bando, int nivel, int vida, int defensa)
         +~Sanador()
         
         +void realizarAccion(Personaje* objetivo) override
@@ -125,47 +128,60 @@ classDiagram
         -int calcularCuracion()
     }
 
-
-    %% Gestiona los objetos mágicos del torneo
+    %% Gestiona objetos mágicos del torneo
     class Inventario{
-        -unordered_map < string, ObjetoMagico* > objetosDisponibles
+        -unordered_map< string, ObjetoMagico* > catalogoObjetos
         
         +Inventario()
         +~Inventario()
         
         +void cargarObjetosIniciales()
-        +void crearObjeto()
+        +void crearObjeto(ObjetoMagico* objeto, int stockInicial)
         +void listarObjetos()
         +void consultarObjeto(string nombre)
         +void actualizarStock(string nombre, int nuevoStock)
         +void eliminarObjeto(string nombre)
-        +void asignarObjetoAPersonaje(Personaje* personaje)
+        +void asignarObjetoAPersonaje(string nombre, Personaje* personaje)
         +void retirarObjetoDePersonaje(Personaje* personaje, int indice)
         
         +ObjetoMagico* buscarObjeto(string nombre)
+        +int getStock(string nombre)
         +int getStockTotal()
     }
 
-    %% Clase base para objetos mágicos
+    %% Clase base para objetos mágicos (tipo con stock)
     class ObjetoMagico{
         #string nombre
         #string descripcion
         #int stockDisponible
-        #bool fueUsado
         
         +ObjetoMagico(string nombre, string descripcion, int stock)
         +virtual ~ObjetoMagico()
         
-        +virtual void aplicarEfecto(Personaje* personaje)
+        +virtual void aplicarEfecto(Personaje* personaje) = 0
         +virtual void mostrarInformacion()
         
         +void decrementarStock()
         +void incrementarStock()
         
         +string getNombre()
+        +string getDescripcion()
         +int getStock()
-        +bool getFueUsado()
-        +void setFueUsado(bool usado)
+    }
+
+    %% Representa una instancia asignada a un personaje
+    class ObjetoAsignado{
+        -ObjetoMagico* tipoObjeto
+        -bool usado
+        
+        +ObjetoAsignado(ObjetoMagico* tipo)
+        +~ObjetoAsignado()
+        
+        +void aplicarEfecto(Personaje* personaje)
+        +void marcarUsado()
+        +bool estaUsado()
+        +ObjetoMagico* getTipoObjeto()
+        +string getNombre()
     }
 
     %% Restaura puntos de vida
@@ -173,11 +189,16 @@ classDiagram
         -int curacionMinima
         -int curacionMaxima
         
-        +PocionVida()
+        +PocionVida(int stock)
         +~PocionVida()
         
         +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
+        
+        +int getCuracionMinima()
+        +int getCuracionMaxima()
+        +void setCuracionMinima(int valor)
+        +void setCuracionMaxima(int valor)
     }
 
     %% Aumenta el ataque temporalmente
@@ -186,11 +207,18 @@ classDiagram
         -int aumentoAtaqueMax
         -int duracionTurnos
         
-        +AmuletoFuria()
+        +AmuletoFuria(int stock)
         +~AmuletoFuria()
         
         +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
+        
+        +int getAumentoAtaqueMin()
+        +int getAumentoAtaqueMax()
+        +int getDuracionTurnos()
+        +void setAumentoAtaqueMin(int valor)
+        +void setAumentoAtaqueMax(int valor)
+        +void setDuracionTurnos(int turnos)
     }
 
     %% Aumenta la defensa temporalmente
@@ -199,50 +227,62 @@ classDiagram
         -int aumentoDefensaMax
         -int duracionTurnos
         
-        +EscudoBendito()
+        +EscudoBendito(int stock)
         +~EscudoBendito()
         
         +void aplicarEfecto(Personaje* personaje) override
         +void mostrarInformacion() override
+        
+        +int getAumentoDefensaMin()
+        +int getAumentoDefensaMax()
+        +int getDuracionTurnos()
+        +void setAumentoDefensaMin(int valor)
+        +void setAumentoDefensaMax(int valor)
+        +void setDuracionTurnos(int turnos)
     }
 
     %% Controla los combates por turnos
     class Arena{
-        -vector < Personaje* > equipoGuild
+        -vector< Personaje* > personajesEnCombate
         -int turnoActual
         
         +Arena()
         +~Arena()
         
-        +void iniciarCombate(vector < Personaje* > personajes)
+        +void iniciarCombate(vector<Personaje*> heroes, vector<Personaje*> enemigos)
         +void ejecutarTurno()
         +bool verificarFinCombate()
         +void mostrarEstadoCombate()
         +void mostrarResumenFinal()
+        +void procesarObjetosPostCombate()
     }
 
     %% Relaciones entre clases
     Main ..> Torneo : Usa
     
-    Torneo "Compone" o-- Guild 
-    Torneo "Compone" <-- Inventario 
-    Torneo "Compone" <-- Arena 
+    Torneo --> Guild : Tiene
+    Torneo o--  Guild : guilds rivales
+    Torneo o-- Inventario : Tiene
+    Torneo o-- Arena : Tiene
     
     Guild o-- Personaje : Tiene muchos
     
-    Personaje <|-- "Es" Guerrero 
-   Personaje <|-- "Es" Mago 
-    Personaje <|--  "Es" Sanador 
+    Personaje <|-- Guerrero : Es
+    Personaje <|-- Mago : Es
+    Personaje <|-- Sanador : Es
     
-    Personaje o-- ObjetoMagico : Usa
+    Personaje o-- ObjetoAsignado : Equipa hasta 2
     
-    Inventario "Gestiona" o-- ObjetoMagico 
+    ObjetoAsignado --> ObjetoMagico : Referencia al tipo
     
-    ObjetoMagico <|-- "Es" PocionVida 
-    ObjetoMagico <|-- "Es" AmuletoFuria 
-    ObjetoMagico <|-- "Es" EscudoBendito 
+    Inventario o-- ObjetoMagico : Gestiona catálogo
     
-    Arena "Usa"..> Personaje
+    ObjetoMagico <|-- PocionVida : Es
+    ObjetoMagico <|-- AmuletoFuria : Es
+    ObjetoMagico <|-- EscudoBendito : Es
+    
+    Arena ..> Personaje : Usa
+    Arena ..> Inventario : Procesa objetos
+    Inventario ..> Personaje : Asigna objetos
 
-    Inventario "Usa"..> Personaje
 ```
