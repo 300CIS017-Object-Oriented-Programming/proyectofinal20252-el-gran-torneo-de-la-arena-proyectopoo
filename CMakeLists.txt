@@ -3,6 +3,16 @@ project(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo main.cpp
-        Heroe.cpp
-        Heroe.h)
+add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo src/main.cpp
+        src/Personajes/Personaje.cpp
+        src/Personajes/Personaje.h
+        src/Personajes/Guerrero.cpp
+        src/Personajes/Guerrero.h
+        src/Personajes/Mago.cpp
+        src/Personajes/Mago.h
+        src/Personajes/Sanador.cpp
+        src/Personajes/Sanador.h
+        src/Guild/Guild.cpp
+        src/Guild/Guild.h
+        src/Torneo/Torneo.cpp
+        src/Torneo/Torneo.h)
