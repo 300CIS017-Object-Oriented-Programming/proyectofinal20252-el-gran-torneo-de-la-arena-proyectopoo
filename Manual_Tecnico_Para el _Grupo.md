@@ -371,8 +371,8 @@ Total de personajes: 3
 
 ## Equipo
 
-Juan Felipe (Pipe)
-Jose Ricardo (Richi)
-Angel Obando
+- Juan Felipe (Pipe)
+- Jose Andrade (Richi)
+- Angel Obando
 
 ---
