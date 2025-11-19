@@ -30,69 +30,68 @@ using std::vector;
 using std::cin;
 using std::string;
 using std::endl;
-using std:: setprecision;
-using std:: fixed;
+using std::setprecision;
+using std::fixed;
 
 
 class Personaje {
 
-protected:
+    protected:
 
-    //Atributos basicos del personaje:
-    string nombre;
-    string rol;
-    string bando;
+        //Atributos basicos del personaje:
+        string nombre;
+        string rol;
+        string bando;
 
-    //Atributos para el combate:
-    int nivel;
-    int vida;
-    int vidaMaxima; //Es el valor de vida maxima con la que empieza el personaje.
-    // Se inicializa al igual que la vida.
-    int ataque;
-    int defensa;
+        //Atributos para el combate:
+        int nivel;
+        int vida;
+        int vidaMaxima; //Es el valor de vida maxima con la que empieza el personaje.
+        // Se inicializa al igual que la vida.
+        int ataque;
+        int defensa;
 
-    //Estados y obejtos magicos asignados:
-    vector <ObjetoAsignado*> objetosEquipados;
-    bool isEstaVivo; // True mientrar vida > 0.
+        //Estados y obejtos magicos asignados:
+        vector<ObjetoAsignado*> objetosEquipados;
+        bool isEstaVivo; // True mientrar vida > 0.
 
-public:
+    public:
 
-    //Contructores y Destructores:
-    Personaje();
-    Personaje(string nombre, string rol, string bando,int nivel,
-        int vida, int ataque, int defensa);
-    virtual ~Personaje(); //Virtual por que de la clase Personaje manerja otros objetos de
-    //Otra clases.
+        //Contructores y Destructores:
+        Personaje( );
+        Personaje( string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa );
+        virtual ~Personaje( ); //Virtual por que de la clase Personaje manerja otros objetos de
+        //Otra clases.
 
-    //Gets:
-    string getNombre();
-    string  getRol();
-    string getBando();
-    int getVida();
-    int getVidaMaxima();
-    int getAtaque();
-    int getDefensa();
-    int getNivel();
-    bool getIsEstaVivo();
+        //Gets:
+        string getNombre( );
+        string  getRol( );
+        string getBando( );
+        int getVida( );
+        int getVidaMaxima( );
+        int getAtaque( );
+        int getDefensa( );
+        int getNivel( );
+        bool getIsEstaVivo( );
 
-    // Sets - solo ponemos sets de los atributos que queremos modificar (la de los objetos magicos) :
-    void setVida(int vida);
-    void setAtaque(int ataque);
-    void setDefensa(int defensa);
+        // Sets - solo ponemos sets de los atributos que queremos modificar (la de los objetos magicos) :
+        void setVida( int vida );
+        void setAtaque( int ataque );
+        void setDefensa( int defensa );
 
 
-    //Metodos abstractos que cuya definicion recae en las clases hijas:
-    virtual void realizarAccion(Personaje * objetivo) = 0;
-    virtual void mostrarInformacion() = 0;
+        //Metodos abstractos que cuya definicion recae en las clases hijas:
+        virtual void realizarAccion( Personaje* objetivo ) = 0;
+        virtual void mostrarInformacion( ) = 0;
 
-    //Metodos de combate, comunes a todos los personajes:
+        //Metodos de combate, comunes a todos los personajes:
 
-    void recibirDanio( int danio);//Reduce vida y verifica si muere.
-    void equiparObjeto (ObjetoAsignado * objeto); // Agrega objeto si hay espacio.
-    void usarObjeto ( int indice ); // Usa el objeto en la posicion indicada.
-    void retirarObjeto(int indice ); //Quita un objeto equipado.
-    bool isPuedeEquiparObjeto();// Verificamos si tiene espacio. (en este caso un maximo de dos).
-    ObjetoAsignado* getObjetoEquipado( int indice); //Objeto el objeto en la posicion (indice).
+        void recibirDanio( int danio );//Reduce vida y verifica si muere.
+        void equiparObjeto( ObjetoAsignado* objeto ); // Agrega objeto si hay espacio.
+        void usarObjeto( int indice ); // Usa el objeto en la posicion indicada.
+        void retirarObjeto( int indice ); //Quita un objeto equipado.
+        bool isPuedeEquiparObjeto( );// Verificamos si tiene espacio. (en este caso un maximo de dos).
+        ObjetoAsignado* getObjetoEquipado( int indice ); //Objeto el objeto en la posicion (indice).
 
 };
 

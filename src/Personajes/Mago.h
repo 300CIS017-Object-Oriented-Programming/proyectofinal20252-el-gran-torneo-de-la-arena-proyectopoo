@@ -10,25 +10,22 @@
 
 class Mago : public Personaje {
     // Atributos especiales del mago:
+    private:
+        int poderMagico;  // Poder magico adicional para los hechizos.
+        double factorIgnorarDefensa;  // Porcentaje de defensa enemiga que ignora.
 
-private:
-    int poderMagico;  // Poder magico adicional para los hechizos.
-    double factorIgnorarDefensa;  // Porcentaje de defensa enemiga que ignora.
+        // Metodo privado auxiliar (ver motivo de esto en Guerrero.h):
+        int calcularDanioMagico( );
 
-    // Metodo privado auxiliar (ver motivo de esto en Guerrero.h):
-    int calcularDanioMagico();
+    public:
+        //Constructores y destructores:
+        Mago( );
+        Mago( string nombre, string bando, int nivel, int vida, int ataque, int defensa );
+        virtual ~Mago( ) = default;
 
-public:
-    //Constructores y destructores:
-    Mago();
-    Mago(string nombre, string bando, int nivel, int vida, int ataque,
-        int defensa);
-    virtual ~Mago() = default;
-
-    // Metodos Sobre escritos (override) de Personaje:
-    void realizarAccion(Personaje * objetivo) override;
-    void mostrarInformacion() override;
-
+        // Metodos Sobre escritos (override) de Personaje:
+        void realizarAccion( Personaje* objetivo ) override;
+        void mostrarInformacion( ) override;
 };
 
 
