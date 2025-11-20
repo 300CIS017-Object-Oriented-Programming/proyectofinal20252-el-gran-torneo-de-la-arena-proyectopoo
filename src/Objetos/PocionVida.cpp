@@ -50,8 +50,9 @@ int PocionVida::getCuracionMaxima( ) {
 void PocionVida::setCuracionMinima( int valor ) {
     /* Validacion para que el efecto no este fuera de los rangos permitidos,
        ademas si el efecto de curacion minima es 40, entoncespor defecto se pone 
-       en 20 */
-    if( valor < 20 || valor >= 40 ) {
+       en 20, ademas se verifica que el valor de curacion Min no sea mayor que
+       el valor de curacion Max */
+    if( valor < 20 || valor >= 40 || valor > this -> curacionMaxima ) {
         this -> curacionMinima = 20;
     } else {
         this -> curacionMinima = valor;
@@ -63,7 +64,7 @@ void PocionVida::setCuracionMaxima( int valor ) {
        entonces por defecto se pondra en 40, ademas si la curacion maxima es 
        menor que la curacion minima, lo cual no tiene sentido, tambien se pone
        por defecto en 40 */
-    if( valor <= 20 || valor > 40 || this -> curacionMaxima < this -> curacionMinima ) {
+    if( valor <= 20 || valor > 40 || valor < this -> curacionMinima ) {
         this -> curacionMaxima = 40;
     } else {
         this -> curacionMaxima = valor;

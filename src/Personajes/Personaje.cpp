@@ -175,8 +175,8 @@ void Personaje::usarObjeto( int indice ) {
 
 ObjetoAsignado* Personaje::getObjetoEquipado( int indice ) {
     // Retorna el objeto en la posicion indicada usando punteros.
-    if( indice >=  0 && indice < objetosEquipados.size( ) ) {
-        return objetosEquipados[ indice ];
+    if( indice >=  0 && indice < this -> objetosEquipados.size( ) ) {
+        return this -> objetosEquipados[ indice ];
     }
     return nullptr; // Retorna nulltpr si el indice es invalido.
 }

@@ -65,7 +65,7 @@ class Personaje {
 
         //Gets:
         string getNombre( );
-        string  getRol( );
+        string getRol( );
         string getBando( );
         int getVida( );
         int getVidaMaxima( );
