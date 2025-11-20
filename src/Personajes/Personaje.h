@@ -20,9 +20,8 @@
 
 //Declaracion adelantada sirve para evitar tener que implementar la clase objetos magicos por el momento.
 //Cuando implementemos la clase ObjetoMagico esta clase lo necesitara, Entonces borraremos o comentaremos esta
-//declaracion adelantada y descomentaremos el include .h .
+//declaracion adelantada y descomentaremos el include .h.
 class ObjetoAsignado;
-
 // Usings para hacer la codificacion mas fluida.
 
 using std::cout;
@@ -54,7 +53,7 @@ class Personaje {
         //Estados y obejtos magicos asignados:
         vector<ObjetoAsignado*> objetosEquipados;
         bool isEstaVivo; // True mientrar vida > 0.
-
+        
     public:
 
         //Contructores y Destructores:
@@ -62,7 +61,7 @@ class Personaje {
         Personaje( string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa );
         virtual ~Personaje( ); //Virtual por que de la clase Personaje manerja otros objetos de
         //Otra clases.
-
+        
         //Gets:
         string getNombre( );
         string getRol( );
@@ -85,7 +84,6 @@ class Personaje {
         virtual void mostrarInformacion( ) = 0;
 
         //Metodos de combate, comunes a todos los personajes:
-
         void recibirDanio( int danio );//Reduce vida y verifica si muere.
         void equiparObjeto( ObjetoAsignado* objeto ); // Agrega objeto si hay espacio.
         void usarObjeto( int indice ); // Usa el objeto en la posicion indicada.

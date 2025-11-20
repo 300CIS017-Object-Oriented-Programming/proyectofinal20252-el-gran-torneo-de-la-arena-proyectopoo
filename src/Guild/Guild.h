@@ -37,6 +37,8 @@ class Guild {
         //unordered_map permite busqueda rapida por nombre (Clave-valor).
         // La clave es el nombre del personaje, el valor es el puntero al personaje.
         unordered_map<string, Personaje*> personajes;
+        /* Mapa para guardar los personajes que han ido muriendo en la batalla */
+        unordered_map<string, Personaje*> muertos;
 
     public:
         //Contructores y destructores:
@@ -48,6 +50,7 @@ class Guild {
 
         void cargarPersonajesIniciales( ); // Carga heroes predeterminados.
         void agregarPersonaje( Personaje* personajes ); // Añade un nuevo personaje.
+        void matarPersonaje( Personaje* personaje ); // Para agregar los personajes que vayan muriendo al map de muertos.
         void consultarPersonaje( string nombre ); // Muestra informacion de los personajes.
         void listarPersonajes( ); // Lista a todos los personajes.
         void retirarPersonaje( string nombre ); // Elimina un personaje.
@@ -55,7 +58,8 @@ class Guild {
 
         //Metodos auxiliares (metodos necesarios para la implementacion del codigo):
 
-        vector<Personaje*> getPersonajesVivos( );// Retorna solo personajes vivos.
+        vector<Personaje*> getPersonajesVivos( ); // Retorna solo personajes vivos.
+        vector<Personaje*> getPersonajesMuertos( );
         int getCantidadPersonajes( ); // Cuenta el total de personajes.
 
         // Gets:
