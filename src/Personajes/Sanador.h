@@ -8,25 +8,24 @@
 #include "Personaje.h"
 #include <cstdlib> //Para rand() y numeros aleatorios
 
-class Sanador: public Personaje {
-private:
-    //Atributos especiales del Sanador:
-    int poderCuracion; // poder de curacion base.
-    double efectividadCuracion;  // Variacion en la efectividad ( entre 0 y 1.0).
+class Sanador : public Personaje {
+    private:
+        //Atributos especiales del Sanador:
+        int poderCuracion; // poder de curacion base.
+        double efectividadCuracion;  // Variacion en la efectividad ( entre 0 y 1.0).
 
-    // Metodo privador Auxiliar (ver razon de esto en Guerrero.h):
-    int calcularCuracion();
+        // Metodo privador Auxiliar (ver razon de esto en Guerrero.h):
+        int calcularCuracion( );
 
-public:
-    Sanador();
-    Sanador( string nombre, string bando, int nivel, int vida, int defensa);
-    virtual ~Sanador() = default;
+    public:
+        Sanador( );
+        Sanador( string nombre, string bando, int nivel, int vida, int defensa );
+        virtual ~Sanador( ) = default;
 
-    // Metodos sobreescritos de Personaje :
+        // Metodos sobreescritos de Personaje :
 
-    void realizarAccion(Personaje * objetivo) override;
-    void mostrarInformacion() override;
-
+        void realizarAccion( Personaje* objetivo ) override;
+        void mostrarInformacion( ) override;
 };
 
 

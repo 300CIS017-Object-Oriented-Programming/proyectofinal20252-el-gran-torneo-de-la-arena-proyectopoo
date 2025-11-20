@@ -25,50 +25,50 @@ using std::vector;
 using std::cin;
 using std::string;
 using std::endl;
-using std:: setprecision;
-using std:: fixed;
-using std:: unordered_map;
-using std:: cin;
-using std:: getline;
+using std::setprecision;
+using std::fixed;
+using std::unordered_map;
+using std::cin;
+using std::getline;
 
 
 class Torneo {
 
-private:
-    string nombreTorneo;
-    Guild * guildJugador;// Guild controlada por el jugador.
-    vector <Guild *> guildsEnemigas; //Guilds enemigas (rivales).
+    private:
+        string nombreTorneo;
+        Guild* guildJugador;// Guild controlada por el jugador.
+        vector<Guild*> guildsEnemigas; //Guilds enemigas (rivales).
 
-    //Pendiente: Cuando implementemos Inventario y Arena, descomentar:
-    // Inventario * inventario; // Inventario global de objetos magicos.
-    // Arena* arena //Sistema de combate.
+        //Pendiente: Cuando implementemos Inventario y Arena, descomentar:
+        // Inventario * inventario; // Inventario global de objetos magicos.
+        // Arena* arena //Sistema de combate.
 
-    //Metodos privados auxiliares para organizar el codigo:
-    void crearNuevoHeroe(); // Logica para la creacion de heroes.
-    void consultarHeroeTorneo(); // Logica para la consulta.
-    void retirarHeroeTorneo(); // Logica de retiro.
-    void mostrarGuildsRivales(); //Muestra a las Guilds Enemigas.
+        //Metodos privados auxiliares para organizar el codigo:
+        void crearNuevoHeroe( ); // Logica para la creacion de heroes.
+        void consultarHeroeTorneo( ); // Logica para la consulta.
+        void retirarHeroeTorneo( ); // Logica de retiro.
+        void mostrarGuildsRivales( ); //Muestra a las Guilds Enemigas.
 
-public:
-    //Constructores y destructores:
-    Torneo();
-    Torneo(string nombre);
-    virtual ~Torneo();
+    public:
+        //Constructores y destructores:
+        Torneo( );
+        Torneo( string nombre );
+        virtual ~Torneo( );
 
-    // Metodos de Inicializacion:
+        // Metodos de Inicializacion:
 
-    void inicializarTorneo(); // Configura todo el torneo (Por alguna razon todo lo escribo aqui queda en verde)
-    void inicializarGuilds(); // Crea la Guild del jugador y enemigas.
-    //Pendiente: void inicializarInventario(); // Carga objetos magicos iniciales.
+        void inicializarTorneo( ); // Configura todo el torneo (Por alguna razon todo lo escribo aqui queda en verde)
+        void inicializarGuilds( ); // Crea la Guild del jugador y enemigas.
+        //Pendiente: void inicializarInventario(); // Carga objetos magicos iniciales.
 
 
-    // Metodos de gestion (menus):
+        // Metodos de gestion (menus):
 
-    void gestionarGuild(); // Menu para administrar la Guild del jugador.
-    // Pendiente: void gestionarInventario(); // Menu para objetos magicos.
-    // Pendiente: void iniciarArena() // inicia el sistema de combate.
+        void gestionarGuild( ); // Menu para administrar la Guild del jugador.
+        // Pendiente: void gestionarInventario(); // Menu para objetos magicos.
+        // Pendiente: void iniciarArena() // inicia el sistema de combate.
 
-    void menuPrincipal(); // Menu Principal del torneo.
+        void menuPrincipal( ); // Menu Principal del torneo.
 
 };
 
