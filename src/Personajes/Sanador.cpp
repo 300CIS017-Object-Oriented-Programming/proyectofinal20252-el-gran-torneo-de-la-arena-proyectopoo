@@ -6,9 +6,9 @@
 
 // Contructores y destructores:
 
-Sanador::Sanador( ) : Personaje( ){ // Reutilizo el contructor de Personaje:
+Sanador::Sanador( ) : Personaje( ) { // Reutilizo el contructor de Personaje:
     //Contructor por defecto:
-
+    
     this -> rol = "Sanador";
     this -> poderCuracion = 40; // Poder de curacion base.
     this -> efectividadCuracion = 0.8 ; // 80% de efectividad de base.

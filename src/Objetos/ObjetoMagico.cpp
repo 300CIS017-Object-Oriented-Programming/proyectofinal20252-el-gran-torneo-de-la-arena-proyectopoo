@@ -1,5 +1,11 @@
 #include "ObjetoMagico.h"
 
+ObjetoMagico::ObjetoMagico( ) {
+    this -> nombre = "Sin nombre";
+    this -> descripcion = "Sin descripcion";
+    this -> stockDisponible = 0;
+}
+
 ObjetoMagico::ObjetoMagico( string nombre, string descripcion, int stockDisponible ) {
     this -> nombre = nombre;
     this -> descripcion = descripcion;

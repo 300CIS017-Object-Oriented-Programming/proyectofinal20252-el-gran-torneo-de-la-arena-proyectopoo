@@ -11,7 +11,7 @@ class ObjetoMagico {
         string descripcion;
         int    stockDisponible;
     public:
-        ObjetoMagico( ) = default;
+        ObjetoMagico( );
         ObjetoMagico( string nombre, string descripcion, int stockDisponible ); 
         virtual void aplicarEfecto( Personaje* personaje );
         virtual void mostrarInformacion( );
