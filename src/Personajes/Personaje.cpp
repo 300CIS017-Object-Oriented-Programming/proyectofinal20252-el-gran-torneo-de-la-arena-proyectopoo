@@ -3,7 +3,7 @@
 //
 
 #include "Personaje.h"
-//#include "ObjetoAsignado.h" // <- leer el comentario en Personaje.h, es posible que tengamos que dejar esto
+#include "../Objetos/ObjetoAsignado.h" // <- leer el comentario en Personaje.h, es posible que tengamos que dejar esto
 // dado a que es posible a que haya una dependencia circular. incluir esto aqui nos permite tratar con ella, confirmar.
 // Si se mete los objetos a un directorio dentro del prcyecto de Clion seria:
 // "(nombre del directorio)/ObjetoAsignado.h" .
@@ -157,14 +157,11 @@ void Personaje::equiparObjeto( ObjetoAsignado* objeto) {
 }
 
 void Personaje::usarObjeto( int indice ) {
-    // Usa el objeto en la posicion indica por el indice.
-    //-> Pendiente: Implementar cuando tengamos ObjetoAsignado
+    // Usa el objeto en la posicion indicada por el indice.
     if( indice >= 0 && indice < this -> objetosEquipados.size( ) ) {
-        // Aqui se llamara a objetosEquipados[indice]->aplicarEfecto(this);
-        cout << this -> nombre << " usa un objeto." << endl; // Pendiente: Aqui tambien se le
-        // debe agregar el nombre del objeto asignado;
-        // Pendiente: Despues de usar el objeto se marca como usado o se elimana (el ObjetoAsignado no
-        // el ObjetoMagico como tal).
+        this -> objetosEquipados[ indice ] -> aplicarEfecto( this );
+        cout << this -> nombre << " usa el objeto" << this -> objetosEquipados[ indice ] -> getNombre( ) << endl;
+        this -> objetosEquipados[ indice ] -> marcarUsado( );
     }
     else {
         cout << "Indice de objeto invalido." << endl;
@@ -175,8 +172,8 @@ void Personaje::usarObjeto( int indice ) {
 
 ObjetoAsignado* Personaje::getObjetoEquipado( int indice ) {
     // Retorna el objeto en la posicion indicada usando punteros.
-    if( indice >=  0 && indice < objetosEquipados.size( ) ) {
-        return objetosEquipados[ indice ];
+    if( indice >=  0 && indice < this -> objetosEquipados.size( ) ) {
+        return this -> objetosEquipados[ indice ];
     }
     return nullptr; // Retorna nulltpr si el indice es invalido.
 }
