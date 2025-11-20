@@ -26,7 +26,7 @@ Guild:: ~Guild( ) {
     // En cada iteración, par representa un elemento de esa colección.
     for( pair<string, Personaje*> par : this -> personajes ) {
         // Es un for basado en rango.
-        // pair: Para es el tipo de dato.
+        // pair: Para el tipo de dato.
 
         cout << "Liberando memoria de : " << par.first << endl; //first es la clave (y en este caso el nombre).
         delete par.second; // par.second es el puntero al Personaje.
@@ -94,6 +94,15 @@ void Guild::agregarPersonaje( Personaje* personaje ) {
 
     personajes[ nombre ] = personaje;
     cout << endl << personaje -> getRol( ) << " " << nombre << " se ha unido a " << this -> nombreGuild << "!!!!!" << endl;
+}
+
+void Guild::matarPersonaje( Personaje* personaje ) {
+    /* Validamos que efectivamente el personaje este muerto */
+    if( !personaje -> getIsEstaVivo( ) ) {
+        this -> muertos[ personaje -> getNombre( ) ] = personaje;
+    } else {
+        cout << "El personaje " << personaje -> getNombre( ) << " no ha muerto!" << endl;
+    }
 }
 
 void Guild::consultarPersonaje( string nombre ) {
@@ -182,9 +191,12 @@ vector<Personaje*> Guild::getPersonajesVivos( ) {
             //lo de adentro del if.
             
             vivos.push_back( par.second );
+        } else {
+            /* Aprovechamos este metodo para agregar los personajes que vayan cayendo en combate al map
+               de personajes muertos */
+            matarPersonaje( par.second );
         }
     }
-
     return vivos;
 }
 
