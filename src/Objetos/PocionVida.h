@@ -1,7 +1,7 @@
 #ifndef POCION_VIDA
 #define POCION_VIDA
 
-#include "../Personajes/Personaje.h"
+#include "../Personajes/Personaje.h" //<- Nota: Asi se tiene que implementar en las clases hijas.
 #include "ObjetoMagico.h"
 
 class PocionVida : public ObjetoMagico {
@@ -12,7 +12,7 @@ class PocionVida : public ObjetoMagico {
         int calcularEfecto( );
     public:
         PocionVida( int stock );
-        ~PocionVida( );
+        ~PocionVida( ) = default;
         void aplicarEfecto( Personaje* personaje ) override;
         void mostrarInformacion( ) override;
         int getCuracionMinima( );
