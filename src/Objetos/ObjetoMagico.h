@@ -3,6 +3,8 @@
 
 #include <string>
 
+class Personaje; //Hacemos un forward declaration aqui para manjar la dependencia circular.
+
 using std::string;
 
 class ObjetoMagico {
@@ -13,8 +15,10 @@ class ObjetoMagico {
     public:
         ObjetoMagico( );
         ObjetoMagico( string nombre, string descripcion, int stockDisponible ); 
-        virtual void aplicarEfecto( Personaje* personaje );
-        virtual void mostrarInformacion( );
+    virtual void aplicarEfecto( Personaje* personaje ) = 0; /*Igualamos a 0 ya que el comportamiento lo definen
+las clases hijas.  */
+        virtual void mostrarInformacion( ) = 0; /*Igualamos a 0 ya que el comportamiento lo definen
+    las clases hijas.  */
         void decrementarStock( );
         void incrementarStock( );
         
@@ -24,7 +28,8 @@ class ObjetoMagico {
         int getStock( );
 
         // Destrcuctor.
-        virtual ~ObjetoMagico( );
+    virtual ~ObjetoMagico( ) = default;/*ya que la clase ObjetoMagico no tiene memoria dinamica
+    propia ni punteros que liberar.  */
 };
 
 #endif

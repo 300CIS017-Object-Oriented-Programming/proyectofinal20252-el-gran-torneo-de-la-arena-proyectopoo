@@ -12,7 +12,7 @@ class PocionVida : public ObjetoMagico {
         int calcularEfecto( );
     public:
         PocionVida( int stock );
-        ~PocionVida( );
+        ~PocionVida( ) = default;
         void aplicarEfecto( Personaje* personaje ) override;
         void mostrarInformacion( ) override;
         int getCuracionMinima( );
