@@ -18,11 +18,7 @@ ObjetoAsignado::ObjetoAsignado(ObjetoMagico* tipo) {
 }
 
 ObjetoAsignado::~ObjetoAsignado() {
-    // Importante:
-    // NO liberamos tipoObjeto aquí, porque el dueño real del ObjetoMagico
-    // será el Inventario (catálogo global con stock).
-    //
-    // Este objeto solo representa "la instancia asignada" a un personaje.
+
     this->tipoObjeto = nullptr;
 }
 
