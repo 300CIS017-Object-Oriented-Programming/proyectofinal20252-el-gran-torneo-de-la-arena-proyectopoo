@@ -7,6 +7,7 @@
 #include "../Personajes/Personaje.h"
 // Cuando se implemente ObjetoMagico, asegurarse de que esta ruta sea correcta:
 #include "ObjetoMagico.h"
+#include "../Personajes/Personaje.h" //<- Se tiene que agregar el .h de personaje
 
 // Constructores y destructores:
 

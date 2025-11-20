@@ -1,4 +1,6 @@
 #include "ObjetoMagico.h"
+//<- No es necesario incluir Personaje.h aqui ya que no hay una implementacion que requiera a personaje.
+
 
 ObjetoMagico::ObjetoMagico( ) {
     this -> nombre = "Sin nombre";
