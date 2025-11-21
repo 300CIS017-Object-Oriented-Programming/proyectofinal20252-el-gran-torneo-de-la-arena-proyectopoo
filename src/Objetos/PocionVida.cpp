@@ -35,7 +35,12 @@ void PocionVida::aplicarEfecto( Personaje* personaje ) {
 }
 
 void PocionVida::mostrarInformacion( ) {
-    cout << this -> getDescription( ) << endl;
+    cout << "==== Pocion de Vida ====" << endl;
+    cout << this -> descripcion << endl;
+    cout << "Curacion Minima: " << this -> curacionMinima << endl;
+    cout << "Curacion Maxima: " << this -> curacionMaxima << endl;
+    cout << "Stock Disponible: " << this -> stockDisponible << endl;
+    cout << "========================" << endl;
 }
 
 /* Getters y Setters */

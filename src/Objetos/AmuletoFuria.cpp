@@ -28,7 +28,12 @@ void AmuletoFuria::aplicarEfecto( Personaje* personaje ) {
 }
 
 void AmuletoFuria::mostrarInformacion( ) {
+    cout << "===== Amuleto de Furia =====" << endl;
     cout << this -> descripcion << endl;
+    cout << "Aumento de ataque minimo: " << this -> aumentoAtaqueMin << endl;
+    cout << "Aumento de ataque maximo: " << this -> aumentoAtaqueMax << endl;
+    cout << "Stock Disponible: " << this -> stockDisponible << endl;
+    cout << "============================" << endl;
 }
 
 /* Getters y Setters */
