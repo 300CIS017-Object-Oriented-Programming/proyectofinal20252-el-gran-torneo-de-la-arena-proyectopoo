@@ -21,4 +21,6 @@ add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo src/mai
         src/Objetos/ObjetoMagico.h
         src/Objetos/ObjetoMagico.cpp
         src/Objetos/PocionVida.h
-        src/Objetos/PocionVida.cpp)
+        src/Objetos/PocionVida.cpp
+        src/Objetos/CaballaLegendaria.h
+        src/Objetos/CaballaLegendaria.cpp)
