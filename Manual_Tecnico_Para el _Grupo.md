@@ -373,6 +373,6 @@ Total de personajes: 3
 
 - Juan Felipe (Pipe)
 - Jose Andrade (Richi)
-- Angel Obando
+- Angel Obando (Angel xd)
 
 ---
