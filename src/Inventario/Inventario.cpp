@@ -5,10 +5,8 @@
 
 using std::pair;
 
-Inventario::Inventario( ) {
 
-}
-
+/* Falta Implementar la carga de Objetos Iniciales, nose que objetos quieren que se carguen inicialmente */
 void Inventario::cargarObjetosIniciales( ) {
 
 }
