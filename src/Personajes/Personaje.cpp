@@ -112,6 +112,10 @@ void Personaje::setDefensa( int defensa ) {
     this -> defensa = defensa;
 }
 
+void Personaje::setEstaVivo( bool estado ) {
+    this -> isEstaVivo = estado;
+}
+
 //Metodos para el combate:
 
 void Personaje::recibirDanio( int danio ) {

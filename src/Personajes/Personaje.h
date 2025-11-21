@@ -77,6 +77,8 @@ class Personaje {
         void setVida( int vida );
         void setAtaque( int ataque );
         void setDefensa( int defensa );
+        /* Agregado para cuando sea revivido */
+        void setEstaVivo( bool );
 
 
         //Metodos abstractos que cuya definicion recae en las clases hijas:
