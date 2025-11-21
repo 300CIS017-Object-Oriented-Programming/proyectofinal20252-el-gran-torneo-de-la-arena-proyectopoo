@@ -18,7 +18,9 @@ ObjetoAsignado::ObjetoAsignado( ObjetoMagico* tipo ) {
 }
 
 ObjetoAsignado::~ObjetoAsignado( ) {
-    delete this -> tipoObjeto; //<- Se agrega esta linea, sino tenemos memory leak.
+    // delete this -> tipoObjeto; //<- Se agrega esta linea, sino tenemos memory leak.
+    /*Nota: El delete no es necesario, ObjetoAsignado es un puntero a objeto magico, pero no es su dueño.
+    El dueño de ObjetoMagico es Inventario, por eso basta con hacer el puntero a ObjetoMagico nulo. (Pipe)*/
     this -> tipoObjeto = nullptr;
 }
 

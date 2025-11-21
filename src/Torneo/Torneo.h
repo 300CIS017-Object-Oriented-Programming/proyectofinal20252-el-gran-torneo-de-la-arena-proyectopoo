@@ -9,7 +9,7 @@
 //y desde ahi entra al directorio Guild.
 
 //->Pendiente: Cuando implementemos Inventario y Arena, descomentar:
-//#include "../Inventario/Inventario.h"
+#include "../Inventario/Inventario.h" //<-Nota: Implementado (Por Angel).
 //#include "../Arena/Arena.h"
 
 //Librearias:
@@ -40,7 +40,7 @@ class Torneo {
         vector<Guild*> guildsEnemigas; //Guilds enemigas (rivales).
 
         //Pendiente: Cuando implementemos Inventario y Arena, descomentar:
-        // Inventario * inventario; // Inventario global de objetos magicos.
+         Inventario * inventario; // Inventario global de objetos magicos.<-Nota: Implementado (Por Angel).
         // Arena* arena //Sistema de combate.
 
         //Metodos privados auxiliares para organizar el codigo:
@@ -48,6 +48,12 @@ class Torneo {
         void consultarHeroeTorneo( ); // Logica para la consulta.
         void retirarHeroeTorneo( ); // Logica de retiro.
         void mostrarGuildsRivales( ); //Muestra a las Guilds Enemigas.
+
+        /* Nuevos metodos privados para el inventario: */
+        void listarInventarioDetallado();
+        void listarObjetosEquipadosHeroes();
+        void asignarObjetoHeroe();
+        void buscarObjetoEspecifico();
 
     public:
         //Constructores y destructores:
@@ -59,13 +65,13 @@ class Torneo {
 
         void inicializarTorneo( ); // Configura todo el torneo (Por alguna razon todo lo escribo aqui queda en verde)
         void inicializarGuilds( ); // Crea la Guild del jugador y enemigas.
-        //Pendiente: void inicializarInventario(); // Carga objetos magicos iniciales.
+    void inicializarInventario(); // Carga objetos magicos iniciales. (Nota: aun esta vacio.)
 
 
         // Metodos de gestion (menus):
 
         void gestionarGuild( ); // Menu para administrar la Guild del jugador.
-        // Pendiente: void gestionarInventario(); // Menu para objetos magicos.
+        void gestionarInventario(); // Menu para objetos magicos.
         // Pendiente: void iniciarArena() // inicia el sistema de combate.
 
         void menuPrincipal( ); // Menu Principal del torneo.

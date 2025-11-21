@@ -12,7 +12,7 @@ class Revivir : public ObjetoMagico {
 
     public:
         Revivir( int stock );
-        ~Revivir( ) = default;
+        virtual ~Revivir( ) = default;
         void aplicarEfecto( Personaje* personaje ) override;
         void mostrarInformacion( ) override;
 

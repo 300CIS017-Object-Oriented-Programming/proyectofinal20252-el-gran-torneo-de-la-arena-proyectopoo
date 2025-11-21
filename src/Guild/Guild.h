@@ -59,7 +59,7 @@ class Guild {
         //Metodos auxiliares (metodos necesarios para la implementacion del codigo):
 
         vector<Personaje*> getPersonajesVivos( ); // Retorna solo personajes vivos.
-        vector<Personaje*> getPersonajesMuertos( );
+        vector<Personaje*> getPersonajesMuertos( ); //Retorna solo Personajes Muertos.
         int getCantidadPersonajes( ); // Cuenta el total de personajes.
 
         // Gets:

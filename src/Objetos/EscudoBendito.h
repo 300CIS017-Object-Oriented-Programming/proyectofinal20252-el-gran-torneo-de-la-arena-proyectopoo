@@ -13,7 +13,7 @@ class EscudoBendito : public ObjetoMagico {
         int calcularEfecto( );
     public:
         EscudoBendito( int stock );
-        ~EscudoBendito( );
+        virtual ~EscudoBendito( ) = default;
         void aplicarEfecto( Personaje* personaje ) override;
         void mostrarInformacion( ) override;
 

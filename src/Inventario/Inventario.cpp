@@ -1,12 +1,33 @@
 #include "Inventario.h"
-#include "../Personajes/Personaje.h"
+/*#include "../Personajes/Personaje.h"
 #include "../Objetos/ObjetoMagico.h"
+Nota (Pipe): en este caso no son necesarios, ya que no hay dependencia circular. Me corrigen.*/
 #include "ObjetoAsignado.h"
 
 using std::pair;
 
+Inventario::~Inventario() {
+    //Nota: Imlemente el destructor de Inventario (Pipe).
+    cout << endl << "========================================" << endl;
+    cout << "Destruyendo Inventario...."  << endl;
+    cout << "Liberando " << this -> catalogoObjetos.size( ) << " objetos magicos..." << endl;
 
-/* Falta Implementar la carga de Objetos Iniciales, nose que objetos quieren que se carguen inicialmente */
+    for (pair<string, ObjetoMagico*> par: this->catalogoObjetos) {
+
+        cout << "Liberadon memoria de: " << par.first << endl;//first es la clave (y en este caso el nombre).
+        delete par.second;// par.second es el puntero a Objeto Magico.
+    }
+
+    this->catalogoObjetos.clear(); //Limpio el mapa.
+    cout<< "Inventario Destruido" << endl;
+    cout << "========================================" << endl;
+
+
+}
+
+/* Falta Implementar la carga de Objetos Iniciales, nose que objetos quieren que se carguen inicialmente
+ * Nota (Pipe): Dos de cada tipo estaria bien, no se que piense Richi.
+ */
 void Inventario::cargarObjetosIniciales( ) {
 
 }

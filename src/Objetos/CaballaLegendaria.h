@@ -18,7 +18,7 @@ private:
 
 public:
     CaballaLegendaria( int stock );
-    ~CaballaLegendaria( ) = default;
+    virtual ~CaballaLegendaria( ) = default;
 
     void aplicarEfecto( Personaje* personaje ) override;
     void mostrarInformacion( ) override;

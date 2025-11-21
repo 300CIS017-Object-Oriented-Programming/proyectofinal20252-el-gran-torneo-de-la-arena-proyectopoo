@@ -33,6 +33,12 @@ void CaballaLegendaria::aplicarEfecto( Personaje* personaje ) {
     cout << "  El aire se congela... el destino decide..." << endl;
     cout << "============================================" << endl;
 
+    /* Agrego Validacion: */
+    if ( this->objetivoEnemigo == nullptr) {
+        cout << "Error: No hay objetivo enemigo establecido." << endl;
+        return;
+    }
+
     if( calcularExito( ) ) {
         // EXITO: El enemigo muere instantaneamente
         cout << endl << "*** ¡EL DESTINO FAVORECE AL VALIENTE! ***" << endl;
