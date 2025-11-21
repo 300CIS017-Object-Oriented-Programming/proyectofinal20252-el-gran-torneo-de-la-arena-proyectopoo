@@ -6,8 +6,8 @@
 
 //Constructores y destructores:
 
-Mago::Mago( ) : Personaje( ) // Reutilizo el constructor de Personaje
-{
+Mago::Mago( ) : Personaje( ) {// Reutilizo el constructor de Personaje
+
     // Constructor por defecto:
     this -> rol = "Mago";
     this -> poderMagico = 30;
@@ -19,7 +19,7 @@ Mago::Mago( ) : Personaje( ) // Reutilizo el constructor de Personaje
 }
 
 Mago::Mago( string nombre, string bando, int nivel, int vida, int ataque, int defensa )
-          : Personaje( nombre, "Mago", bando, nivel, vida, ataque, defensa ) {// Reutilizo el
+          : Personaje( nombre, "Mago", bando, nivel, vida, ataque, defensa ) { // Reutilizo el
 // constructor con parametros de Mago.
     this -> poderMagico = 30;
     this -> factorIgnorarDefensa = 0.5;
@@ -75,7 +75,7 @@ void Mago::realizarAccion( Personaje * objetivo ) {
     // Temporalmente reducimos la defensa del objetivo :
     objetivo -> setDefensa( defensaReducida );
     cout << "El hechizo ignora " << ( this -> factorIgnorarDefensa * 100 ) <<
-        "% de la defensa enemiga !!!!!" << endl;
+            "% de la defensa enemiga !!!!!" << endl;
 
     // Aplicamoes el daño:
     objetivo -> recibirDanio( danioMagico );

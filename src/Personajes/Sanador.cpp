@@ -94,7 +94,7 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
         // aplica la curacion:
         objetivo -> setVida( nuevaVida );
         cout << objetivo -> getNombre( ) << " recupera " << curacion
-        << " puntos de vida. Vida actual: " << nuevaVida << "/" << vidaMaxima << endl;
+             << " puntos de vida. Vida actual: " << nuevaVida << "/" << vidaMaxima << endl;
     }
 
     //Si la curacion es 0% o menos (por si acaso):

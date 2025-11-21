@@ -7,7 +7,7 @@
 // Constructores y destrucotres:
 
 
-Guerrero::Guerrero( ): Personaje( ) { //Constructor por defecto, llama al constructor de Personaje.
+Guerrero::Guerrero( ) : Personaje( ) { //Constructor por defecto, llama al constructor de Personaje.
     this -> rol = "Guerrero";
     this -> probabilidadCritico = 0.25; // 25% de probabilidad de critico.
     // Los guerreros tienen mas vida y defensa.
@@ -47,7 +47,7 @@ void Guerrero::realizarAccion( Personaje* objetivo ) {
     // El Guerrero con posibilidad de critico
 
 
-    if( !this -> isEstaVivo) { // los muertos no atacan.
+    if( !this -> isEstaVivo ) { // los muertos no atacan.
         cout << this -> nombre << " esta derrotado y no puede atacar." << endl;
         return;
     }
