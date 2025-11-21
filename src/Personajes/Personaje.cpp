@@ -4,7 +4,7 @@
 
 #include "Personaje.h"
 #include "../Guild/Guild.h"
-#include "../Objetos/ObjetoAsignado.h" // <- leer el comentario en Personaje.h, es posible que tengamos que dejar esto
+#include "../Inventario/ObjetoAsignado.h" // <- leer el comentario en Personaje.h, es posible que tengamos que dejar esto
 // dado a que es posible a que haya una dependencia circular. incluir esto aqui nos permite tratar con ella, confirmar.
 // Si se mete los objetos a un directorio dentro del prcyecto de Clion seria:
 // "(nombre del directorio)/ObjetoAsignado.h" .
