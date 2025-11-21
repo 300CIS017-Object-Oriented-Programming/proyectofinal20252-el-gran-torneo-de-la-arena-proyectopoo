@@ -31,3 +31,7 @@ string ObjetoMagico::getDescription( ) {
 int ObjetoMagico::getStock( ) {
     return this -> stockDisponible;
 }
+
+void ObjetoMagico::setStock( int stock ) {
+    this -> stockDisponible = stock;
+}

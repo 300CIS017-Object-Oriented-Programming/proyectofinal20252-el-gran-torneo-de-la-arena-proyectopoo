@@ -22,13 +22,13 @@ class Inventario {
         void cargarObjetosIniciales( );
         void crearObjeto( ObjetoMagico* objeto, int stockInicial );
         void listarObjetos( );
-        void consultarObjeto( string nombre );
-        void actualizarStock( string nombre, int nuevoStock );
-        void eliminarObjeto( string nombre );
-        void asignarObjetoAPersonaje( string nombre, Personaje* personaje );
+        void consultarObjeto( string objeto );
+        void actualizarStock( string objeto, int nuevoStock );
+        void eliminarObjeto( string objeto );
+        void asignarObjetoAPersonaje( string objeto, Personaje* personaje );
         void retirarObjetoDePersonaje( Personaje* personaje, int indice );
-        ObjetoMagico* buscarObjeto( string nombre );
-        int getStock( string nombre );
+        ObjetoMagico* buscarObjeto( string objeto );
+        int getStock( string objeto );
         int getStockTotal( );
 
 };

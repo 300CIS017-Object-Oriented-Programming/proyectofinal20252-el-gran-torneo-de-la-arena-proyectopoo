@@ -27,6 +27,9 @@ class ObjetoMagico {
         string getDescription( );
         int getStock( );
 
+        /* Se agrega Set Stock para manejarlo de manera mas eficiente en Inventario */
+        void setStock( int stock );
+
         // Destrcuctor.
         virtual ~ObjetoMagico( ) = default;/*ya que la clase ObjetoMagico no tiene memoria dinamica
         propia ni punteros que liberar.  */

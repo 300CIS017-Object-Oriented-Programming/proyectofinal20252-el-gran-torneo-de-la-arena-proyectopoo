@@ -47,7 +47,7 @@ void Guild::cargarPersonajesIniciales( ) {
     // Carga un conjunto de peronajes para la Guild.
     // Esto permite que el juego funciones sin que el usuario tenga que crear personajes.
 
-    cout << endl << "========================================" << endl;
+    cout << endl << "===========================================" << endl;
     cout << "Cargando personajes iniciales para  " << this -> nombreGuild << "...." << endl;
 
     //Creamos 3 personajes iniciales: 1 de cada tipo:
@@ -68,7 +68,7 @@ void Guild::cargarPersonajesIniciales( ) {
     personajes[ heroe3 -> getNombre( ) ] = heroe3;
 
     cout << "Personajes iniciales cargados exitosamente." << endl;
-    cout << "========================================" << endl;
+    cout << "===========================================" << endl;
 
 }
 

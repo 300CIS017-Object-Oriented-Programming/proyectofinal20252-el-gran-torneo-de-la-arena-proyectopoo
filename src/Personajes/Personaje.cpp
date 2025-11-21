@@ -153,11 +153,19 @@ void Personaje::equiparObjeto( ObjetoAsignado* objeto) {
 
     if( isPuedeEquiparObjeto( ) ) {
         this -> objetosEquipados.push_back( objeto );
-        cout << this -> nombre << " ha equipado un objeto." << endl;// <- Pendiente: cuando tengamos
-        //implementado los objetos y objetos asignados hay que agregarle al cout que le de el nombre
+        cout << this -> nombre << " ha equipado el objeto " << objeto -> getNombre( ) << endl;
     }
     else {
         cout << this  -> nombre << "no puede equipar mas objetos magicos (maximo de 2). " << endl;
+    }
+}
+
+/* Implementacion del metodo retirarObjeto que no estaba */
+void Personaje::retirarObjeto( int indice ) {
+    if( indice >= 0 && indice < this -> objetosEquipados.size( ) ) {
+        this -> objetosEquipados.erase( this -> objetosEquipados.begin( ) + indice );
+    } else {
+        cout << "Indice seleccionado no valido!" << endl;
     }
 }
 
