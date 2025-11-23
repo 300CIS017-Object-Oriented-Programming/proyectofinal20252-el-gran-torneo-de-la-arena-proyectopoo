@@ -6,6 +6,11 @@ Nota (Pipe): en este caso no son necesarios, ya que no hay dependencia circular.
 
 using std::pair;
 
+Inventario::Inventario() {
+    cout << "===== INVENTARIO DEL TORNEO CREADO =====" << endl;
+    // El unordered_map se inicializa automáticamente vacío
+}
+
 Inventario::~Inventario() {
     //Nota: Imlemente el destructor de Inventario (Pipe).
     cout << endl << "========================================" << endl;

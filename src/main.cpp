@@ -2,12 +2,19 @@
 #include <ctime>
 #include "Torneo/Torneo.h" //Para poder acceder al directorio donde estan los archivos.
 
+#include <windows.h> // Error en Linux/Mac
+
 using std::cout;
 using std::cin;
 
 int main( ) {
     //Inicializa la semilla aleatoria para los numero aleatorios .
     //Es necesario para los golpes criticos, curaciones variables, etc.
+    // Configurar consola para UTF-8 (solo Windows)
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
     srand( time( 0 ) );
 
     cout << "========================================" << endl;
@@ -24,15 +31,15 @@ int main( ) {
     cout << endl;
     cout << "╔══════════════════════════════════════════════════════════════════╗" << endl;
     cout << "║                                                                  ║" << endl;
-    cout << "║    ██╗  ██╗   ██╗██████╗ ███████╗███╗   ██╗██╗  ██╗ ██████╗     ║" << endl;
-    cout << "║    ██║  ╚██╗ ██╔╝██╔══██╗██╔════╝████╗  ██║██║  ██║██╔═══██╗    ║" << endl;
-    cout << "║    ██║   ╚████╔╝ ██████╔╝█████╗  ██╔██╗ ██║███████║██║   ██║    ║" << endl;
-    cout << "║    ██║    ╚██╔╝  ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║   ██║    ║" << endl;
-    cout << "║    ███████╗██║   ██║  ██║███████╗██║ ╚████║██║  ██║╚██████╔╝    ║" << endl;
-    cout << "║    ╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝     ║" << endl;
+    cout << "║    ██╗  ██╗   ██╗██████╗ ███████╗███╗   ██╗██╗  ██╗ ██████╗      ║" << endl;
+    cout << "║    ██║  ╚██╗ ██╔╝██╔══██╗██╔════╝████╗  ██║██║  ██║██╔═══██╗     ║" << endl;
+    cout << "║    ██║   ╚████╔╝ ██████╔╝█████╗  ██╔██╗ ██║███████║██║   ██║     ║" << endl;
+    cout << "║    ██║    ╚██╔╝  ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║   ██║     ║" << endl;
+    cout << "║    ███████╗██║   ██║  ██║███████╗██║ ╚████║██║  ██║╚██████╔╝     ║" << endl;
+    cout << "║    ╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝      ║" << endl;
     cout << "║                                                                  ║" << endl;
-    cout << "║              ⚔  EL GRAN TORNEO DE LA ARENA  ⚔                   ║" << endl;
-    cout << "║         En Lyrenhold, donde los heroes escriben leyendas        ║" << endl;
+    cout << "║              ⚔  EL GRAN TORNEO DE LA ARENA  ⚔                    ║" << endl;
+    cout << "║         En Lyrenhold, donde los heroes escriben leyendas         ║" << endl;
     cout << "║                                                                  ║" << endl;
     cout << "╚══════════════════════════════════════════════════════════════════╝" << endl;
     cout << endl;
