@@ -16,8 +16,8 @@ add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo src/mai
         src/Guild/Guild.h
         src/Torneo/Torneo.cpp
         src/Torneo/Torneo.h
-        src/Objetos/ObjetoAsignado.h
-        src/Objetos/ObjetoAsignado.cpp
+        src/Inventario/Inventario.h
+        src/Inventario/Inventario.cpp
         src/Objetos/ObjetoMagico.h
         src/Objetos/ObjetoMagico.cpp
         src/Objetos/PocionVida.h

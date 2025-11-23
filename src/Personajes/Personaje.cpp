@@ -4,10 +4,7 @@
 
 #include "Personaje.h"
 #include "../Guild/Guild.h"
-#include "../Inventario/ObjetoAsignado.h" // <- leer el comentario en Personaje.h, es posible que tengamos que dejar esto
-// dado a que es posible a que haya una dependencia circular. incluir esto aqui nos permite tratar con ella, confirmar.
-// Si se mete los objetos a un directorio dentro del prcyecto de Clion seria:
-// "(nombre del directorio)/ObjetoAsignado.h" .
+#include "../Inventario/ObjetoAsignado.h" // <- Para manejar la dependencia circular. (Pendiente hecho: por Angel).
 
 
 Personaje::Personaje( ) {
@@ -38,9 +35,10 @@ Personaje::Personaje( string nombre, string rol, string bando, int nivel, int vi
 
 Personaje::~Personaje( ) {
     //Desctructor: Se debe liberar memoria de los objetos equipados
-    //Pediente-> Cuando implementemos ObjetoAsignado, liberar cada objeto.
-    //Por ahora solo limpiamos el vector
-
+    //Pendiente Realizado.
+    for (int i = 0; i < this-> objetosEquipados.size(); i ++) {
+        delete objetosEquipados[i];
+    }
     this -> objetosEquipados.clear( );
 }
 
@@ -153,11 +151,19 @@ void Personaje::equiparObjeto( ObjetoAsignado* objeto) {
 
     if( isPuedeEquiparObjeto( ) ) {
         this -> objetosEquipados.push_back( objeto );
-        cout << this -> nombre << " ha equipado un objeto." << endl;// <- Pendiente: cuando tengamos
-        //implementado los objetos y objetos asignados hay que agregarle al cout que le de el nombre
+        cout << this -> nombre << " ha equipado el objeto " << objeto -> getNombre( ) << endl;
     }
     else {
         cout << this  -> nombre << "no puede equipar mas objetos magicos (maximo de 2). " << endl;
+    }
+}
+
+/* Implementacion del metodo retirarObjeto que no estaba */
+void Personaje::retirarObjeto( int indice ) {
+    if( indice >= 0 && indice < this -> objetosEquipados.size( ) ) {
+        this -> objetosEquipados.erase( this -> objetosEquipados.begin( ) + indice );
+    } else {
+        cout << "Indice seleccionado no valido!" << endl;
     }
 }
 
@@ -183,3 +189,29 @@ ObjetoAsignado* Personaje::getObjetoEquipado( int indice ) {
     return nullptr; // Retorna nulltpr si el indice es invalido.
 }
 
+/*Metodo para mostrar la informacion de los objetos equipados por el personaje: */
+
+void Personaje::mostrarObjetosEquipados() {
+
+    if (this->objetosEquipados.empty()) {
+        cout << "[Ningun Objeto equipado]" << endl;
+        return;
+    }
+
+    for (int i = 0; i < this-> objetosEquipados.size(); i++) {
+        ObjetoAsignado * objeto = this->objetosEquipados[ i ];
+
+        //Muestra el nombre y el estado del obejto:
+        cout << "   [" << (i + 1) << "]  " << objeto->getNombre();
+
+        if ( objeto-> estaUsado( ) ) {
+            cout << "(Usado).";
+        }
+        else {
+            cout << "(Disponible).";
+        }
+
+        cout << endl;
+    }
+
+}

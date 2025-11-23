@@ -21,32 +21,32 @@ using std::endl;
 
 class ObjetoAsignado {
 
-private:
-    // Tipo de objeto mágico que representa (poción, amuleto, escudo, etc.).
-    ObjetoMagico* tipoObjeto;
+    private:
+        // Tipo de objeto mágico que representa (poción, amuleto, escudo, etc.).
+        ObjetoMagico* tipoObjeto;
 
-    // Indica si el objeto ya fue utilizado en el combate.
-    bool usado;
+        // Indica si el objeto ya fue utilizado en el combate.
+        bool usado;
 
-public:
-    // Constructores y destructores:
-    ObjetoAsignado(ObjetoMagico* tipo);
-    virtual ~ObjetoAsignado();
+    public:
+        // Constructores y destructores:
+        ObjetoAsignado( ObjetoMagico* tipo );
+        virtual ~ObjetoAsignado( );
 
-    // Aplica el efecto del objeto sobre el personaje (si no está usado).
-    void aplicarEfecto(Personaje* personaje);
+        // Aplica el efecto del objeto sobre el personaje (si no está usado).
+        void aplicarEfecto( Personaje* personaje );
 
-    // Marca el objeto como usado (una vez gastado en combate).
-    void marcarUsado();
+        // Marca el objeto como usado (una vez gastado en combate).
+        void marcarUsado( );
 
-    // Consulta si ya fue usado.
-    bool estaUsado() const;
+        // Consulta si ya fue usado.
+        bool estaUsado( );
 
-    // Devuelve el puntero al tipo de objeto mágico.
-    ObjetoMagico* getTipoObjeto() const;
+        // Devuelve el puntero al tipo de objeto mágico.
+        ObjetoMagico* getTipoObjeto( );
 
-    // Devuelve el nombre del objeto (delegado a ObjetoMagico).
-    string getNombre() const;
+        // Devuelve el nombre del objeto (delegado a ObjetoMagico).
+        string getNombre( );
 };
 
 #endif //PROYECTOFINAL20252_EL_GRAN_TORNEO_DE_LA_ARENA_PROYECTOPOO_OBJETOSASIGNADOS_H

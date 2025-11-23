@@ -7,7 +7,7 @@
 // Constructores y destrucotres:
 
 
-Guerrero::Guerrero( ): Personaje( ) { //Constructor por defecto, llama al constructor de Personaje.
+Guerrero::Guerrero( ) : Personaje( ) { //Constructor por defecto, llama al constructor de Personaje.
     this -> rol = "Guerrero";
     this -> probabilidadCritico = 0.25; // 25% de probabilidad de critico.
     // Los guerreros tienen mas vida y defensa.
@@ -47,7 +47,7 @@ void Guerrero::realizarAccion( Personaje* objetivo ) {
     // El Guerrero con posibilidad de critico
 
 
-    if( !this -> isEstaVivo) { // los muertos no atacan.
+    if( !this -> isEstaVivo ) { // los muertos no atacan.
         cout << this -> nombre << " esta derrotado y no puede atacar." << endl;
         return;
     }
@@ -94,10 +94,9 @@ void Guerrero::mostrarInformacion( ) {
     cout << "Probabilidad Critico: " << ( this -> probabilidadCritico * 100 ) << "%" << endl;
     cout << "Estado: " << ( this->isEstaVivo ? "Vivo" : "Derrotado (Con su creador)" ) << endl; //
     // Se coloca un condicional en el cout de arriba para que de el estado real del Guerrero.
-    cout << "Objetos equipados: " << this -> objetosEquipados.size( ) << "/2" << endl;
 
-    // -> Pendiente: Cuando ya este implementado los objetos magicos y objetos asignados, seria bueno que
-    // podamos mostrar cuales objetos tiene equipado por sus nombres.
+    /*Pendiente realizado: Aplicamos el metodo para mostrar los objetos equipados. */
+    mostrarObjetosEquipados();
 
     cout << "==========================================" << endl;
 }

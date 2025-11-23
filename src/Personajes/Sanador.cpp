@@ -94,7 +94,7 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
         // aplica la curacion:
         objetivo -> setVida( nuevaVida );
         cout << objetivo -> getNombre( ) << " recupera " << curacion
-        << " puntos de vida. Vida actual: " << nuevaVida << "/" << vidaMaxima << endl;
+             << " puntos de vida. Vida actual: " << nuevaVida << "/" << vidaMaxima << endl;
     }
 
     //Si la curacion es 0% o menos (por si acaso):
@@ -120,8 +120,9 @@ void Sanador::mostrarInformacion( ) {
     // Se coloca un condicional en el cout de arriba para que de el estado real del Mago.
 
     cout << "Objetos equipados: " << this -> objetosEquipados.size( ) << "/2" << endl;
-    // -> Pendiente: Cuando ya este implementado los objetos magicos y objetos asignados, seria bueno que
-    // podamos mostrar cuales objetos tiene equipado por sus nombres.
+
+    /*Pendiente realizado: Aplicamos el metodo para mostrar los objetos equipados. */
+    mostrarObjetosEquipados();
 
     cout << "=========================================" << endl;
 }

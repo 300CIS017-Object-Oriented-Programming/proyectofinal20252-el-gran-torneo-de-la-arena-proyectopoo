@@ -8,9 +8,19 @@ Revivir::Revivir( int stock ) : ObjetoMagico( ) {
     this -> nombre = "Pocion de Resurrecion";
     this -> descripcion = "Un objeto que revive un compañero caido en combate. El personaje que sea revivido solo lo hara con el 50% de su vida maxima";
     this -> stockDisponible = stock;
+
+    /*Agrego inicializacion Explicita:*/
+    this ->aliado =nullptr;
 }
 
 void Revivir::aplicarEfecto( Personaje* personaje ) {
+
+    /*Verificamos que haya un aliado establecido.*/
+    if (this->aliado == nullptr) {
+        cout << "Error: No se ha establecido un aliado para revivir." << endl;
+        return;
+    }
+
     /* Verificamos que el aliado efectivamente este muerto */
     if( !aliado -> getIsEstaVivo( ) ) {
         cout << "¡" << personaje -> getNombre( ) << " ha decidido revivir a su compañero" << 

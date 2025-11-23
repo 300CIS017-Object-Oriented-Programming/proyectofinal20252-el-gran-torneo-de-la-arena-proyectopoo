@@ -20,6 +20,22 @@ int main( ) {
     //Inicializa todo el sistema (otra vez se puso en verde)
     torneo.inicializarTorneo( );
 
+    //Nota: cuando implementen el pacto sangriento verifiquen que esto compile.
+    cout << endl;
+    cout << "╔══════════════════════════════════════════════════════════════════╗" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "║    ██╗  ██╗   ██╗██████╗ ███████╗███╗   ██╗██╗  ██╗ ██████╗     ║" << endl;
+    cout << "║    ██║  ╚██╗ ██╔╝██╔══██╗██╔════╝████╗  ██║██║  ██║██╔═══██╗    ║" << endl;
+    cout << "║    ██║   ╚████╔╝ ██████╔╝█████╗  ██╔██╗ ██║███████║██║   ██║    ║" << endl;
+    cout << "║    ██║    ╚██╔╝  ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║   ██║    ║" << endl;
+    cout << "║    ███████╗██║   ██║  ██║███████╗██║ ╚████║██║  ██║╚██████╔╝    ║" << endl;
+    cout << "║    ╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝     ║" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "║              ⚔  EL GRAN TORNEO DE LA ARENA  ⚔                   ║" << endl;
+    cout << "║         En Lyrenhold, donde los heroes escriben leyendas        ║" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "╚══════════════════════════════════════════════════════════════════╝" << endl;
+    cout << endl;
     //Ejecuta el menu principal:
     torneo.menuPrincipal( );
 

@@ -9,12 +9,14 @@
 Torneo::Torneo( ) { //Constructor por defecto:
     this -> nombreTorneo = "Gran Torneo de Lyrenhold";
     this -> guildJugador = nullptr;
+    this-> inventario = nullptr; //Agregar Inicializacion.
 }
 
 Torneo::Torneo( string nombre ) {
     //Constructor parametrizado:
     this -> nombreTorneo = nombre;
     this -> guildJugador = nullptr;
+    this-> inventario = nullptr;//Agregar Inicializacion.
 }
 
 Torneo::~Torneo( ) {
@@ -25,10 +27,24 @@ Torneo::~Torneo( ) {
     // Libera las Guilds enemigas:
     cout << "Liberando " << this -> guildsEnemigas.size( ) << " Guilds enemigas..." << endl;
     for( int i = 0; i < this -> guildsEnemigas.size( ); i++ ) {
-        delete guildsEnemigas[ i ];
+        delete this->guildsEnemigas[ i ];
+    }
+    guildsEnemigas.clear( );
+
+    //Libera el inventario:
+    if (this->inventario != nullptr) {
+        cout << "Liberando Inventario...." << endl;
+        delete this->inventario;
+        this->inventario = nullptr;
     }
 
-    guildsEnemigas.clear( );
+    //Libera la guild del jugador:
+    if (this->guildJugador != nullptr) {
+        cout << "Liberando la Guild del Jugador....." << endl;
+        delete this-> guildJugador;
+        this->guildJugador = nullptr;
+    }
+
     cout << "Torneo finalizado." << endl;
     cout << "=======================================" << endl;
 }
@@ -49,8 +65,8 @@ void Torneo::inicializarTorneo( ) {
     //Inicializa las Guilds
     inicializarGuilds( );
 
-    // Pendiente: Cuando implementemos Inventario, descomentar:
-    //inicializarInventario();
+    // Pendiente (Realizado): Inicializa la Guilds.
+    inicializarInventario();
 
     cout << "El torneo esta listo para comenzar!!!!!" << endl;
     cout << "==========================================" << endl;
@@ -99,6 +115,19 @@ void Torneo::inicializarGuilds( ) {
     cout << "=== Guilds inicializadas ===" << endl;
 }
 
+void Torneo::inicializarInventario() {
+
+    cout << endl << "=== Inicializando Inventario ===" << endl;
+
+    //Crear el inventario :
+    this->inventario = new Inventario();
+
+    //Usar el metodo de inicializacion de inventario. <- Pendiente de implementar:
+    this->inventario-> cargarObjetosIniciales();
+
+    cout << "=== Inventario inicializado ===" << endl;
+
+}
 
 // Metodos auxialiares privados:
 
@@ -276,7 +305,8 @@ void Torneo::mostrarGuildsRivales( ) {
         this -> guildsEnemigas[ i ] -> listarPersonajes( );
 
         //Mostramos estadisticas adiccionales:
-        personajesVivos = this -> guildsEnemigas[ i ] -> getPersonajesVivos( ).size( ); 
+        personajesVivos = this -> guildsEnemigas[ i ] -> getPersonajesVivos( ).size( ); /*
+        Verificar esto cuando lo corran*/
         personajesTotales = this -> guildsEnemigas[ i ] -> getCantidadPersonajes( );
         cout << " ##### Personajes activos: " << personajesVivos << "/" << personajesTotales << endl ;
     }
@@ -361,8 +391,7 @@ void Torneo:: menuPrincipal() {
                 break;
             }
             case 2: {
-                cout << "Funcionalidad pendiente de implementar." << endl;
-                cout << "Proxima fase: Gestion de inventario de objetos magicos." << endl;
+                gestionarInventario();
                 break;
             }
             case 3: {
@@ -387,4 +416,175 @@ void Torneo:: menuPrincipal() {
 
     }
     while( opcion != 0 );
+}
+
+//Metodo de Gestion del inventario:
+
+void Torneo::listarInventarioDetallado() {
+
+    //Para mostrar los detalles del inventario:
+
+    cout << endl << "=== INVENTARIO DE OBJETOS MAGICOS ===" << endl;
+
+    if ( this->inventario->getStockTotal( )  == 0) {
+        cout << "El inventario esta vacio. " << endl;
+        return;
+    }
+
+    this -> inventario -> listarObjetos();
+
+    cout << "Stock total disponible: " << this -> inventario -> getStockTotal( ) << endl;
+    cout << "=====================================" << endl;
+
+}
+
+void Torneo:: asignarObjetoHeroe() {
+    //Metodo que contiene la logica para asignar los objetos a los heroes:
+
+    string nombreHeroe;
+    string nombreObjeto;
+
+    cout << endl << "=== Asignar objeto a heroe ===" << endl;
+
+    //Mostrar el inventario disponible:
+
+    this -> inventario->listarObjetos();
+
+    cout << endl << "Ingrese el nombre del objeto: ";
+    getline( cin, nombreObjeto);
+
+    if (nombreObjeto.empty()) {
+        cout << " Error: Debe ingresar un nombre de objeto." << endl;
+        return;
+    }
+
+    //Verificamos que el objeto exista:
+
+    ObjetoMagico * objeto = this -> inventario -> buscarObjeto( nombreObjeto);
+
+    if ( objeto == nullptr) {
+        cout << "Error: No hay stock disponible de '" << nombreObjeto << "'. " <<endl;
+        return;
+    }
+
+    //Mostrar heroes disponibles:
+    cout << endl << "Heroes Disponibles: " << endl;
+    this-> guildJugador -> listarPersonajes();
+
+    cout << endl << "Ingrese el nombre del heroe: " ;
+    getline(cin, nombreHeroe);
+
+    if (nombreHeroe.empty()) {
+        cout << "Error: Debe ingresar un nombre de heroe." << endl;
+        return;
+    }
+
+    //Buscar el heroe:
+
+    Personaje * heroe = this -> guildJugador -> buscarPersonaje(nombreHeroe);
+
+    if ( heroe == nullptr) {
+        cout << "Error: No se encontro ningun heroe con el nombre '" << nombreHeroe << "'.";
+        return;
+    }
+
+    //Verificar que el Heroe puede equipar mas objetos:
+
+    if ( !heroe -> isPuedeEquiparObjeto( ) ) {
+        cout << "Error: " << nombreHeroe << " ya tiene el maximo de objetos equipados (2/2). " << endl;
+        return;
+    }
+
+    //Asignar el objeto:
+
+    this -> inventario ->asignarObjetoAPersonaje( nombreObjeto, heroe);
+
+    //Decrementar stock:
+    objeto->decrementarStock();
+
+    cout << "Objeto aignado exitosamente!!!!!!!!" << endl;
+    cout << "Stock restante de '" << nombreObjeto << "': " << objeto ->getStock() << endl;
+
+}
+
+void Torneo::buscarObjetoEspecifico() {
+    //Metodo auxiliar para buscar un objeto especifico.
+    string nombreObjeto;
+
+    cout << "Ingrese el nombre del objeto: ";
+    getline(cin, nombreObjeto);
+
+    if (nombreObjeto.empty()) {
+        cout << "Error: Debe de ingresar el nombre de un objeto." << endl;
+        return;
+    }
+
+    this-> inventario -> consultarObjeto(nombreObjeto);
+}
+
+void Torneo::listarObjetosEquipadosHeroes() {
+    //Metodo para ver los objetos equipados por los heroes:
+
+    char respuesta;
+
+    cout << endl << "=== Objetos equipados por heroes ===" << endl;
+    this -> guildJugador -> listarPersonajes( );
+    cout << "Desea ver los detalles de un heroe? (S/N)" << endl;
+
+    cin >> respuesta;
+    cin.ignore();
+
+    if ( respuesta == 's' || respuesta == 'S' ) {
+        consultarHeroeTorneo();
+    }
+
+}
+
+//Metodo de gestionar inventario:
+
+void Torneo::gestionarInventario() {
+    int opcion;
+
+    do {
+        cout << endl << "=== GESTION DE INVENTARIO ===" << endl;
+        cout << "Stock total: " << this->inventario->getStockTotal() << " Objetos." << endl;
+        cout << "1. Listar objetos disponible." << endl;
+        cout << "2. Consultar objeto especifico." << endl;
+        cout << "3. Asignar objeto a heroe." << endl;
+        cout << "4. Ver objetos equipado por heroes. " << endl;
+        cout << "0. Volvel al menu principal." << endl;
+        cout << "Selecciones una opcion: ";
+        cin >> opcion;
+        cin.ignore();
+
+
+
+        switch (opcion) {
+            case 1: {
+                listarInventarioDetallado();
+                break;
+            }
+            case 2: {
+                buscarObjetoEspecifico();
+                break;
+            }
+            case 3: {
+                asignarObjetoHeroe();
+                break;
+            }
+            case 4: {
+                listarObjetosEquipadosHeroes();
+                break;
+            }
+            case 0: {
+                cout << "Volviendo al menu principal......" << endl;
+                break;
+            }
+            default: {
+                cout << "Error: opcion invalida, intente de nuevo." << endl;
+                break;
+            }
+        }
+    }
+    while (opcion!=0);
 }

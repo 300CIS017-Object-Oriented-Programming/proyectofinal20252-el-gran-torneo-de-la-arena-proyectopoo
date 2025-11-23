@@ -11,11 +11,6 @@
 #include <iomanip>
 #include <string>
 
-//Otras Clases:
-//#include "ObjetoAsignado.h" //<- Pendiente hay que revisar esta parte para saber si se incluye aqui o en el .ccp
-// del personaje, ya que hay una posibilidad de que haya dependencia circular. de caso de que haya la declaracion de abajo
-// se mantiene, ya que tambien nos permite evitar la dependencia circular. Confirmar esto y se elimina el .h de aqui
-// y se pone en el .ccp .
 
 
 //Declaracion adelantada sirve para evitar tener que implementar la clase objetos magicos por el momento.
@@ -92,6 +87,10 @@ class Personaje {
         void retirarObjeto( int indice ); //Quita un objeto equipado.
         bool isPuedeEquiparObjeto( );// Verificamos si tiene espacio. (en este caso un maximo de dos).
         ObjetoAsignado* getObjetoEquipado( int indice ); //Objeto el objeto en la posicion (indice).
+
+        /*Metodo Para mostrar la informacion de los objetos equipado por el personaje. (Pipe)*/
+        void mostrarObjetosEquipados();
+
 
 };
 
