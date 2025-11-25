@@ -6,7 +6,7 @@
 #include "ObjetoAsignado.h"
 #include "../Personajes/Personaje.h"
 // Cuando implementes ObjetoMagico, asegúrate de que esta ruta sea correcta:
-#include "ObjetoMagico.h"
+#include "../Objetos/ObjetoMagico.h"
 // =======================
 // Constructores y destructor
 // =======================
