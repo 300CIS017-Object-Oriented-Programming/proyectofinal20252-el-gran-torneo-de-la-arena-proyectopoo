@@ -25,4 +25,8 @@ add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo src/mai
         src/Objetos/CaballaLegendaria.h
         src/Objetos/CaballaLegendaria.cpp
         src/Objetos/PactoSangriento.h
-        src/Objetos/PactoSangriento.cpp)
+        src/Objetos/PactoSangriento.cpp
+        src/Personajes/HechiceroOscuro.cpp
+        src/Personajes/HechiceroOscuro.h
+        src/Personajes/Paladin.h
+        src/Personajes/Paladin.cpp)
