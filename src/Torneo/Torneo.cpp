@@ -10,6 +10,7 @@ Torneo::Torneo( ) { //Constructor por defecto:
     this -> nombreTorneo = "Gran Torneo de Lyrenhold";
     this -> guildJugador = nullptr;
     this-> inventario = nullptr; //Agregar Inicializacion.
+    this-> arena = new Arena();
 }
 
 Torneo::Torneo( string nombre ) {
@@ -44,6 +45,9 @@ Torneo::~Torneo( ) {
         delete this-> guildJugador;
         this->guildJugador = nullptr;
     }
+
+    cout << "Liberando la Arena del Torneo....." << endl;
+    delete this -> arena;
 
     cout << "Torneo finalizado." << endl;
     cout << "=======================================" << endl;
@@ -127,6 +131,59 @@ void Torneo::inicializarInventario() {
 
     cout << "=== Inventario inicializado ===" << endl;
 
+}
+
+
+void Torneo::iniciarArena() {
+
+    //Verifica que haya heroes vivos antes de iniciar:
+
+    vector<Personaje*> heroesVivos = this->guildJugador->getPersonajesVivos();
+
+    if ( heroesVivos.empty() ) {
+        cout << "No tienes heroes vivos para combatir!!!" << endl;
+        return;
+    }
+
+    //Seleccionar una Guild enemiga para combatir:
+    cout << endl << "=== SELECCIONAR OPONENTE ===" << endl;
+    mostrarGuildsRivales();
+
+    cout << "Seleccione la guild enemiga (1-" << this->guildsEnemigas.size() << "): " ;
+    int seleccion;
+    cin >> seleccion;
+
+    if ( seleccion < 1 || seleccion > this -> guildsEnemigas.size() ) {
+
+        cout << "Seleccion invalida." << endl;
+        return;
+    }
+
+    Guild * guildEnemiga = this -> guildsEnemigas[ seleccion - 1 ];
+    vector <Personaje*> enemigosVivos = guildEnemiga ->getPersonajesVivos();
+
+    if ( enemigosVivos.empty() ) {
+        cout << "La Guild " << guildEnemiga -> getNombreGuild() << " ya fue derrotada!!!!" << endl;
+        return;
+    }
+
+    //Pasamos el inventario a la Arena para que pueda procesar objetos:
+    this-> arena -> setInventario(this-> inventario);
+
+    //iniciar Combate:
+
+    this-> arena -> iniciarCombate(heroesVivos, enemigosVivos );
+
+    //Bucle principal del combate:
+
+    while ( this -> arena -> verificarFinCombate() ) {
+        this-> arena -> ejecutarTurno();
+    }
+
+    //Mostrar Resultados:
+
+    this -> arena -> mostrarResumenFinal();
+    this -> arena -> procesarObjetosPostCombate();
 }
 
 // Metodos auxialiares privados:
@@ -377,8 +434,8 @@ void Torneo:: menuPrincipal() {
         cout << "     " << this -> nombreTorneo << endl;
         cout << "========================================" << endl;
         cout << "1, Gestionar Guild." << endl;
-        cout << "2. Gestionar inventario (pediente). " << endl;
-        cout << "3. Iniciar Arena (pendiente)." << endl;
+        cout << "2. Gestionar inventario . " << endl;
+        cout << "3. Iniciar Arena (combates)." << endl;
         cout << "4. Ver Guilds enemigas." << endl;
         cout << "0. Salir del torneo." << endl;
         cout << "Seleccione una opcion: ";
@@ -395,8 +452,7 @@ void Torneo:: menuPrincipal() {
                 break;
             }
             case 3: {
-                cout << "Funcionalidad pendiente de implementar." << endl;
-                cout << "Proxima fase: Sistema de combate en la Arena." << endl;
+                iniciarArena();
                 break;
             }
             case 4: {

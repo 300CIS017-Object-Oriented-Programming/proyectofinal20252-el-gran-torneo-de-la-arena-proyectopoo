@@ -10,7 +10,7 @@
 
 //->Pendiente: Cuando implementemos Inventario y Arena, descomentar:
 #include "../Inventario/Inventario.h" //<-Nota: Implementado (Por Angel).
-//#include "../Arena/Arena.h"
+#include "../Arena/Arena.h"
 
 //Librearias:
 
@@ -43,6 +43,11 @@ class Torneo {
          Inventario * inventario; // Inventario global de objetos magicos.<-Nota: Implementado (Por Angel).
         // Arena* arena //Sistema de combate.
 
+        //Ya agregamos la Arena:
+
+        Arena * arena; //Seccion de combate.
+
+
         //Metodos privados auxiliares para organizar el codigo:
         void crearNuevoHeroe( ); // Logica para la creacion de heroes.
         void consultarHeroeTorneo( ); // Logica para la consulta.
@@ -65,7 +70,9 @@ class Torneo {
 
         void inicializarTorneo( ); // Configura todo el torneo (Por alguna razon todo lo escribo aqui queda en verde)
         void inicializarGuilds( ); // Crea la Guild del jugador y enemigas.
-    void inicializarInventario(); // Carga objetos magicos iniciales. (Nota: aun esta vacio.)
+        void inicializarInventario(); // Carga objetos magicos iniciales. (Nota: aun esta vacio.)
+
+        void iniciarArena();//Inicia el sistema de Combate.
 
 
         // Metodos de gestion (menus):
