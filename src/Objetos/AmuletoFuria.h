@@ -13,7 +13,7 @@ class AmuletoFuria : public ObjetoMagico {
         int calcularEfecto( );
     public:
         AmuletoFuria( int stock );
-        virtual virtual ~AmuletoFuria( ) = default;
+        virtual ~AmuletoFuria( ) = default;
         void aplicarEfecto( Personaje* personaje ) override;
         void mostrarInformacion( ) override;
 

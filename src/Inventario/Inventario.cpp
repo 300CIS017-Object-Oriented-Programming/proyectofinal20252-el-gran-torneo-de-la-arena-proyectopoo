@@ -95,6 +95,30 @@ void Inventario::asignarObjetoAPersonaje( string objeto, Personaje* personaje ) 
 
 void Inventario::retirarObjetoDePersonaje( Personaje* personaje, int indice ) {
     ObjetoAsignado* objeto = personaje -> getObjetoEquipado( indice );
+
+    //Validacion:
+    if ( objeto == nullptr ) {
+        cout << "No hay ningun objeto equipado en ese slot." << endl;
+        return;
+    }
+
+    //Si el objeto no fue usado, devolver el stock al inventario
+    if (!objeto->estaUsado()) {
+        string nombreObjeto = objeto->getNombre();
+        ObjetoMagico * tipoObjeto = buscarObjeto(nombreObjeto);
+
+        //Otra validacion:
+        if (tipoObjeto != nullptr) {
+            tipoObjeto->incrementarStock();
+            cout << "Stock de '" << nombreObjeto <<"' devuelto al inventario." << endl;
+        }
+        else {
+            cout << "EL objeto ya fue usado y no puede devolverse al Stock. " << endl;
+        }
+        //Retirarn el objeto del persoaje
+        personaje->retirarObjeto(indice);
+        cout << "Objeto retirado exitosamente del personaje." << endl;
+    }
 }
 
 ObjetoMagico* Inventario::buscarObjeto( string objeto ) {

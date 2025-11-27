@@ -194,7 +194,10 @@ vector<Personaje*> Guild::getPersonajesVivos( ) {
         } else {
             /* Aprovechamos este metodo para agregar los personajes que vayan cayendo en combate al map
                de personajes muertos */
-            matarPersonaje( par.second );
+            /*Mover automaticamente a  muertos si no esta ya. Para verificacion.*/
+           if (this->muertos.find(par.first)== this->muertos.end()) {
+               matarPersonaje( par.second );
+           }
         }
     }
     return vivos;
@@ -204,4 +207,14 @@ int Guild::getCantidadPersonajes( ) {
     // Retorna el numero total de personajes en la Guild
 
     return this -> personajes.size( ); // Tambine retorna el numero total, no solo los vivos.
+}
+
+vector<Personaje * > Guild::getPersonajesMuertos() {
+    //Retorna el vector con todos los personajes muertos:
+    vector<Personaje*> fallecidos;
+
+    for (pair<string, Personaje *> par: this->muertos) {
+        fallecidos.push_back(par.second); /* Hacemos push_back al vector de perosnajes muertos.*/
+    }
+    return fallecidos;
 }
