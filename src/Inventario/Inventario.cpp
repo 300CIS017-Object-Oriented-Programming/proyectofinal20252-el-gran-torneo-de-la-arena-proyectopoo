@@ -112,13 +112,16 @@ void Inventario::retirarObjetoDePersonaje( Personaje* personaje, int indice ) {
             tipoObjeto->incrementarStock();
             cout << "Stock de '" << nombreObjeto <<"' devuelto al inventario." << endl;
         }
-        else {
-            cout << "EL objeto ya fue usado y no puede devolverse al Stock. " << endl;
-        }
-        //Retirarn el objeto del persoaje
+    }
+    else {
+        // El objeto ya fue usado, no devolver stock
+        cout << "EL objeto ya fue usado y no puede devolverse al Stock. " << endl;
+    }
+
+        //Retirarn el objeto del persoaje (este usado o no).
         personaje->retirarObjeto(indice);
         cout << "Objeto retirado exitosamente del personaje." << endl;
-    }
+
 }
 
 ObjetoMagico* Inventario::buscarObjeto( string objeto ) {
