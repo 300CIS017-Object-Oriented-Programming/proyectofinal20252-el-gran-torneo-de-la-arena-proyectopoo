@@ -75,7 +75,7 @@ void Paladin::realizarAccion( Personaje* objetivo ) {
     int danioDivino = calcularDanioDivino( );
 
     cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║  ⚔️ JUSTICIA DIVINA ⚔️                 ║" << endl;
+    cout << "║    JUSTICIA DIVINA                   ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
     cout << this -> nombre << " invoca el poder de la luz sagrada!" << endl;
     cout << "Un destello divino ilumina su arma mientras ataca a "
@@ -115,7 +115,7 @@ void Paladin::protegerAliado( Personaje* aliado ) {
     }
 
     cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║  🛡️ ESCUDO PROTECTOR 🛡️               ║" << endl;
+    cout << "║   ESCUDO PROTECTOR                ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
     cout << this -> nombre << " se interpone para proteger a "
          << aliado -> getNombre( ) << "!" << endl;
@@ -162,7 +162,7 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
     }
 
     cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║  ✨ BENDICIÓN DIVINA ✨                ║" << endl;
+    cout << "║   BENDICIÓN DIVINA                 ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
     cout << this -> nombre << " canaliza el poder sagrado hacia "
          << aliado -> getNombre( ) << "!" << endl;
@@ -182,7 +182,7 @@ void Paladin::mostrarInformacion( ) {
     // Muestra información detallada del Paladín
 
     cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║     Información del Paladín            ║" << endl;
+    cout << "║     Informacion del Paladín            ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
 
     cout << "Nombre: " << this -> nombre << endl;
@@ -201,7 +201,7 @@ void Paladin::mostrarInformacion( ) {
     cout << endl << "Objetos equipados (" << this -> objetosEquipados.size( ) << "/2):" << endl;
     mostrarObjetosEquipados( );
 
-    cout << endl << "🛡️ Habilidades Especiales:" << endl;
+    cout << endl << "️ Habilidades Especiales:" << endl;
     cout << "  • Proteger Aliado: Intercepta ataques" << endl;
     cout << "  • Bendición Divina: Aumenta defensa aliada" << endl;
     cout << "  • Escudo Sagrado: Probabilidad de bloqueo total" << endl;
