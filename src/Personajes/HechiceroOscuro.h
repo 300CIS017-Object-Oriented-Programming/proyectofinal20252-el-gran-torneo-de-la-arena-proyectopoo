@@ -29,8 +29,11 @@ public:
 
     // Métodos sobrescritos de Personaje
     void realizarAccion( Personaje* objetivo ) override;
-    void realizarAccionAOE( Personaje* objetivo, vector<Personaje*> objetivosAdicionales );
-    void mostrarInformacion( ) override;
+    /*void realizarAccionAOE( Personaje* objetivo, vector<Personaje*> objetivosAdicionales ); <- Hasta que veamos bien
+     *como implementar el daño AOE, modifique el realizar accion del hechicero oscuro para si no tener que cambiar la
+     *estructura general del proyecto mas de los necesario. (Pipe)
+     */
+    void mostrarInformacion( ) override; //<- Cambia algunos simbolo que podrian causar errores de compilacion (Pipe).
 
     // Getters
     int getPoderOscuro( );

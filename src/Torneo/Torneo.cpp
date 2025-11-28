@@ -18,6 +18,7 @@ Torneo::Torneo( string nombre ) {
     this -> nombreTorneo = nombre;
     this -> guildJugador = nullptr;
     this-> inventario = nullptr;//Agregar Inicializacion.
+    this-> arena = new Arena();
 }
 
 Torneo::~Torneo( ) {
@@ -215,6 +216,8 @@ void Torneo::crearNuevoHeroe( ) {
     cout << "1. Guerrero." << endl;
     cout << "2. Mago." << endl;
     cout << "3. Sanador" << endl;
+    cout << "4. Paladin" << endl;
+    cout << "5. Hechicero Oscuro" << endl;
     cout << "Seleccione: ";
     cin >> tipoRol;
 
@@ -269,6 +272,42 @@ void Torneo::crearNuevoHeroe( ) {
             cout << "Defensa: ";
             cin >> defensa;
             nuevoHeroe = new Sanador ( nombre, "Jugador", nivel, vida, defensa);
+            break;
+        }
+
+        case 4: {
+            //Paladin;
+            cout << "Nivel: ";
+            cin >> nivel;
+
+            cout <<  "Vida: ";
+            cin >> vida;
+
+            cout << "Ataque: ";
+            cin >> ataque;
+
+            cout << "Defensa: ";
+            cin >> defensa;
+
+            nuevoHeroe = new Paladin (  nombre, "Jugador", nivel,  vida,  ataque, defensa );
+            break;
+        }
+        case 5: {
+            //Paladin;
+            cout << "Nivel: ";
+            cin >> nivel;
+
+            cout <<  "Vida: ";
+            cin >> vida;
+
+            cout << "Ataque: ";
+            cin >> ataque;
+
+            cout << "Defensa: ";
+            cin >> defensa;
+
+            nuevoHeroe = new HechiceroOscuro( nombre, "Jugador",  nivel, vida, ataque,  defensa );
+            break;
             break;
         }
         default: {

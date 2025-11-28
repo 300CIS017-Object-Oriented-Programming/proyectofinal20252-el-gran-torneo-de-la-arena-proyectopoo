@@ -58,11 +58,7 @@ void HechiceroOscuro::realizarAccion( Personaje* objetivo ) {
         return;
     }
 
-    if( this -> bando == objetivo -> getBando( ) ) {
-        cout << "¡Advertencia! Los hechizos oscuros dañan a todos, incluso aliados." << endl;
-        cout << "Usa realizarAccionAOE( ) para ataques de area." << endl;
-        return;
-    }
+    //Quitamos la validacion de Bando del hechicero Oscuro.
 
     if( !objetivo -> getIsEstaVivo( ) ) {
         cout << "El objetivo ya esta derrotado." << endl;
@@ -72,19 +68,53 @@ void HechiceroOscuro::realizarAccion( Personaje* objetivo ) {
     // Calcular daño oscuro
     int danioOscuro = calcularDanioOscuro( );
 
-    cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║  ⚫ MAGIA OSCURA DESATADA ⚫           ║" << endl;
-    cout << "╚════════════════════════════════════════╝" << endl;
-    cout << this -> nombre << " invoca un hechizo de oscuridad total!" << endl;
-    cout << "La energía corrupta envuelve a " << objetivo -> getNombre( ) << "..." << endl;
+    //El costo de la magia Oscura, pierde 10% de su vida maxima
 
-    // Aplicar daño al objetivo principal
-    objetivo -> recibirDanio( danioOscuro );
+    int costoVida = this-> vidaMaxima/10 ; //10% de la vida maxima
 
-    cout << "¡Daño oscuro infligido: " << danioOscuro << " puntos!" << endl;
-    cout << "═══════════════════════════════════════════" << endl;
+    cout << endl << "============================================" << endl;
+    cout << "          MAGIA OSCURA DESATADA" << endl;
+    cout << "============================================" << endl;
+    cout << this -> nombre << " Canaliza energia Oscura...." << endl;
+    cout << "El poder corrompe su propia esencia!!!" << endl;
+    cout << this->nombre << "Sacrifica " << costoVida << " Puntos de vida" << endl;
+
+
+    //Aplicar el costo de vida al hechicero:
+
+    this->vida -= costoVida;
+    cout << "Vida restante de " << this->nombre << ": " << this->vida << "/" << this->vidaMaxima << endl;
+
+
+    //Verificamos si el hechicero muere por su propio poder:
+    if (this-> vida <=0 ) {
+        this->vida = 0;
+        this->isEstaVivo = false;
+        cout << endl << "La Magia Oscura ha consumido a " << this->nombre <<"!!!!" << endl;
+        cout << this->nombre << " Ha sido derrotado por su propio poder !!! " << endl;
+        cout << "============================================" << endl;
+        return; //Muere antes de atacar.
+    }
+
+    cout << endl;
+
+    //Advertencia si ataca aliado (pues si lo permite):
+    if ( this-> bando == objetivo->getBando()) {
+        cout << "ADVERTENCIA: La oscuridad no distingue amigos de enemigos!!!" << endl;
+        cout << this->nombre << " ataca a su aliado " << objetivo->getNombre() << "!!!!!" << endl;
+    }
+    else {
+        cout << this->nombre << " Lanza un HECHIZO OSCURO contra: " << objetivo << objetivo->getNombre() << "!!!!" <<endl;
+    }
+
+    objetivo-> recibirDanio(danioOscuro);
+
+    cout << "Danio oscuro infligido: " << danioOscuro << " puntos!!!" << endl;
+    cout << "============================================" << endl;
+
 }
 
+/*
 void HechiceroOscuro::realizarAccionAOE( Personaje* objetivoPrincipal, vector<Personaje*> objetivosAdicionales ) {
     // Ataque de área que daña a múltiples objetivos (enemigos Y aliados)
 
@@ -148,12 +178,14 @@ void HechiceroOscuro::realizarAccionAOE( Personaje* objetivoPrincipal, vector<Pe
     cout << "═══════════════════════════════════════════" << endl;
 }
 
+*/
+
 void HechiceroOscuro::mostrarInformacion( ) {
     // Muestra información detallada del Hechicero Oscuro
 
-    cout << endl << "╔════════════════════════════════════════╗" << endl;
-    cout << "║   Información del Hechicero Oscuro     ║" << endl;
-    cout << "╚════════════════════════════════════════╝" << endl;
+    cout << endl << "=======================================" << endl;
+    cout << "#   Información del Hechicero Oscuro     #" << endl;
+    cout << "==========================================" << endl;
 
     cout << "Nombre: " << this -> nombre << endl;
     cout << "Bando: " << this -> bando << endl;
@@ -170,9 +202,9 @@ void HechiceroOscuro::mostrarInformacion( ) {
     cout << endl << "Objetos equipados (" << this -> objetosEquipados.size( ) << "/2):" << endl;
     mostrarObjetosEquipados( );
 
-    cout << endl << "⚠ ADVERTENCIA: Los hechizos oscuros dañan" << endl;
+    cout << endl << "ADVERTENCIA: Los hechizos oscuros dañan" << endl;
     cout << "tanto a enemigos como a aliados cercanos." << endl;
-    cout << "════════════════════════════════════════════" << endl;
+    cout << "==========================================" << endl;
 }
 
 // Getters

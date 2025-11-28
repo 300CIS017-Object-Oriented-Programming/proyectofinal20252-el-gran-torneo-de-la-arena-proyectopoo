@@ -11,6 +11,8 @@
 # include "../Personajes/Guerrero.h"
 # include "../Personajes/Mago.h"
 # include "../Personajes/Sanador.h"
+# include "../Personajes/Paladin.h"
+# include "../Personajes/HechiceroOscuro.h"
 
 //Librerias:
 #include <vector>
