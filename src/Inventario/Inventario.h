@@ -8,6 +8,14 @@
 #include "../Personajes/Personaje.h"
 #include "../Objetos/ObjetoMagico.h"
 
+// Agregar los objetos específicos:
+#include "../Objetos/PocionVida.h"
+#include "../Objetos/AmuletoFuria.h"
+#include "../Objetos/EscudoBendito.h"
+#include "../Objetos/PactoSangriento.h"
+#include "../Objetos/CaballaLegendaria.h"
+#include "../Objetos/Revivir.h"
+
 #include <string>
 #include <unordered_map>
 

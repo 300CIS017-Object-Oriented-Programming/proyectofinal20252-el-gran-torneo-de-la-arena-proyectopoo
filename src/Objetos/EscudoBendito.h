@@ -3,6 +3,7 @@
 
 #include "../Personajes/Personaje.h"
 #include "ObjetoMagico.h"
+#include <iostream>
 
 class EscudoBendito : public ObjetoMagico {
     private:
