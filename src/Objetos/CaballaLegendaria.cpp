@@ -1,6 +1,4 @@
-//
-// Created by Richi on 11/20/2025.
-//
+
 
 #include <iostream>
 #include <cstdlib>

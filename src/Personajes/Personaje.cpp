@@ -129,7 +129,7 @@ void Personaje::recibirDanio( int danio ) {
     this -> vida -= danioReal;
 
     cout << this -> nombre << " recibe: " << danioReal << " puntos de daño >_<. Vida restante: " <<
-            this -> vida << endl;
+            (this -> vida <= 0 ? 0 : this -> vida)<< endl;
 
     // Verifica si el personaje murio:
 
