@@ -65,8 +65,10 @@ void Mago::realizarAccion( Personaje * objetivo ) {
     //Calcula el daño magico con variacion:
     int danioMagico = calcularDanioMagico( );
 
-    cout << this -> nombre << " lanza un hechizo poderoso contra " << objetivo -> getNombre( ) << "!!!!!" << endl;
-
+    cout << endl << "╔════════════════════════════════════════╗" << endl;
+    cout << "║    ZOOLTRAAK                           ║" << endl;
+    cout << "╚════════════════════════════════════════╝" << endl;
+    cout << this -> nombre << " invoca el poder de la luz sagrada!" << endl;
     // los ataque magicos ignoran parcialmente las defensas del objetivo.
     //Guardamos la defensa del objetivo de manera temporal:
     int defensaOriginal = objetivo -> getDefensa( );

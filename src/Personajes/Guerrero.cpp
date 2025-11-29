@@ -66,7 +66,10 @@ void Guerrero::realizarAccion( Personaje* objetivo ) {
     // Cacular el daño base del guerrero:
     int danioBase = this -> ataque; // se declara aqui ya que si no pasa los condicionales de arriba
     // no hay necesidad de realizar ninguna declaracion.
-
+    cout << endl << "╔════════════════════════════════════════╗" << endl;
+    cout << "║    ESTOCADA MORTAL                     ║" << endl;
+    cout << "╚════════════════════════════════════════╝" << endl;
+    cout << this -> nombre << " invoca el poder de la luz sagrada!" << endl;
     // Verificamos si es un golpe critico
     if( isEsCritico( ) ) {
         int danioCritico = calcularDanioCritico( danioBase );
