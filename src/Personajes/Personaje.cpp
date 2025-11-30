@@ -114,6 +114,14 @@ void Personaje::setEstaVivo( bool estado ) {
     this -> isEstaVivo = estado;
 }
 
+
+//Metodos auxiliares:
+
+void Personaje::pausar(int milisegundos) {
+    sleep_for( milliseconds( milisegundos ) );
+}
+
+
 //Metodos para el combate:
 
 void Personaje::recibirDanio( int danio ) {

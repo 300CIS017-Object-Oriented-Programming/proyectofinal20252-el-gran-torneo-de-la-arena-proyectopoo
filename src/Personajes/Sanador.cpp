@@ -76,9 +76,11 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
     if( curacion > 0 ) {
         int efectividadPorcentaje;
         efectividadPorcentaje = (int) ( efectividadCuracion * 100 ); //Para obtener un porcentaje entero.
-        cout << this -> nombre << "Canaliza energia curativa hacia " << objetivo -> getNombre( ) << "!!!!!!"
+        cout << this -> nombre << " Canaliza energia curativa hacia " << objetivo -> getNombre( ) << "!!!!!!"
         << endl;
         cout << "Efectividad: " << efectividadPorcentaje << "%" << endl;
+
+        pausar(1200); //Para que el usuario pueda leer el texto.
 
         //Obtengo la vida actual y maxima del objetivo:
         int vidaActual = objetivo -> getVida( );
@@ -95,6 +97,8 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
         objetivo -> setVida( nuevaVida );
         cout << objetivo -> getNombre( ) << " recupera " << curacion
              << " puntos de vida. Vida actual: " << nuevaVida << "/" << vidaMaxima << endl;
+
+        pausar(1200); //Para que el usuario pueda leer el texto.
     }
 
     //Si la curacion es 0% o menos (por si acaso):
@@ -102,6 +106,43 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
         cout << this -> nombre << " intenta curar a " << objetivo -> getNombre( ) << " pero falla completamente (0%). " << endl;
         cout << "La energia curativa no se manifesto esta vez." << endl;
     }
+}
+
+void Sanador::realizarAccionIA( vector<Personaje *> aliados , vector<Personaje*> enemigos) {
+    /* IA del Sanador: Cura al aliado mas herido.
+     * Estrategia: Mantener vivo al equipo, nunca ataca.
+     */
+
+    if ( !this ->isEstaVivo) {
+        return; //Los muertos no actuan.
+    }
+
+    cout << endl << ">> " << this-> nombre << " (Sanador) evalua el estado de sus aliados..." << endl;
+    pausar(2000);  //  Pausa para crear tensión
+
+    //Buscar al aliado mas herido (mayor diferencia entre vidaMaxima y vida actual):
+    Personaje * objetivo = nullptr;
+    int mayorDanio = 0;
+
+    for ( int i = 0; i < aliados.size(); i++) {
+        if ( aliados[i] -> getIsEstaVivo()) {
+            int danioRecibido = aliados[i] -> getVidaMaxima() - aliados[i] ->getVida();
+
+            if ( danioRecibido > mayorDanio) {
+                mayorDanio = danioRecibido;
+                objetivo = aliados[ i ];
+            }
+        }
+    }
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo); //Reutilizar la logica de curacion existente.
+    }
+    else {
+        cout << this->nombre << " observa que sus aliados estan sanos." << endl;
+        cout << "El sanador espera el momento adecuado para actuar." << endl;
+    }
+
 }
 
 

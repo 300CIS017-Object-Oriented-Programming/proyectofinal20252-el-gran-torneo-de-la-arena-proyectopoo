@@ -69,8 +69,11 @@ void Guerrero::realizarAccion( Personaje* objetivo ) {
     cout << endl << "╔════════════════════════════════════════╗" << endl;
     cout << "║    ESTOCADA MORTAL                     ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
-    cout << this -> nombre << " invoca el poder de la luz sagrada!" << endl;
+    cout << this -> nombre << " invoca todo su poder!!!!" << endl;
     // Verificamos si es un golpe critico
+
+    pausar(1200); //Para que el usuario pueda leer el texto.
+
     if( isEsCritico( ) ) {
         int danioCritico = calcularDanioCritico( danioBase );
         cout << "¡¡¡¡GOLPE CRITICO!!!!" << endl;
@@ -82,6 +85,43 @@ void Guerrero::realizarAccion( Personaje* objetivo ) {
         cout << this -> nombre << " ataca a " << objetivo -> getNombre( ) << "!!!!!" <<endl;
         objetivo -> recibirDanio( danioBase );
     }
+}
+
+// Metodos sobre escritos del Personaje (para la IA del juego):
+
+void Guerrero::realizarAccionIA( vector<Personaje*> aliados, vector <Personaje * >enemigos) {
+    /*IA del Guerrero: ataca al enemigo con menos vida.
+     * Estrategia: Eliminar objetivos debiles primero.
+     */
+
+    if ( !this-> isEstaVivo) {
+        return; //Los muertos no atacan.
+    }
+
+    cout << endl << ">> " << this->nombre << " (Guerrero) analiza el campo de batalla..." << endl;
+    pausar(2000);  //  Pausa para crear tensión
+
+    //Buscar al enemigo con menos vida:
+
+    Personaje * objetivo = nullptr;
+    int menorVida = 9999;
+
+    for ( int i = 0 ; i < enemigos.size(); i++) {
+
+         if ( enemigos[i]->getIsEstaVivo() && enemigos[i] -> getVida() < menorVida) {
+            menorVida = enemigos[i] -> getVida();
+            objetivo = enemigos[ i ];
+        } //Condicional especifico para que busque el enemigo con menor vida.
+
+    }
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo); //Reutilizamos la logica de la accion.
+    }
+    else {
+        cout << this-> nombre << " no encuentra objetivos vivos." << endl;
+    }
+
 }
 
 void Guerrero::mostrarInformacion( ) {

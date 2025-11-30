@@ -77,8 +77,9 @@ void HechiceroOscuro::realizarAccion( Personaje* objetivo ) {
     cout << "============================================" << endl;
     cout << this -> nombre << " Canaliza energia Oscura...." << endl;
     cout << "El poder corrompe su propia esencia!!!" << endl;
-    cout << this->nombre << "Sacrifica " << costoVida << " Puntos de vida" << endl;
+    cout << this->nombre << " Sacrifica " << costoVida << " Puntos de vida" << endl;
 
+    pausar(1200); //Para que el usuario pueda leer el texto.
 
     //Aplicar el costo de vida al hechicero:
 
@@ -93,18 +94,20 @@ void HechiceroOscuro::realizarAccion( Personaje* objetivo ) {
         cout << endl << "La Magia Oscura ha consumido a " << this->nombre <<"!!!!" << endl;
         cout << this->nombre << " Ha sido derrotado por su propio poder !!! " << endl;
         cout << "============================================" << endl;
+        pausar(1200); //Para que el usuario pueda leer el texto.
         return; //Muere antes de atacar.
     }
 
     cout << endl;
 
+    pausar(1200); //Para que el usuario pueda leer el texto.
     //Advertencia si ataca aliado (pues si lo permite):
     if ( this-> bando == objetivo->getBando()) {
         cout << "ADVERTENCIA: La oscuridad no distingue amigos de enemigos!!!" << endl;
         cout << this->nombre << " ataca a su aliado " << objetivo->getNombre() << "!!!!!" << endl;
     }
     else {
-        cout << this->nombre << " Lanza un HECHIZO OSCURO contra: " << objetivo << objetivo->getNombre() << "!!!!" <<endl;
+        cout << this->nombre << " Lanza un HECHIZO OSCURO contra: " << objetivo->getNombre() << "!!!!" <<endl;
     }
 
     objetivo-> recibirDanio(danioOscuro);
@@ -179,6 +182,38 @@ void HechiceroOscuro::realizarAccionAOE( Personaje* objetivoPrincipal, vector<Pe
 }
 
 */
+
+void HechiceroOscuro::realizarAccionIA(vector <Personaje*> aliados, vector<Personaje*> enemigos) {
+    /*IA del Hechicero Oscuro: Ataca al enemigo mas fuerte.
+     * Estrategia: Eliminar amenazas grandes, sin importar el costo.
+     * Nota: El costo de la vida ya esta en realizarAccion.
+     */
+
+    if ( !this->isEstaVivo) {
+        return; //Los muertos no actuan.
+    }
+
+    cout << endl << ">> " << this->nombre << " (Hechicero Oscuro) canaliza energia oscura..." << endl;
+    pausar(2000);  //  Pausa para crear tensión
+
+    //Buscar al enemigo con mayor ataque (la mayor amenaza):
+    Personaje * objetivo = nullptr;
+    int mayorAtaque = -1;
+
+    for (int i = 0; i < enemigos.size(); i++) {
+        if ( enemigos[i]->getIsEstaVivo() && enemigos[i]-> getAtaque() > mayorAtaque) {
+            mayorAtaque = enemigos[i]->getAtaque();
+            objetivo = enemigos[i];
+        }
+    }
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo);//Reutilizamos la logica de realizar accion.
+    }
+    else {
+        cout << this-> nombre << " no encuentra objetivos vivos." << endl;
+    }
+}
 
 void HechiceroOscuro::mostrarInformacion( ) {
     // Muestra información detallada del Hechicero Oscuro

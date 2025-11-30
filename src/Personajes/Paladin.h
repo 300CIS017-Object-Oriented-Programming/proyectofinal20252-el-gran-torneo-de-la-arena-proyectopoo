@@ -31,6 +31,11 @@ class Paladin : public Personaje {
         void realizarAccion( Personaje* objetivo ) override;
         void mostrarInformacion( ) override;
 
+        //Metodo para la IA:
+        void realizarAccionIA( vector<Personaje*> aliados, vector <Personaje*> enemigos) override;
+
+
+
         // Método especial del Paladín
         void protegerAliado( Personaje* aliado );
         void bendiccionDivina( Personaje* aliado );  // Aumenta defensa temporalmente

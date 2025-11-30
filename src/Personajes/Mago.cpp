@@ -69,6 +69,9 @@ void Mago::realizarAccion( Personaje * objetivo ) {
     cout << "║    ZOOLTRAAK                           ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
     cout << this -> nombre << " invoca el poder de la luz sagrada!" << endl;
+
+    pausar(1200); //Para que el usuario pueda leer el texto.
+
     // los ataque magicos ignoran parcialmente las defensas del objetivo.
     //Guardamos la defensa del objetivo de manera temporal:
     int defensaOriginal = objetivo -> getDefensa( );
@@ -85,6 +88,37 @@ void Mago::realizarAccion( Personaje * objetivo ) {
     // Restauramos la defensa original :
     objetivo -> setDefensa( defensaOriginal );
 
+}
+
+void Mago:: realizarAccionIA (vector <Personaje*> aliados, vector <Personaje*> enemigos) {
+    /*IA del Mago: Ataca al enemigo con mayor defensa.
+     *Estrategia: Aprovecha que ignora la defensa para eliminar tanques.
+     */
+
+    if ( !this->isEstaVivo) {
+        return; //Los muertos no actuan.
+    }
+
+    cout << endl << ">> "  << this->nombre << " (Mago) canaliza energia arcana..." << endl;
+    pausar(2000);  //  Pausa para crear tensión
+
+    //Buscar al enemigo con mayor defensa:
+    Personaje * objetivo = nullptr;
+    int mayorDefensa = - 1;
+
+    for ( int i = 0; i < enemigos.size(); i++) {
+        if (enemigos[i] -> getIsEstaVivo() && enemigos[i]->getDefensa() > mayorDefensa) {
+            mayorDefensa = enemigos[i] ->getDefensa();
+            objetivo = enemigos[i];
+        }
+    }
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo); //Reutilizamos el metodo para las acciones.
+    }
+    else {
+        cout << this->nombre << " no encuentra objetivos vivos." << endl;
+    }
 }
 
 void Mago::mostrarInformacion( ) { // Muestra los detalles del mago:

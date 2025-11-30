@@ -37,6 +37,10 @@ void Arena::setInventario( Inventario* inv) {
 
 //Metodos auxiliares privados:
 
+void Arena::pausar(int milisegundos) {
+    sleep_for( milliseconds( milisegundos ) );
+}
+
 Personaje *Arena::seleccionarObjetivoAleatorio(vector<Personaje*> equipo) {
 
     /*Selecciona aleatoriamente un personaje Vivo del equipo dado.
@@ -125,70 +129,17 @@ void Arena::ejecutarAccionEnemigo(Personaje* enemigo) {
      * -Sanadores: solo curan aliados, no atacan directamente.
      */
 
-    if (!enemigo ->getIsEstaVivo()) {
-        return; //Los muertos no actuan.
+    if ( ! enemigo->getIsEstaVivo()) {
+        return; // los muertos no actuan.
     }
 
-    cout << endl << ">> " << enemigo->getNombre() << " (" << enemigo->getRol() << ") se prepara..." << endl;
+    //Llamamos al metodo de IA del enemigo.
 
-    string rol = enemigo->getRol();
+    //El enemigo ve a "this-> heroe" como sus enemigos y a "this->enemigos" como sus aliados.
+    enemigo ->realizarAccionIA( this->enemigos, this->heroes);
 
-    //Comportamiento del Sanador enemigo:
+    pausar(1000);  //  Pausa después de que el enemigo actúe
 
-    /*Nota : Esto ya es un comportamiento del "Heroe" enemigo, ya que
-     *no hacemos esas distinciones en las clases de Personaje y las clases de heroes, se implementa una
-     *logica adiccional exclusiva de los enemigos. (Pipe)*/
-
-    if (rol == "Sanador" ) {
-        /*El Sanador No ataca, solo cura aliados.
-         * Buscamos al aliado mas herido que siga vivo:
-         */
-        Personaje* aliadoMasHerido  = nullptr;
-
-        int mayorDanio = 0; // Diferencia entre vida maxima y vida actual.
-
-        for (int i = 0; i < this->enemigos.size() ; i++) {
-            Personaje * aliado = this->enemigos[i];
-
-            if (aliado->getIsEstaVivo()) {
-
-                int danioRecibido = aliado ->getVidaMaxima() - aliado -> getVida();
-                if (danioRecibido > mayorDanio) {
-                    mayorDanio = danioRecibido;
-                    aliadoMasHerido = aliado;
-                }
-            }
-        }
-        //Si hay alguien herido, lo curamos:
-        if (aliadoMasHerido != nullptr && mayorDanio > 0) {
-            enemigo->realizarAccion(aliadoMasHerido);
-        }
-
-        else {
-            //Si nadie esta herid0, el sanador no hace nada util este turno:
-
-            cout << enemigo->getNombre() << " observa que todavia sus aliados estan sanos. " << endl;
-            cout << "El sanador espera el momento adecuado para actuar." << endl;
-        }
-        return; //El sanador termina su turno aqui, nunca ataca.
-    }
-
-    //Comportamiento de Guerrero, Mago y otro roles ofensivos:
-    //Atacamos al heroe con menos vida:
-    Personaje* objetivo = nullptr;
-    int menorVida = 99999; // Is over Nine Thousand!!! Nani!?!?
-
-    for (int i = 0; i < this->heroes.size(); i++) {
-        Personaje* heroe = this->heroes[i];
-        if (heroe-> getIsEstaVivo() && heroe->getVida() < menorVida) {
-            menorVida= heroe ->getVida();
-            objetivo = heroe;
-        }
-    }
-
-    if (objetivo != nullptr) {
-        enemigo -> realizarAccion( objetivo);
-    }
 }
 
 void Arena::mostrarMenuAcciones(Personaje * heroe) {
@@ -342,6 +293,8 @@ void Arena::iniciarCombate( vector <Personaje*> equipoHeroes, vector<Personaje*>
     cout << "    BIENVENIDOS A LA ARENA DE LYRENHOLD" << endl;
     cout << "===============================================" << endl;
 
+    pausar(1000);  //  Pausa dramática
+
     //Guardamos las referencias al equipo:
 
     this->heroes = equipoHeroes;
@@ -358,15 +311,20 @@ void Arena::iniciarCombate( vector <Personaje*> equipoHeroes, vector<Personaje*>
         cout << " -"  << this->heroes[i]->getNombre() << " (" << this->heroes[i] -> getRol() << ")" << endl;
     }
 
+    pausar(800);  // Pausa
+
     cout << endl << "Equipo Enemigo (" << this->enemigos.size() << "Oponentes):" << endl;
     for (int i = 0; i < this-> enemigos.size(); i++) {
         cout << " -"  << this->enemigos[i]->getNombre() << " (" << this->enemigos[i] -> getRol() << ")" << endl;
     }
 
+    pausar(1000);  // Pausa antes del combate
+
     cout << endl << "===============================================" << endl;
     cout << "          QUE COMIENCE EL COMBATE!" << endl;
     cout << "===============================================" << endl;
 
+    pausar(1500);  //  Pausa dramática final
 }
 
 void Arena::ejecutarTurno ( ) {
@@ -381,10 +339,13 @@ void Arena::ejecutarTurno ( ) {
     cout << "              TURNO " << this -> turnoActual << endl;
     cout << "================================================" << endl;
 
+
+    pausar(800);  // Pausa al inicio del turno
     //-- Fase de los heroes --
 
     cout << endl << "--- FASE DE LOS HEROES ---" << endl;
 
+    pausar(500);  //  Pausa breve
     for ( int i = 0; i < this->heroes.size(); i++) {
         Personaje * heroe = this->heroes[i];
 
@@ -405,6 +366,8 @@ void Arena::ejecutarTurno ( ) {
 
     cout << endl << "--- FASE DE LOS ENEMIGOS ---" << endl;
 
+    pausar(1000);  // Pausa antes de que actúen los enemigos
+
     for (int i = 0 ; i < this->enemigos.size() ; i++) {
         Personaje * enemigo  = this-> enemigos[i];
 
@@ -420,6 +383,7 @@ void Arena::ejecutarTurno ( ) {
     }
 
     cout << endl << "--- Fin del Turno" << this ->turnoActual << " ---" << endl;
+    pausar(600);  // Pausa al final del turno
 }
 
 bool Arena::verificarFinCombate() {
@@ -488,6 +452,8 @@ void Arena:: mostrarResumenFinal() {
 
     //Determinamos el ganador:
 
+    pausar(1000);  //  Pausa dramática
+
     bool ganaronHeroes = !isEquipoDerrotado(this->heroes);
 
     if (ganaronHeroes) {
@@ -498,6 +464,8 @@ void Arena:: mostrarResumenFinal() {
         cout << endl << "*** DERROTA... LA GUILD ENEMIGA HA TRIUNFADO ***" << endl;
         cout << "Motivo: Todos los heroes han caido en combate." << endl;
     }
+
+    pausar(800);  // Pausa
 
     //Heroes supervivientes:
     cout << endl << "Heroes supervivientes: " ;

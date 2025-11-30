@@ -12,6 +12,8 @@
 #include <vector>
 #include<iostream>
 #include<string>
+#include <thread> // <- Para pausas.
+#include <chrono> // <- Para medir los tiempos.
 #include<cstdlib>
 #include<ctime> //Para rand() y numero aleatoriosen la "IA" del enemigo.
 
@@ -23,6 +25,8 @@ using std::cin;
 using std:: endl;
 using std::vector;
 using std:: string;
+using std:: this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 class Arena {
 private:
@@ -67,6 +71,11 @@ private:
 
     // Muestra una lista de personajes de un equipo (para seleccion de objetivo).
     void mostrarListaObjetivos( vector<Personaje*> equipo, bool soloVivos);
+
+    /*Metodo que permite pausar el combate temporalmente.
+     *(Para darle al jugador tiempo de ver los cambios en el juego.)*/
+
+    void pausar(int millisegundos);
 
 public:
 //Contrustores y Destructores:

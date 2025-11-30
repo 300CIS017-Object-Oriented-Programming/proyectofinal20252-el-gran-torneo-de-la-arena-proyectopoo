@@ -35,6 +35,10 @@ public:
      */
     void mostrarInformacion( ) override; //<- Cambia algunos simbolo que podrian causar errores de compilacion (Pipe).
 
+    //Metodo para la IA del enemigo:
+
+    void realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos) override;
+
     // Getters
     int getPoderOscuro( );
     double getPorcentajeDanioAOE( );

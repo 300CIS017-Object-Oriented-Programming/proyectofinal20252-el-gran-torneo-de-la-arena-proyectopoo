@@ -10,6 +10,8 @@
 #include <vector>
 #include <iomanip>
 #include <string>
+#include <thread> // <- Para pausas.
+#include <chrono> // <- Para medir los tiempos.
 
 
 
@@ -26,9 +28,12 @@ using std::string;
 using std::endl;
 using std::setprecision;
 using std::fixed;
+using std:: this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 
 class Personaje {
+
 
     protected:
 
@@ -48,6 +53,9 @@ class Personaje {
         //Estados y obejtos magicos asignados:
         vector<ObjetoAsignado*> objetosEquipados;
         bool isEstaVivo; // True mientrar vida > 0.
+
+        //Metodo Auxiliar protegido:
+        void pausar(int milisegundos);
         
     public:
 
@@ -79,6 +87,14 @@ class Personaje {
         //Metodos abstractos que cuya definicion recae en las clases hijas:
         virtual void realizarAccion( Personaje* objetivo ) = 0;
         virtual void mostrarInformacion( ) = 0;
+
+        /*Metodo para la IA: cada rol decide automaticamente que hacer.
+         * Recibe los vectores de aliado y enemigos para tomar decisiones.
+         * Este metodo es usado por los enemigos en al Arena.
+        */
+        virtual void realizarAccionIA(vector <Personaje*> aliados, vector <Personaje *> enemigos ) = 0;
+
+
 
         //Metodos de combate, comunes a todos los personajes:
         void recibirDanio( int danio );//Reduce vida y verifica si muere.

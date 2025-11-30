@@ -26,6 +26,10 @@ class Mago : public Personaje {
         // Metodos Sobre escritos (override) de Personaje:
         void realizarAccion( Personaje* objetivo ) override;
         void mostrarInformacion( ) override;
+
+        //Metodo para realizar la IA del enemigo:
+        void realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos ) override;
+
 };
 
 

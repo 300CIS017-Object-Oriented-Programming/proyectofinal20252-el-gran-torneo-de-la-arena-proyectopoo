@@ -81,11 +81,15 @@ void Paladin::realizarAccion( Personaje* objetivo ) {
     cout << "Un destello divino ilumina su arma mientras ataca a "
          << objetivo -> getNombre( ) << "!" << endl;
 
+    pausar(1200); //Para que el usuario pueda leer el texto.
+
     // Aplicar daño
     objetivo -> recibirDanio( danioDivino );
 
     cout << "¡Golpe divino! Daño infligido: " << danioDivino << " puntos" << endl;
     cout << "═══════════════════════════════════════════" << endl;
+
+    pausar(1200); //Para que el usuario pueda leer el texto.
 
     // Incrementar contador de turnos
     this -> contadorTurnos++;
@@ -120,6 +124,8 @@ void Paladin::protegerAliado( Personaje* aliado ) {
     cout << this -> nombre << " se interpone para proteger a "
          << aliado -> getNombre( ) << "!" << endl;
 
+    pausar(1200); //Para que el usuario pueda leer el texto.
+
     // Verificar si el escudo sagrado se activa
     if( activarEscudoSagrado( ) ) {
         this -> escudoActivado = true;
@@ -136,6 +142,7 @@ void Paladin::protegerAliado( Personaje* aliado ) {
     }
 
     cout << "═══════════════════════════════════════════" << endl;
+    pausar(1200); //Para que el usuario pueda leer el texto.
 }
 
 void Paladin::bendiccionDivina( Personaje* aliado ) {
@@ -167,6 +174,8 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
     cout << this -> nombre << " canaliza el poder sagrado hacia "
          << aliado -> getNombre( ) << "!" << endl;
 
+    pausar(1200); //Para que el usuario pueda leer el texto.
+
     // Aumentar defensa del aliado
     int defensaAnterior = aliado -> getDefensa( );
     int aumentoDefensa = 15;
@@ -176,6 +185,60 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
     cout << "Defensa aumentada: +" << aumentoDefensa << " puntos" << endl;
     cout << "Defensa: " << defensaAnterior << " → " << aliado -> getDefensa( ) << endl;
     cout << "═══════════════════════════════════════════" << endl;
+    pausar(1200); //Para que el usuario pueda leer el texto.
+}
+
+void Paladin::realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+    /*IA del Paladin: ataca al enemigos, pero si un aliado esta muy herido, lo protege
+     * Estrategia: Balance entre ataque y proteccion.
+     */
+
+    if (!this->isEstaVivo) {
+        return; // los muertos no actuan;
+    }
+
+    cout << endl << ">> " << this->nombre << " (Paladin) evalua el campo de batalla..." << endl;
+    pausar(2000);  //  Pausa para crear tensión
+
+    //Primero verificamos si algun aliado necesita proteccion (vida < 30%):
+    Personaje * aliadoEnPeligro = nullptr;
+
+    for ( int i = 0 ; i < aliados.size(); i++) {
+        //Nota el "!= this" es para que no se seleccione a si mismo, ya que el hace parte del equipo.
+        if (aliados[i] -> getIsEstaVivo() && aliados[i] != this) {
+            double porcentajeVida = (double) aliados[i] ->getVida() / aliados[i]->getVidaMaxima();
+            if (porcentajeVida < 0.30) {
+                aliadoEnPeligro = aliados[i];
+                break;
+            }
+        }
+    }
+
+    //Si hay aliado en peligro, usar bencion divina:
+    if (aliadoEnPeligro != nullptr) {
+        cout << this->nombre << " decide proteger a su aliado herido!!!!" << endl;
+        bendiccionDivina(aliadoEnPeligro);
+        return;
+    }
+
+    //Si no hay aliados en peligro, atacar al enemigo con mas vida:
+    Personaje * objetivo = nullptr;
+    int mayorVida = -1;
+
+    for (int i = 0; i < enemigos.size() ; i++) {
+        if (enemigos[i]->getIsEstaVivo( ) && enemigos[ i ] -> getVida() > mayorVida) {
+            mayorVida = enemigos[i]->getVida();
+            objetivo = enemigos[i];
+        }
+    }
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo); //Reutilizamos el metodo;
+    }
+    else {
+        cout << this->nombre << " no encuentra objetivos." << endl;
+    }
+
 }
 
 void Paladin::mostrarInformacion( ) {

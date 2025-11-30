@@ -33,6 +33,7 @@ class Guerrero: public Personaje{
 
         void realizarAccion( Personaje* objetivo ) override;
         void mostrarInformacion( ) override;
+        void realizarAccionIA( vector<Personaje * > aliados, vector <Personaje *> enemigos) override;
 
 };
 
