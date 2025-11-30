@@ -41,6 +41,66 @@ void Arena::pausar(int milisegundos) {
     sleep_for( milliseconds( milisegundos ) );
 }
 
+//Metodo para el manejo de efectos temporales:
+
+void Arena::procesarEfectosTemporales() {
+    //Procesa los efectos temporales de todos los objetos equipados:
+    //Se llama al final de cada turno.
+
+    bool hayEfectos = false;
+
+    //Verificar si hay algun efecto Activo antes de mostrar el mensaje.
+
+    for (int i = 0; i < this->heroes.size() ; i++ ) {
+
+        for ( int slot = 0; slot < 2; slot++) {
+            ObjetoAsignado * objeto = this->heroes[i]->getObjetoEquipado(slot);
+            if (objeto != nullptr && objeto -> tieneEfectoActivo() ) {
+                hayEfectos = true;
+                break;
+            }
+        }
+
+        if (hayEfectos) break;
+    }
+
+    //Solo mostrar el encabezado si hay efectos que procesar:
+
+    if (hayEfectos ) {
+        cout << endl << "--- Procesando efectos temporales ---" << endl;
+    }
+
+    //Procesar heroes:
+
+    for (int i = 0; i < heroes.size(); i ++ ) {
+        Personaje * heroe = this-> heroes[i];
+
+        for ( int slot = 0; slot < 2 ; slot++ ) {
+            ObjetoAsignado* objeto = heroe->getObjetoEquipado( slot );
+
+            if ( objeto != nullptr && objeto -> tieneEfectoActivo() ) {
+                objeto -> procesarFinTurno();
+            }
+
+        }
+    }
+
+    //Procesar enemigos (por si tienen objetos):
+
+    for (int i = 0; i < enemigos.size(); i++ ) {
+        Personaje * enemigo = this->enemigos[i];
+
+        for (int slot = 0; slot < 2; slot ++ ) {
+            ObjetoAsignado* objeto = enemigo -> getObjetoEquipado( slot );
+
+            if ( objeto != nullptr && objeto ->tieneEfectoActivo()) {
+                objeto->procesarFinTurno();
+            }
+        }
+    }
+
+}
+
 Personaje *Arena::seleccionarObjetivoAleatorio(vector<Personaje*> equipo) {
 
     /*Selecciona aleatoriamente un personaje Vivo del equipo dado.
@@ -146,7 +206,8 @@ void Arena::mostrarMenuAcciones(Personaje * heroe) {
     //Muestra las opciones disponibles para el heroe (El jugador):
 
     cout << endl << "=== Turno de " << heroe->getNombre() << " (" << heroe->getRol() << ") ===" << endl;
-    cout << "Vida: " << heroe->getVida() << "/" << heroe -> getVidaMaxima() << endl;
+    cout << "Vida: " << heroe->getVida() << "/" << heroe -> getVidaMaxima() <<
+        " -- Defensa: " << heroe->getDefensa() << " -- Ataque: " << heroe->getAtaque() << endl;
     cout << "1. Realizar accion principal (atacar/curar segun rol)." << endl;
     cout << "2. Usar objeto equipado." << endl;
     cout << "3. Ver estado del combate." << endl;
@@ -348,6 +409,10 @@ void Arena::ejecutarTurno ( ) {
     }
 
     cout << endl << "--- Fin del Turno " << this ->turnoActual << " ---" << endl;
+
+    //Procesar efectos temporales al final del turno.
+    procesarEfectosTemporales();
+
     pausar(600);  // Pausa al final del turno
 }
 

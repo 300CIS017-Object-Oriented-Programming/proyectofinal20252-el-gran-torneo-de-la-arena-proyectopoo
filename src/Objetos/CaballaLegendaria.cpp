@@ -25,7 +25,8 @@ bool CaballaLegendaria::calcularExito( ) {
 }
 
 // Metodo principal - aplica el efecto del objeto
-void CaballaLegendaria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje *> enemigos ) {
+void CaballaLegendaria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje *> enemigos,
+    ObjetoAsignado* instancia )  {
 
     //La Caballa Legendaria requiere seleccionar un enemigo objetivo:
     cout << endl << "============================================" << endl;

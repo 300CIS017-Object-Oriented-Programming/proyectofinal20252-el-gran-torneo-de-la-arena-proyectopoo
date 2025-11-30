@@ -77,6 +77,9 @@ private:
 
     void pausar(int millisegundos);
 
+    //Para procesar efectos temporales:
+    void procesarEfectosTemporales();
+
 public:
 //Contrustores y Destructores:
     Arena();

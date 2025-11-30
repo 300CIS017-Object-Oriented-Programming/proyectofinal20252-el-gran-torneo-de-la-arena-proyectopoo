@@ -22,7 +22,8 @@ int PocionVida::calcularEfecto( ) {
     return this -> curacionMinima + rand( ) % ( this -> curacionMaxima - this -> curacionMinima + 1 );
 }
 
-void PocionVida::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+void PocionVida::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos,
+    ObjetoAsignado* instancia ) {
     // La pocion de vida solo afecta al usuario, ignora aliados y enemigos.
     int curacion = calcularEfecto();
 

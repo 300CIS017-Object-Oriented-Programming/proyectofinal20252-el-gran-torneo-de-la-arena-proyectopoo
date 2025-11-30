@@ -15,6 +15,7 @@ AmuletoFuria::AmuletoFuria( int stock ) : ObjetoMagico( ) {
     this -> aumentoAtaqueMax = 10;
     this -> aumentoAtaqueMin = 5;
     this -> turnos = 2;
+
 }
 
 int AmuletoFuria::calcularEfecto( ) {
@@ -22,13 +23,31 @@ int AmuletoFuria::calcularEfecto( ) {
     return this -> aumentoAtaqueMin + rand( ) % ( this -> aumentoAtaqueMax - this -> aumentoAtaqueMin + 1 );
 }
 
-void AmuletoFuria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+//Metodos publicos para le manejo de los efectos temporales:
+
+void AmuletoFuria::revertirEfecto(Personaje * personaje, ObjetoAsignado* instancia) {
+    //Revertir el aumento de ataque.
+    int aumentoARevertir = instancia->getUltimoAumento();
+    int ataqueActual = personaje->getAtaque();
+    personaje -> setAtaque( ataqueActual - aumentoARevertir);
+
+    cout << endl << " >> El efecto del [Amuleto de Furia] ha expirado!!!!" << endl;
+    cout << " Ataque de " << personaje-> getNombre() << " restaurado: " << ataqueActual <<
+        " --> " << personaje->getAtaque() << endl;
+
+    pausar(1500);
+}
+
+void AmuletoFuria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados,
+    vector<Personaje*> enemigos, ObjetoAsignado* instancia ){
     //El amuleto de furia solo afecta al usuario, ignora aliados y enemigos.
 
     int aumento = calcularEfecto();
     int ataqueAntes = usuario->getAtaque();
 
     usuario-> setAtaque( ataqueAntes + aumento);
+    instancia->setUltimoAumento (aumento); //Guardar para poder revertir.
+
 
     cout << endl << "========================================" << endl;
     cout << "         AMULETO DE FURIA" << endl;
@@ -64,6 +83,11 @@ int AmuletoFuria::getAumentoAtaqueMax( ) {
 
 int AmuletoFuria::getTurnos( ) {
     return this -> turnos;
+}
+
+//Get espcifico para los efectos temporales:
+int AmuletoFuria::getTurnosEfecto() {
+    return this-> turnos;
 }
 
 void AmuletoFuria::setAumentoAtaqueMin( int valor ) { 

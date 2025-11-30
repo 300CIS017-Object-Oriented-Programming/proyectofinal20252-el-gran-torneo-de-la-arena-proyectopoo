@@ -1,6 +1,8 @@
 #ifndef OBJETO_MAGICO
 #define OBJETO_MAGICO
 
+#include "../Inventario/ObjetoAsignado.h"
+
 #include <string>
 #include <vector>
 #include <thread> // <- Para pausas.
@@ -10,6 +12,7 @@
 
 
 class Personaje; //Hacemos un forward declaration aqui para manjar la dependencia circular.
+class ObjetoAsignado; // Forward declaration para evitar dependencia circular
 
 using std::string;
 using std::vector;
@@ -28,11 +31,18 @@ class ObjetoMagico {
         ObjetoMagico( );
         ObjetoMagico( string nombre, string descripcion, int stockDisponible ); 
         virtual void aplicarEfecto( Personaje* usuario,
-            vector<Personaje*> aliados, vector<Personaje*> enemigos ) = 0;
+        vector<Personaje*> aliados, vector<Personaje*> enemigos, ObjetoAsignado* instancia ) = 0;
         /*Igualamos a 0 ya que el comportamiento lo definen
         las clases hijas.  */
         virtual void mostrarInformacion( ) = 0; /*Igualamos a 0 ya que el comportamiento lo definen
                                                 las clases hijas.  */
+
+        //Metodos para efectos temporales ( los objetos con efecto temporal lo sobreescriben).
+
+        virtual int getTurnosEfecto();
+        virtual void revertirEfecto( Personaje* personaje, ObjetoAsignado* instancia);
+
+
         void decrementarStock( );
         void incrementarStock( );
         

@@ -27,7 +27,8 @@ int PactoSangriento::calcularAumentoAtaque( ) {
 }
 
 // Metodo principal - aplica el efecto del objeto
-void PactoSangriento::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+void PactoSangriento::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos,
+    ObjetoAsignado* instancia )  {
 
     //El pacto sangriento solo afecta al usuario, ignora a aliados y enemigos.
 

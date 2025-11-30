@@ -16,7 +16,8 @@ class Revivir : public ObjetoMagico {
     public:
         Revivir( int stock );
         virtual ~Revivir( ) = default;
-        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos ) override;
+        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos,
+        ObjetoAsignado* instancia ) override;
         void mostrarInformacion( ) override;
 
 

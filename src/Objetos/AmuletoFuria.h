@@ -12,10 +12,16 @@ class AmuletoFuria : public ObjetoMagico {
         /* Metodo Auxiliar para calcular el efecto aleatorio de la Furia */
         int calcularEfecto( );
     public:
+
         AmuletoFuria( int stock );
         virtual ~AmuletoFuria( ) = default;
-        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector <Personaje*> enemigos ) override;
+        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector
+        <Personaje*> enemigos, ObjetoAsignado* instancia ) override;
         void mostrarInformacion( ) override;
+
+       //Metodos para efecto temporal:
+        int getTurnosEfecto() override;
+        void revertirEfecto( Personaje * personaje, ObjetoAsignado* instancia ) override;
 
         /* Getters y Setters */
         int getAumentoAtaqueMin( );

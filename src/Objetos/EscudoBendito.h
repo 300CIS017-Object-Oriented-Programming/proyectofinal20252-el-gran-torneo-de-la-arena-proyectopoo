@@ -14,16 +14,29 @@ class EscudoBendito : public ObjetoMagico {
         int turnos;
 
         int calcularEfecto( );
+
     public:
+
         EscudoBendito( int stock );
         virtual ~EscudoBendito( ) = default;
-        void aplicarEfecto( Personaje* usuario, vector<Personaje* > aliados, vector<Personaje*> enemigos ) override;
+        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector
+        <Personaje*> enemigos, ObjetoAsignado* instancia ) override;
         void mostrarInformacion( ) override;
+
+        //Metodos para efectos temporales:
+        void revertirEfecto( Personaje * personaje,
+        ObjetoAsignado* instancia) override;
+
 
         /* Getters y Setters */
         int getAumentoDefensaMin( );
         int getAumentoDefensaMax( );
         int getTurnos( );
+
+        //Get para efectos Temporales:
+        int getTurnosEfecto() override;
+
+        //Sets:
         void setDefensaMin( int valor );
         void setDefensaMax( int valor );
         void setTurnos( int turnos );

@@ -30,6 +30,14 @@ class ObjetoAsignado {
         // Indica si el objeto ya fue utilizado en el combate.
         bool usado;
 
+       // Atributos para manejar efectos temporales:
+
+       Personaje * personajeAfectado; //Personaje que recibio el efecto.
+       int turnosRestantes; // Turnos que quedan del efecto (0 sin efecto).
+
+       int ultimoAumento;  // ← Nuevo: Guarda el aumento específico de esta instancia
+
+
     public:
         // Constructores y destructores:
         ObjetoAsignado( ObjetoMagico* tipo );
@@ -49,6 +57,18 @@ class ObjetoAsignado {
 
         // Devuelve el nombre del objeto (delegado a ObjetoMagico).
         string getNombre( );
+
+       // Nuevo: Getter y Setter para ultimoAumento
+       int getUltimoAumento();
+
+       //Sets
+       void setUltimoAumento(int aumento);
+
+       //Metodos para manejar efectos temporales:
+       void procesarFinTurno();
+       bool tieneEfectoActivo();
+       int getTurnosRestantes();
+
 };
 
 #endif //PROYECTOFINAL20252_EL_GRAN_TORNEO_DE_LA_ARENA_PROYECTOPOO_OBJETOSASIGNADOS_H

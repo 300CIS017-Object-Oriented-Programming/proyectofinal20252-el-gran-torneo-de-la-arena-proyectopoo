@@ -11,7 +11,8 @@ Revivir::Revivir( int stock ) : ObjetoMagico( ) {
 
 }
 
-void Revivir::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+void Revivir::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos,
+    ObjetoAsignado* instancia ) {
      // La pocion de resurreccion requiere seleccionar a un aliado Muerto.
 
     cout << endl << "========================================" << endl;

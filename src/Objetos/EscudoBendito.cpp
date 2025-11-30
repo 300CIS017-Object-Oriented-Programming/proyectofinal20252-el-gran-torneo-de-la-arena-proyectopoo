@@ -11,13 +11,30 @@ EscudoBendito::EscudoBendito( int stock ) : ObjetoMagico( ) {
     this -> aumentoDefensaMin = 10;
     this -> aumentoDefensaMax = 20;
     this -> turnos = 1;
+
 }
 
 int EscudoBendito::calcularEfecto( ) {
     return this -> aumentoDefensaMin + rand( ) % ( this -> aumentoDefensaMax - this -> aumentoDefensaMin + 1 );
 }
 
-void EscudoBendito::aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos ) {
+//Metodo para los efectos temporales:
+
+void EscudoBendito::revertirEfecto( Personaje* personaje, ObjetoAsignado* instancia) {
+    //Revertir el aumento de defensa
+    int aumentoARevertir = instancia->getUltimoAumento();
+    int defensaActual = personaje->getDefensa();
+    personaje ->setDefensa( defensaActual - aumentoARevertir);
+
+    cout << endl << " >> El efecto del [Escudo Bendito] ha expirado!!!!" << endl;
+    cout << " Defensa de " << personaje->getNombre() << " restaurada: "
+    << defensaActual << " --> " << personaje -> getDefensa() << endl;
+
+    pausar (1500);
+}
+
+void EscudoBendito::aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos,
+    ObjetoAsignado* instancia ) {
 
    //El escudo bendito solo afecta al usuario, ignora a aliados y enemigos.
 
@@ -25,6 +42,7 @@ void EscudoBendito::aplicarEfecto( Personaje* usuario, vector <Personaje*> aliad
     int defensaAntes = usuario->getDefensa();
 
     usuario -> setDefensa( defensaAntes + aumento);
+    instancia-> setUltimoAumento (aumento); //<---Guardar para poder revertir.
 
     cout << endl << "========================================" << endl;
     cout << "         ESCUDO BENDITO" << endl;
@@ -61,6 +79,14 @@ int EscudoBendito::getAumentoDefensaMax( ) {
 int EscudoBendito::getTurnos( ) {
     return this -> turnos;
 }
+
+//Get especifico para los efectos temporales:
+
+int EscudoBendito::getTurnosEfecto() {
+    return this->turnos;
+}
+
+//Sets:
 
 void EscudoBendito::setDefensaMin( int valor ) { 
     /* Verificamos que no se ingrese un valor menor a 10 o mayor-igual a 20, en tal caso

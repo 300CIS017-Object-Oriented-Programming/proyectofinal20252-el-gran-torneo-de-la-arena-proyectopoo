@@ -151,6 +151,7 @@ Personaje* Personaje::seleccionarObjetivo( vector<Personaje*> objetivos, string 
             cout << " " << contador << ". " << objetivos[i]-> getNombre()
             << " (" << objetivos[ i ] -> getRol() << ") "
             << "-- Vida: " << objetivos[ i ]->getVida() << "/" << objetivos[ i ]->getVidaMaxima()
+            << " -- Defensa: " << objetivos[ i ]->getDefensa()
             << endl;
             contador++;
         }

@@ -13,7 +13,8 @@ class PocionVida : public ObjetoMagico {
     public:
         PocionVida( int stock );
         virtual ~PocionVida( ) = default;
-        void aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) override;
+        void aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos,
+            ObjetoAsignado* instancia ) override;
         void mostrarInformacion( ) override;
         int getCuracionMinima( );
         int getCuracionMaxima( );

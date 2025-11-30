@@ -12,6 +12,18 @@ ObjetoMagico::ObjetoMagico( string nombre, string descripcion, int stockDisponib
     this -> stockDisponible = stockDisponible;
 }
 
+//Metodos virtuales:
+
+int ObjetoMagico:: getTurnosEfecto( ) {
+    //Por defecto, los objetos no tienen efecto temporal.
+    return 0;
+}
+
+void ObjetoMagico::revertirEfecto( Personaje * personaje, ObjetoAsignado* instancia ){
+    //Por defect, los objetos no tienen efecto que revertir.
+    //Las clases hijas con efectos temporales sobreescriben este metodo.
+}
+
 //Metodos auxiliares:
 
 void ObjetoMagico::pausar(int milisegundos) {
