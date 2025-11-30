@@ -18,6 +18,9 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <thread> // <- Para pausas.
+#include <chrono> // <- Para medir los tiempos.
+
 
 // Usings para hacer la codificacion mas fluida.
 using std::cout;
@@ -30,6 +33,8 @@ using std::fixed;
 using std::unordered_map;
 using std::cin;
 using std::getline;
+using std:: this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 
 class Torneo {
@@ -53,6 +58,8 @@ class Torneo {
         void consultarHeroeTorneo( ); // Logica para la consulta.
         void retirarHeroeTorneo( ); // Logica de retiro.
         void mostrarGuildsRivales( ); //Muestra a las Guilds Enemigas.
+
+        void pausar(int milisegundos);
 
         /* Nuevos metodos privados para el inventario: */
         void listarInventarioDetallado();

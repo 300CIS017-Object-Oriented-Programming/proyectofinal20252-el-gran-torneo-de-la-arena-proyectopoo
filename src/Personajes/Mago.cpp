@@ -121,6 +121,27 @@ void Mago:: realizarAccionIA (vector <Personaje*> aliados, vector <Personaje*> e
     }
 }
 
+
+bool Mago:: realizarAccionJugador(vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+    /*El Mago ataca enemigos. El jugador selecciona a cual. */
+
+    if (!this->isEstaVivo) {
+        cout << this-> nombre << " esta derrotado y no puede actuar. " << endl;
+        return false;
+    }
+
+    Personaje * objetivo = seleccionarObjetivo( enemigos,
+        "Seleccione un enemigo para lanzar un hechizo (Los demonios no tienen derechos): ");
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo);
+        return true;
+    }
+
+    return false;
+
+}
+
 void Mago::mostrarInformacion( ) { // Muestra los detalles del mago:
     cout << endl << "======== Informacion del Mago ========" << endl;
 

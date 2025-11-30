@@ -54,8 +54,15 @@ class Personaje {
         vector<ObjetoAsignado*> objetosEquipados;
         bool isEstaVivo; // True mientrar vida > 0.
 
-        //Metodo Auxiliar protegido:
-        void pausar(int milisegundos);
+        bool isTieneEscudoProtector; /*True si tiene Escudo que bloquea el proximo ataque.*/
+
+        //Metodos Auxiliares protegidos:
+        void pausar(int milisegundos); // <- Para las pausas
+
+        Personaje * seleccionarObjetivo( vector<Personaje*> objetivos, string mensaje);
+
+
+
         
     public:
 
@@ -75,13 +82,15 @@ class Personaje {
         int getDefensa( );
         int getNivel( );
         bool getIsEstaVivo( );
+        bool getEscudoProtector();
 
         // Sets - solo ponemos sets de los atributos que queremos modificar (la de los objetos magicos) :
         void setVida( int vida );
         void setAtaque( int ataque );
         void setDefensa( int defensa );
         /* Agregado para cuando sea revivido */
-        void setEstaVivo( bool );
+        void setEstaVivo( bool estado);
+        void setEscudoProtector( bool estado);
 
 
         //Metodos abstractos que cuya definicion recae en las clases hijas:
@@ -95,6 +104,12 @@ class Personaje {
         virtual void realizarAccionIA(vector <Personaje*> aliados, vector <Personaje *> enemigos ) = 0;
 
 
+        /*Metodo para el jugador: muestra los objetivos validos segun el rol
+         *y permite al jugador seleccionar. Encapsula la logica de seleccion.
+         * Retorna true si la accion fue realizada, false si fue cancelada.
+         */
+
+         virtual bool realizarAccionJugador( vector<Personaje*> aliados, vector<Personaje*> enemigos) = 0;
 
         //Metodos de combate, comunes a todos los personajes:
         void recibirDanio( int danio );//Reduce vida y verifica si muere.

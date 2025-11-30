@@ -118,29 +118,25 @@ void Paladin::protegerAliado( Personaje* aliado ) {
         return;
     }
 
+    if (aliado-> getEscudoProtector() ) {
+        cout << aliado->getNombre() << " ya tiene un escudo protector activo." << endl;
+        return;
+    }
+
     cout << endl << "╔════════════════════════════════════════╗" << endl;
     cout << "║   ESCUDO PROTECTOR                ║" << endl;
     cout << "╚════════════════════════════════════════╝" << endl;
     cout << this -> nombre << " se interpone para proteger a "
-         << aliado -> getNombre( ) << "!" << endl;
+         << aliado -> getNombre( ) << "!!!!" << endl;
 
-    pausar(1200); //Para que el usuario pueda leer el texto.
+    pausar(1500); //Para que el usuario pueda leer el texto.
 
-    // Verificar si el escudo sagrado se activa
-    if( activarEscudoSagrado( ) ) {
-        this -> escudoActivado = true;
-        cout << "¡El ESCUDO SAGRADO se activa!" << endl;
-        cout << "Una barrera de luz divina envuelve al Paladín." << endl;
-        cout << "El próximo ataque será completamente bloqueado!" << endl;
-    } else {
-        cout << this -> nombre << " adopta una postura defensiva." << endl;
-        cout << aliado -> getNombre( ) << " recibe un bonus temporal de +10 defensa." << endl;
+    //Activar el escudo sagrado en el aliado:
 
-        // Aumentar defensa del aliado temporalmente
-        int defensaActual = aliado -> getDefensa( );
-        aliado -> setDefensa( defensaActual + 10 );
-    }
+    aliado->setEscudoProtector(true);
 
+    cout << "Una barrera de luz divina envueve a " << aliado->getNombre() << "!!!" << endl;
+    cout << "El proximo ataque sera completamente bloqueado!!!" << endl;
     cout << "═══════════════════════════════════════════" << endl;
     pausar(1200); //Para que el usuario pueda leer el texto.
 }
@@ -174,7 +170,7 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
     cout << this -> nombre << " canaliza el poder sagrado hacia "
          << aliado -> getNombre( ) << "!" << endl;
 
-    pausar(1200); //Para que el usuario pueda leer el texto.
+    pausar(1500); //Para que el usuario pueda leer el texto.
 
     // Aumentar defensa del aliado
     int defensaAnterior = aliado -> getDefensa( );
@@ -189,8 +185,12 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
 }
 
 void Paladin::realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+
     /*IA del Paladin: ataca al enemigos, pero si un aliado esta muy herido, lo protege
      * Estrategia: Balance entre ataque y proteccion.
+     * - Si un aliado tiene menos del 30% de vida y no tiene escudo, lo protege.
+     * - Si un aliado tiene menos del 50% de vida, usa bendicion.
+     * - Si no, ataca al enemigo con mas vida.
      */
 
     if (!this->isEstaVivo) {
@@ -200,44 +200,131 @@ void Paladin::realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> e
     cout << endl << ">> " << this->nombre << " (Paladin) evalua el campo de batalla..." << endl;
     pausar(2000);  //  Pausa para crear tensión
 
-    //Primero verificamos si algun aliado necesita proteccion (vida < 30%):
-    Personaje * aliadoEnPeligro = nullptr;
+    //Primero verificamos si algun aliado (o el mismo) necesita escudo (vida < 30% y sin escudo):
 
-    for ( int i = 0 ; i < aliados.size(); i++) {
-        //Nota el "!= this" es para que no se seleccione a si mismo, ya que el hace parte del equipo.
-        if (aliados[i] -> getIsEstaVivo() && aliados[i] != this) {
-            double porcentajeVida = (double) aliados[i] ->getVida() / aliados[i]->getVidaMaxima();
-            if (porcentajeVida < 0.30) {
-                aliadoEnPeligro = aliados[i];
-                break;
+    for (int i = 0; i < aliados.size(); i++) {
+        if ( aliados[i] -> getIsEstaVivo() ) {
+            double porcentajeVida = (double) aliados[i]->getVida() / aliados[i]->getVidaMaxima();
+
+            if ( porcentajeVida < 0.30 && !aliados[i]->getEscudoProtector() ) {
+                if( aliados[ i ] == this ) {
+                    cout << this -> nombre << " se prepara para protegerse a si mismo!!!" << endl;
+                } else {
+                    cout << this -> nombre << " decide proteger a su aliado en peligro!!!" << endl;
+                }
+                protegerAliado( aliados[ i ] );
+                return;
             }
         }
     }
 
-    //Si hay aliado en peligro, usar bencion divina:
-    if (aliadoEnPeligro != nullptr) {
-        cout << this->nombre << " decide proteger a su aliado herido!!!!" << endl;
-        bendiccionDivina(aliadoEnPeligro);
-        return;
+    //Si no hay aliados en peligro Critico, verificar si alguien necesita bendicion (vida < 50%):
+
+    for (int i = 0; i < aliados.size(); i++) {
+
+        if (aliados[i]->getIsEstaVivo() ) {
+            double porcentajeVida = (double) aliados[i]->getVida() / aliados[i]->getVidaMaxima();
+            if (porcentajeVida < 0.5 ) {
+                if (aliados[i] == this) {
+                    cout << this->nombre << " decide protegerse a si bendecirse a si mismo!!!!!" << endl;
+                }
+                else {
+                    cout << this->nombre << " decide bendecir a su aliado herido!!!!" << endl;
+                }
+                bendiccionDivina(aliados[i]) ;
+                return;
+            }
+        }
     }
 
-    //Si no hay aliados en peligro, atacar al enemigo con mas vida:
-    Personaje * objetivo = nullptr;
+    //Si no hay aliados que necesiten ayuda, atacar al enemigo con mas vida:
+    Personaje* objetivo = nullptr;
     int mayorVida = -1;
 
-    for (int i = 0; i < enemigos.size() ; i++) {
-        if (enemigos[i]->getIsEstaVivo( ) && enemigos[ i ] -> getVida() > mayorVida) {
-            mayorVida = enemigos[i]->getVida();
+    for (int i = 0; i < enemigos.size(); i++) {
+        if (enemigos[i] ->getIsEstaVivo() && enemigos[i]-> getVida() > mayorVida) {
+            mayorVida = enemigos[ i ]->getVida();
             objetivo = enemigos[i];
         }
     }
 
     if (objetivo != nullptr) {
-        realizarAccion(objetivo); //Reutilizamos el metodo;
+        realizarAccion(objetivo);
     }
     else {
-        cout << this->nombre << " no encuentra objetivos." << endl;
+        cout << this-> nombre << " no encuentra objetivos." << endl;
     }
+}
+
+bool Paladin::realizarAccionJugador(vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+      /*El paladin puede atacar enemigos O proteger/bendecir aliados
+       * El jugador elige que hacer.
+       */
+
+       if (!this-> isEstaVivo) {
+           cout << this->nombre << " esta derrotado y no puede actuar." << endl;
+           return false;
+       }
+
+    cout << endl << "========================================" << endl;
+    cout << "  El Paladin puede realizar diferentes acciones:" << endl;
+    cout << "  1. Atacar a un enemigo (Justicia Divina)" << endl;
+    cout << "  2. Otorgar Escudo Protector a un aliado (bloquea 1 ataque)" << endl;
+    cout << "  3. Bendicion Divina a un aliado (+15 defensa permanente)" << endl;
+    cout << "  0. Cancelar" << endl;
+    cout << "========================================" << endl;
+    cout << "Seleccione: ";
+
+    int opcion;
+    cin >> opcion;
+
+    Personaje * objetivo = nullptr;
+
+    switch ( opcion ) {
+        case 1: {
+            objetivo = seleccionarObjetivo(enemigos, "Seleccione un enemigo "
+                                                     "para atacar (No dio el Diezmo) : ");
+            if (objetivo != nullptr) {
+                realizarAccion(objetivo);
+                return true;
+            }
+
+            break;
+        }
+        case 2: {
+            objetivo = seleccionarObjetivo(aliados, "Seleccione un aliado"
+                                                    " a proteger (Tiene que ser un creyente con tarjeta Premium): ");
+            if (objetivo != nullptr) {
+                protegerAliado(objetivo);
+                return true;
+            }
+            break;
+        }
+        case 3: {
+            objetivo = seleccionarObjetivo( aliados, "Seleccione un "
+                                                     "aliado para bendecir (Si no viene a "
+                                                     "misa los domingos, pailas): ");
+            if (objetivo != nullptr) {
+                bendiccionDivina(objetivo);
+                return true;
+            }
+            break;
+        }
+        case 0: {
+            cout << "Accion cancelada. (No pagaron)" << endl;
+            return false;
+            break;
+
+        }
+        default: {
+            cout << "Opcion invalida. " << endl;
+            return false;
+            break;
+
+        }
+    }
+
+    return false;
 
 }
 

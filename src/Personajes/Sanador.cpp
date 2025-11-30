@@ -145,6 +145,24 @@ void Sanador::realizarAccionIA( vector<Personaje *> aliados , vector<Personaje*>
 
 }
 
+bool Sanador::realizarAccionJugador( vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+    /*El Sanador cura a aliados. El jugador seleccionar a cual. */
+
+    if (!this-> isEstaVivo) {
+        cout << this->nombre << " esta derrotado y no puede actuar." << endl;
+        return false;
+    }
+
+    Personaje* objetivo = seleccionarObjetivo( aliados, "Seleccionar un "
+                                                        "aliado para curar (Si tiene seguro): ");
+
+    if ( objetivo != nullptr ) {
+        realizarAccion(objetivo);
+        return true;
+    }
+
+    return false;
+}
 
 void Sanador::mostrarInformacion( ) {
     //Mostramos la informacion del sanador:

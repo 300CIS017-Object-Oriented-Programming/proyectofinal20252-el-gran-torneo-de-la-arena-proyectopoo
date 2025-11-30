@@ -34,7 +34,8 @@ class Paladin : public Personaje {
         //Metodo para la IA:
         void realizarAccionIA( vector<Personaje*> aliados, vector <Personaje*> enemigos) override;
 
-
+        //Metodo para las acciones del jugador:
+        bool realizarAccionJugador( vector <Personaje*> aliados, vector <Personaje*> enemigos) override;
 
         // Método especial del Paladín
         void protegerAliado( Personaje* aliado );

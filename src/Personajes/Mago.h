@@ -30,6 +30,9 @@ class Mago : public Personaje {
         //Metodo para realizar la IA del enemigo:
         void realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos ) override;
 
+        //Metodo para realizar la accion del jugador:
+        bool realizarAccionJugador( vector <Personaje*> aliados, vector<Personaje*> enemigos) override;
+
 };
 
 

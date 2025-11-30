@@ -150,6 +150,7 @@ void Arena::mostrarMenuAcciones(Personaje * heroe) {
     cout << "1. Realizar accion principal (atacar/curar segun rol)." << endl;
     cout << "2. Usar objeto equipado." << endl;
     cout << "3. Ver estado del combate." << endl;
+    cout << "4. Saltar turno." << endl;  // <- Nuevo, por si el jugador quiere saltarse un turno.
     cout << "Selecciones una opcion: ";
 
 }
@@ -172,62 +173,14 @@ void Arena:: ejecutarAccionHeroe(Personaje* heroe) {
         switch (opcion) {
 
             case 1: {
-                //Accion principal segun el rol del heroe:
-                string rol = heroe->getRol();
+                //Accion principal: cada Heroe sabe como ejecutar su accion.
 
-                if (rol == "Sanador") {
-                    //El sanador cura aliados:
-                    cout << endl << "Seleccione un aliado para curar: " << endl;
-                    mostrarListaObjetivos(this->heroes, true);
-                    cout << "Opcion: ";
+                //Dentro se muestran los objetivos correctos por tipo de Heroe.
 
-                    int seleccion;
-                    cin>> seleccion;
+                accionRealizada = heroe->realizarAccionJugador( this->heroes, this->enemigos);
 
-                    //Buscamos el aliado seleccionado (solo entre los vivos):
-                    int contador = 1;
-
-                    for (int i = 0; i < this->heroes.size(); i++) {
-                        if (this->heroes[i]->getIsEstaVivo()) {
-                            if ( contador == seleccion){
-                                heroe -> realizarAccion(this->heroes[i]);
-                                accionRealizada = true;
-                                break;
-                            }
-                            contador ++;
-                        }
-                    }
-                    if (!accionRealizada) {
-                        cout << "Seleccion invalida. intente de nuevo.";
-                    }
-                }
-                else {
-
-                    //Guerrero, Mago, etc atacan enemigos:
-
-                    cout << endl << "Seleccione un enemigo para atacar: " << endl;
-                    mostrarListaObjetivos(this->enemigos, true);
-                    cout << "Opcion: ";
-
-                    int seleccion;
-                    cin >>seleccion;
-
-                    //Buscamos el enemigo seleccionado (solo entre vivos):
-
-                    int contador = 1;
-                    for (int i = 0; i < this->enemigos.size(); i++) {
-                        if (this-> enemigos[i]-> getIsEstaVivo()) {
-                            if (contador == seleccion) {
-                                heroe->realizarAccion(this->enemigos[i]);
-                                accionRealizada = true;
-                                break;
-                            }
-                            contador++;
-                        }
-                    }
-                    if (!accionRealizada) {
-                        cout << "Seleccion invalida. intente de nuevo." << endl ;
-                    }
+                if ( !accionRealizada ) {
+                    cout << "Accion cancelada. Seleccione otra opcion." << endl;
                 }
                 break;
             }
@@ -274,6 +227,16 @@ void Arena:: ejecutarAccionHeroe(Personaje* heroe) {
                 //No marcamos accion realizada, vuelve al menu.
                 break;
             }
+
+            case 4: {
+                //Saltar Turno:
+                cout << heroe -> getNombre() << " decide esperar y observar...." << endl;
+                pausar(1000);
+                accionRealizada = true; //Termina el turno sin hacer nada.
+
+                break;
+            }
+
             default: {
                 cout << "Opcion Invalida. Intente de nuevo." << endl;
                 break;
@@ -306,14 +269,14 @@ void Arena::iniciarCombate( vector <Personaje*> equipoHeroes, vector<Personaje*>
     this->  objetosUsados = 0;
     this->  combateActivo = true;
 
-    cout << endl << "Equipo del Jugador (" << this->heroes.size() << "heroes):" << endl;
+    cout << endl << "Equipo del Jugador (" << this->heroes.size() << " heroes):" << endl;
     for (int i = 0; i < this-> heroes.size(); i++) {
         cout << " -"  << this->heroes[i]->getNombre() << " (" << this->heroes[i] -> getRol() << ")" << endl;
     }
 
     pausar(800);  // Pausa
 
-    cout << endl << "Equipo Enemigo (" << this->enemigos.size() << "Oponentes):" << endl;
+    cout << endl << "Equipo Enemigo (" << this->enemigos.size() << " Oponentes):" << endl;
     for (int i = 0; i < this-> enemigos.size(); i++) {
         cout << " -"  << this->enemigos[i]->getNombre() << " (" << this->enemigos[i] -> getRol() << ")" << endl;
     }
@@ -382,7 +345,7 @@ void Arena::ejecutarTurno ( ) {
         }
     }
 
-    cout << endl << "--- Fin del Turno" << this ->turnoActual << " ---" << endl;
+    cout << endl << "--- Fin del Turno " << this ->turnoActual << " ---" << endl;
     pausar(600);  // Pausa al final del turno
 }
 

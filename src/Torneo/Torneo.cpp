@@ -193,6 +193,11 @@ void Torneo::iniciarArena() {
 
 // Metodos auxialiares privados:
 
+void Torneo::pausar(int milisegundos) {
+    sleep_for( milliseconds( milisegundos ) );
+}
+
+
 void Torneo::crearNuevoHeroe( ) {
     // Metodo auxiliar que encapsula toda la logica de creacion de heroes.
     // Hace que el menu de gestionarGuild sea mas limpio.
@@ -409,6 +414,8 @@ void Torneo::mostrarGuildsRivales( ) {
         Verificar esto cuando lo corran*/
         personajesTotales = this -> guildsEnemigas[ i ] -> getCantidadPersonajes( );
         cout << " ##### Personajes activos: " << personajesVivos << "/" << personajesTotales << endl ;
+
+        pausar(2000); //Para que el usuario pueda leer el texto.
     }
 
        // Resumen al final:

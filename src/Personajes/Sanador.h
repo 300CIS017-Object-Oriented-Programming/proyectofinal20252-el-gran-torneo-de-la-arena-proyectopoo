@@ -29,6 +29,9 @@ class Sanador : public Personaje {
 
        //Metodo para la IA:
         void realizarAccionIA( vector<Personaje*> aliados, vector <Personaje*> enemigos) override;
+
+       //Para las acciones del jugador:
+        bool realizarAccionJugador( vector<Personaje*> aliados, vector <Personaje*> enemigos) override;
 };
 
 

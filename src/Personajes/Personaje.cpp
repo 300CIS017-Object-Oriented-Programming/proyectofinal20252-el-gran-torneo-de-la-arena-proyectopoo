@@ -18,6 +18,7 @@ Personaje::Personaje( ) {
     this -> ataque = 10;
     this -> defensa = 5;
     this -> isEstaVivo = true;
+    this-> isTieneEscudoProtector = false; //Por defecto no tiene escudo.
 }
 
 Personaje::Personaje( string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa ) {
@@ -31,6 +32,7 @@ Personaje::Personaje( string nombre, string rol, string bando, int nivel, int vi
     this -> ataque = ataque;
     this -> defensa = defensa;
     this -> isEstaVivo = true; // Todos los personaje inician vivos.
+    this-> isTieneEscudoProtector = false; //Por defecto no tiene escudo.
 }
 
 Personaje::~Personaje( ) {
@@ -80,6 +82,10 @@ bool Personaje::getIsEstaVivo( ) {
     return this -> isEstaVivo;
 }
 
+bool Personaje::getEscudoProtector() {
+    return this->isTieneEscudoProtector;
+}
+
 // Sets:
 
 void Personaje::setVida( int vida ) {
@@ -114,6 +120,10 @@ void Personaje::setEstaVivo( bool estado ) {
     this -> isEstaVivo = estado;
 }
 
+void Personaje:: setEscudoProtector( bool estado) {
+    this-> isTieneEscudoProtector = estado;
+}
+
 
 //Metodos auxiliares:
 
@@ -121,10 +131,80 @@ void Personaje::pausar(int milisegundos) {
     sleep_for( milliseconds( milisegundos ) );
 }
 
+Personaje* Personaje::seleccionarObjetivo( vector<Personaje*> objetivos, string mensaje) {
+    /*Muestra una lista de objetivos vivos y permite seleccionar uno.
+     * Retorna el puntero al personaje seleccionado, o nullptr si se cancela.
+     * Dependiendo si es sanador o un rol atacante, cambiaria el vector que recibe en los arguementos,
+     * ayuda con el encapsulamiento y hara mas facil agregarle mas heroes despues (sin importar el rol).
+     *Primero lo implementare para que retorne el puntero a un objeto, despues veo como puedo hacerlo para que
+     *retorne varios, pensando en el AOE del hechicero Oscuro. (Pipe)
+     */
+
+    cout << endl << mensaje << endl;
+    cout << "----------------------------------------" << endl;
+    int contador = 1;
+
+    for (int i = 0; i < objetivos.size(); i++) {
+
+        if ( objetivos[i]->getIsEstaVivo() ) {
+
+            cout << " " << contador << ". " << objetivos[i]-> getNombre()
+            << " (" << objetivos[ i ] -> getRol() << ") "
+            << "-- Vida: " << objetivos[ i ]->getVida() << "/" << objetivos[ i ]->getVidaMaxima()
+            << endl;
+            contador++;
+        }
+    }
+
+    if (contador == 1) {
+        cout << "No hay objetivos disponibles." << endl;
+        return nullptr;
+    }
+
+    cout << " 0. Cancelar." << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "Opcion: " ;
+
+    int seleccion;
+    cin >> seleccion;
+
+    if (seleccion == 0) {
+        return nullptr;
+    }
+
+
+    //Buscar al objetivo seleccionado:
+
+    contador = 1;
+
+    for (int i = 0; i < objetivos.size(); i++) {
+        if ( objetivos[i]-> getIsEstaVivo() ) {
+            if (contador == seleccion) {
+                return objetivos[ i ];
+            }
+            contador ++;
+        }
+    }
+
+    cout << "Seleccion invalida." << endl;
+    return nullptr;
+}
 
 //Metodos para el combate:
 
 void Personaje::recibirDanio( int danio ) {
+
+   //Verificar que tenga el escudo protector:
+    if (this->isTieneEscudoProtector) {
+        cout << endl << "========================================" << endl;
+        cout << "  ¡¡¡ESCUDO PROTECTOR ACTIVADO!!!" << endl;
+        cout << "  " << this -> nombre << " bloquea completamente el ataque!" << endl;
+        cout << "  El escudo se desvanece despues de absorber el golpe." << endl;
+        cout << "========================================" << endl;
+        this -> isTieneEscudoProtector = false; // El escudo se consume.
+        return; // No recibe daño.
+    }
+
     // Calcula el daño real considerando la defensa:
     int danioReal = danio - this -> defensa;
 

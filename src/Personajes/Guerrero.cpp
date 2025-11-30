@@ -124,6 +124,26 @@ void Guerrero::realizarAccionIA( vector<Personaje*> aliados, vector <Personaje *
 
 }
 
+
+
+bool Guerrero::realizarAccionJugador(vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+    /*El Guerrero ataca enemigos. El jugador selecciona a cual. */
+
+    if (!this -> isEstaVivo) {
+        cout << this-> nombre << " esta derrotado y no puede actuar." << endl;
+        return false;
+    }
+
+    Personaje * objetivo = seleccionarObjetivo( enemigos, "o-__-o Seleccione un enemigo para atacar : ");
+
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo);
+        return true;
+    }
+    return false;
+}
+
+
 void Guerrero::mostrarInformacion( ) {
     // Muestar informacion detallada del guerrero:
     cout << endl << "======== Informacion del Guerrero ========" << endl;

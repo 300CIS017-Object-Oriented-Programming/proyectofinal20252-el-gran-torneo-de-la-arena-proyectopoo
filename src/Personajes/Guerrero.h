@@ -33,7 +33,12 @@ class Guerrero: public Personaje{
 
         void realizarAccion( Personaje* objetivo ) override;
         void mostrarInformacion( ) override;
+
+        //Para la IA del enemigo:
         void realizarAccionIA( vector<Personaje * > aliados, vector <Personaje *> enemigos) override;
+
+        // Para las acciones del jugador:
+        bool realizarAccionJugador( vector <Personaje*> aliados, vector<Personaje*> enemigos) override;
 
 };
 
