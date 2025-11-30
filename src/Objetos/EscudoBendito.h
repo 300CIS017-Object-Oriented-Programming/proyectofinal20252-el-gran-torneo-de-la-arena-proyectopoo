@@ -5,6 +5,8 @@
 #include "ObjetoMagico.h"
 #include <iostream>
 
+using std::endl;
+
 class EscudoBendito : public ObjetoMagico {
     private:
         int aumentoDefensaMin;
@@ -15,7 +17,7 @@ class EscudoBendito : public ObjetoMagico {
     public:
         EscudoBendito( int stock );
         virtual ~EscudoBendito( ) = default;
-        void aplicarEfecto( Personaje* personaje ) override;
+        void aplicarEfecto( Personaje* usuario, vector<Personaje* > aliados, vector<Personaje*> enemigos ) override;
         void mostrarInformacion( ) override;
 
         /* Getters y Setters */

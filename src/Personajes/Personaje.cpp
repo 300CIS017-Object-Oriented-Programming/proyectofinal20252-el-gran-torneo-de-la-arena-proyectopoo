@@ -255,13 +255,16 @@ void Personaje::retirarObjeto( int indice ) {
     }
 }
 
-void Personaje::usarObjeto( int indice ) {
-    // Usa el objeto en la posicion indicada por el indice.
-    if( indice >= 0 && indice < this -> objetosEquipados.size( ) ) {
-        this -> objetosEquipados[ indice ] -> aplicarEfecto( this );
-        cout << this -> nombre << " usa el objeto" << this -> objetosEquipados[ indice ] -> getNombre( ) << endl;
-        this -> objetosEquipados[ indice ] -> marcarUsado( );
+void Personaje::usarObjeto( int indice, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+
+    //Usa el objeto en la posicion indicada por el indice.
+
+    if ( indice >= 0 && indice < this->objetosEquipados.size() ) {
+        cout << this->nombre << " usa el objeto " << this-> objetosEquipados[ indice ] ->getNombre() << endl;
+        this->objetosEquipados[ indice ] -> aplicarEfecto(this, aliados, enemigos);
+        //El marcado como usado se hace dentro de aplicarEfecto de ObjetoAsignado.
     }
+
     else {
         cout << "Indice de objeto invalido." << endl;
     }

@@ -22,16 +22,31 @@ int PocionVida::calcularEfecto( ) {
     return this -> curacionMinima + rand( ) % ( this -> curacionMaxima - this -> curacionMinima + 1 );
 }
 
-void PocionVida::aplicarEfecto( Personaje* personaje ) {
-    int curacion = calcularEfecto( );
+void PocionVida::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+    // La pocion de vida solo afecta al usuario, ignora aliados y enemigos.
+    int curacion = calcularEfecto();
 
-    /* Validaciono para que el personaje que use la pocion de Vida no pueda 
-       tener mas vida que la maxima posible */
-    if( personaje -> getVida( ) + curacion > personaje -> getVidaMaxima( ) ) {
-        personaje -> setVida( personaje -> getVidaMaxima( ) );
-    } else {
-        personaje -> setVida( personaje -> getVida( ) + curacion );
+    cout << endl << "========================================" << endl;
+    cout << "         POCION DE VIDA" << endl;
+    cout << "========================================" << endl;
+    cout << usuario -> getNombre( ) << " bebe una pocion de vida..." << endl;
+
+    pausar(2000);
+
+    int vidaAntes = usuario -> getVida();
+
+    if ( usuario -> getVida() + curacion > usuario->getVidaMaxima() ) {
+        usuario->setVida( usuario ->getVidaMaxima() );
     }
+    else {
+        usuario->setVida( usuario->getVida() + curacion);
+    }
+
+    cout << "Curacion obtenida: +" << curacion << " puntos de vida." << endl;
+    cout << "Vida: " << vidaAntes << " --> " << usuario->getVida() << "/" << usuario->getVidaMaxima() << endl;
+    cout << "========================================" << endl;
+
+    pausar(1500);
 }
 
 void PocionVida::mostrarInformacion( ) {

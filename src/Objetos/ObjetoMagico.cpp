@@ -12,6 +12,13 @@ ObjetoMagico::ObjetoMagico( string nombre, string descripcion, int stockDisponib
     this -> stockDisponible = stockDisponible;
 }
 
+//Metodos auxiliares:
+
+void ObjetoMagico::pausar(int milisegundos) {
+    sleep_for( milliseconds( milisegundos ) );
+}
+
+
 void ObjetoMagico::decrementarStock( ) {
     this -> stockDisponible--;
 }

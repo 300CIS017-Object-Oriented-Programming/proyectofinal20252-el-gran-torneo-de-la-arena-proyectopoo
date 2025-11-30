@@ -13,7 +13,7 @@ CaballaLegendaria::CaballaLegendaria( int stock ) : ObjetoMagico( ) {
     this -> descripcion = "Un pez mistico de tiempos ancestrales. Al consumirlo, el destino decide: 50% de probabilidad de eliminar instantaneamente al enemigo, 50% de que el usuario muera en el acto. Solo los mas valientes se atreven a usarla.";
     this -> stockDisponible = stock;
     this -> probabilidadExito = 0.5;
-    this -> objetivoEnemigo = nullptr;
+
 }
 
 // Metodo auxiliar privado
@@ -25,39 +25,101 @@ bool CaballaLegendaria::calcularExito( ) {
 }
 
 // Metodo principal - aplica el efecto del objeto
-void CaballaLegendaria::aplicarEfecto( Personaje* personaje ) {
-    cout << endl << "============================================" << endl;
-    cout << "  " << personaje -> getNombre( ) << " consume la CABALLA LEGENDARIA DEL DESTINO!" << endl;
-    cout << "  El aire se congela... el destino decide..." << endl;
-    cout << "============================================" << endl;
+void CaballaLegendaria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje *> enemigos ) {
 
-    /* Agrego Validacion: */
-    if ( this->objetivoEnemigo == nullptr) {
-        cout << "Error: No hay objetivo enemigo establecido." << endl;
+    //La Caballa Legendaria requiere seleccionar un enemigo objetivo:
+    cout << endl << "============================================" << endl;
+    cout << "    CABALLA LEGENDARIA DEL DESTINO" << endl;
+    cout << "============================================" << endl;
+    cout << "ADVERTENCIA: 50% de matar al enemigo, 50% de morir tu!" << endl;
+    cout << endl << "Seleccione un enemigo objetivo:" << endl;
+    cout << "----------------------------------------" << endl;
+
+    pausar(2000);
+
+    //Mostrar lista de enemigos vivos:
+
+    int contador = 1;
+
+    for (int i = 0; i < enemigos.size(); i++) {
+        if ( enemigos[i] -> getIsEstaVivo() ) {
+            cout << " " << contador << ". " << enemigos[i]->getNombre()
+            << " (" << enemigos[i]->getRol() << ") " << "- Vida: " <<
+                enemigos[i]->getVida() << "/" << enemigos[i]-> getVidaMaxima() << endl;
+            contador ++;
+        }
+    }
+
+    if (contador == 1) {
+        cout << "No hay enemigos vivos para atacar." << endl;
+        cout << "La Caballa se conserva para otro momento." << endl;
         return;
     }
 
-    if( calcularExito( ) ) {
-        // EXITO: El enemigo muere instantaneamente
-        cout << endl << "*** ¡EL DESTINO FAVORECE AL VALIENTE! ***" << endl;
+    cout << " 0. Cancelar (conservar la Caballa). " << endl;
+    cout  << "----------------------------------------" << endl;
+    cout <<"Opcion: ";
 
-        if( this -> objetivoEnemigo != nullptr && this -> objetivoEnemigo -> getIsEstaVivo( ) ) {
-            cout << this -> objetivoEnemigo -> getNombre( ) << " es fulminado por el poder ancestral!" << endl;
-            this -> objetivoEnemigo -> setVida( 0 );
-            cout << "¡" << this -> objetivoEnemigo -> getNombre( ) << " ha sido ELIMINADO instantaneamente!" << endl;
-        } else {
-            cout << "No hay enemigo objetivo establecido o ya esta derrotado." << endl;
-            cout << "El poder de la caballa se disipa en el viento..." << endl;
-        }
-    } else {
-        // FRACASO: El usuario muere
-        cout << endl << "*** ¡EL DESTINO ES CRUEL! ***" << endl;
-        cout << "La caballa estaba maldita... " << personaje -> getNombre( ) << " cae fulminado!" << endl;
-        personaje -> setVida( 0 );
-        cout << "¡" << personaje -> getNombre( ) << " ha MUERTO por su propia osadia!" << endl;
+    int seleccion;
+    cin >> seleccion;
+
+    if (seleccion == 0) {
+        cout << "Decides guardar la Caballa para un momento mas desesperado." << endl;
+        pausar(1500);
+        return;
     }
 
+    //Buscar el enemigo seleccionado.
+    Personaje * objetivo = nullptr;
+    contador = 1;
+
+    for (int i = 0; i < enemigos.size(); i++) {
+        if (enemigos[i] -> getIsEstaVivo() ) {
+            if ( contador == seleccion) {
+                objetivo = enemigos[i];
+                break;
+            }
+            contador++ ;
+        }
+    }
+
+    if (objetivo == nullptr) {
+        cout << "Seleccion invalida. La Caballa se conserva." << endl;
+        pausar(1500);
+        return;
+    }
+
+    //Ahora ejecutamos el efecto de la caballa:
+
+    cout << endl << usuario->getNombre() << " consume la CABALLA LEGENDARIA!!!!!!" << endl;
+    cout << "El aire se congela... el destino se decide...." << endl;
+
+    pausar(3000);
+
+    if ( calcularExito( ) ) {
+        //Exito: El enemigo muere instantanemente.
+        cout << endl << "*~~* EL DESTINO FAVORECE A LOS VALIENTES !!!!!!!! *~~*" << endl;
+        cout << objetivo -> getNombre() << " es fulminado por el poder ancestral!!!!" << endl;
+        objetivo->setVida(0);
+        objetivo->setEstaVivo(false);
+        cout << objetivo->getNombre() << "ha sido ELIMINADO instantaneamente!!!!!!" << endl;
+
+    }
+    else {
+        //Fracaso: el usuario muere:
+        cout << endl << "*~~* EL DESTINO ES CRUEL!!!! *~~*" << endl;
+        cout << "La Caballa estaba maldita.....O "<< usuario->getNombre() << " era alergico a los pescados "
+            <<", no hay forma de saberlo..... " <<" igualmente "<< usuario->getNombre() <<  " cae FULMINADO." << endl;
+        pausar(2500);
+
+        usuario->setVida(0);
+        usuario->setEstaVivo(false);
+
+        cout << usuario->getNombre() << " ha MUERTO por su propia osadia !!!!... O alergia a los pescados." << endl;
+
+    }
     cout << "============================================" << endl;
+    pausar(1500);
 }
 
 // Muestra informacion del objeto
@@ -70,15 +132,10 @@ void CaballaLegendaria::mostrarInformacion( ) {
     cout << "=======================================" << endl;
 }
 
-// Setter para establecer el enemigo objetivo antes de usar la caballa
-void CaballaLegendaria::setObjetivoEnemigo( Personaje* enemigo ) {
-    this -> objetivoEnemigo = enemigo;
-}
+
 
 // Getters
-Personaje* CaballaLegendaria::getObjetivoEnemigo( ) {
-    return this -> objetivoEnemigo;
-}
+
 
 double CaballaLegendaria::getProbabilidadExito( ) {
     return this -> probabilidadExito;

@@ -22,9 +22,25 @@ int AmuletoFuria::calcularEfecto( ) {
     return this -> aumentoAtaqueMin + rand( ) % ( this -> aumentoAtaqueMax - this -> aumentoAtaqueMin + 1 );
 }
 
-void AmuletoFuria::aplicarEfecto( Personaje* personaje ) {
-    int aumento = calcularEfecto( );
-    personaje -> setAtaque( aumento + personaje -> getAtaque( ) );
+void AmuletoFuria::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+    //El amuleto de furia solo afecta al usuario, ignora aliados y enemigos.
+
+    int aumento = calcularEfecto();
+    int ataqueAntes = usuario->getAtaque();
+
+    usuario-> setAtaque( ataqueAntes + aumento);
+
+    cout << endl << "========================================" << endl;
+    cout << "         AMULETO DE FURIA" << endl;
+    cout << "========================================" << endl;
+    cout << usuario -> getNombre( ) << " activa el Amuleto de Furia!" << endl;
+    cout << "Aumento de ataque: +" << aumento << " puntos." << endl;
+    cout << "Ataque: " << ataqueAntes << " -> " << usuario -> getAtaque( ) << endl;
+    cout << "Duracion: " << this -> turnos << " turnos." << endl;
+    cout << "========================================" << endl;
+
+    pausar(1500);
+
 }
 
 void AmuletoFuria::mostrarInformacion( ) {

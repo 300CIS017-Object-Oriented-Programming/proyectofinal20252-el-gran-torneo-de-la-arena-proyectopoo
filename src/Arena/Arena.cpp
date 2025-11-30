@@ -185,39 +185,41 @@ void Arena:: ejecutarAccionHeroe(Personaje* heroe) {
                 break;
             }
             case 2: {
-                //Usar objeto equipado:
-                cout << endl << "Objeto equipados de " << heroe ->getNombre() << ":"<< endl;
-                heroe->mostrarObjetosEquipados();
-
-                cout << "Seleccione el slot del objeto (1 o 2), 0 para cancelar: ";
+                //Usar el objeto equipado:
+                cout << endl << "Objetos equipados de " << heroe->getNombre() << ": " << endl;
+                heroe ->mostrarObjetosEquipados();
+                cout << "Seleccione el slot del objeto (1 o 2), 0 para cancelar: " ;
                 int slot;
                 cin >> slot;
 
                 if (slot == 1 || slot == 2) {
                     //Verificamos que haya un objeto en ese slot:
-                    ObjetoAsignado * objeto = heroe->getObjetoEquipado(slot-1);
+                    ObjetoAsignado * objeto = heroe -> getObjetoEquipado(slot - 1);
 
                     if (objeto == nullptr) {
                         cout << "No hay objeto en ese slot." << endl;
                     }
 
-                    else if (objeto ->estaUsado()) {
+                    else if (objeto->estaUsado()){
                         cout << "Ese objeto ya fue usado en este combate." << endl;
+
                     }
                     else {
-                        //usarObjeto usa indices 0 y 1, ajustamos:
-                        heroe->usarObjeto(slot-1);
+                        //usarObjeto() usa indices 0 y 1, ajustamos:
+                        heroe->usarObjeto( slot - 1, this->heroes, this->enemigos);
                         this->objetosUsados++;
                         accionRealizada = true;
                     }
                 }
-                else if (slot == 0) {
-                    cout << "Uso de objeto cancelado." << endl;
+
+                else if ( slot == 0) {
+                    cout << "Uso de objeto Cancelado." << endl;
                     //No marcamos accion realizada, vuelve al menu.
                 }
                 else {
-                    cout << "Slot invalido." << endl;
+                    cout << "Slot Invalido." << endl;
                 }
+
                 break;
             }
             case 3: {

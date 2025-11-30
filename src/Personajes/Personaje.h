@@ -114,7 +114,8 @@ class Personaje {
         //Metodos de combate, comunes a todos los personajes:
         void recibirDanio( int danio );//Reduce vida y verifica si muere.
         void equiparObjeto( ObjetoAsignado* objeto ); // Agrega objeto si hay espacio.
-        void usarObjeto( int indice ); // Usa el objeto en la posicion indicada.
+        void usarObjeto( int indice, vector<Personaje*> aliados, vector <Personaje*> enemigos );
+        // Usa el objeto en la posicion indicada.
         void retirarObjeto( int indice ); //Quita un objeto equipado.
         bool isPuedeEquiparObjeto( );// Verificamos si tiene espacio. (en este caso un maximo de dos).
         ObjetoAsignado* getObjetoEquipado( int indice ); //Objeto el objeto en la posicion (indice).

@@ -9,6 +9,7 @@
 // Librerías:
 #include <iostream>
 #include <string>
+#include <vector>
 
 // Declaraciones adelantadas para evitar dependencias circulares.
 class ObjetoMagico;
@@ -18,6 +19,7 @@ class Personaje;
 using std::string;
 using std::cout;
 using std::endl;
+using std::vector;
 
 class ObjetoAsignado {
 
@@ -34,7 +36,7 @@ class ObjetoAsignado {
         virtual ~ObjetoAsignado( );
 
         // Aplica el efecto del objeto sobre el personaje (si no está usado).
-        void aplicarEfecto( Personaje* personaje );
+        void aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos );
 
         // Marca el objeto como usado (una vez gastado en combate).
         void marcarUsado( );

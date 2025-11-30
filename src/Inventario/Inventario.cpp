@@ -35,6 +35,37 @@ Inventario::~Inventario() {
  */
 void Inventario::cargarObjetosIniciales( ) {
 
+    //Cargar los objetos iniciales del torneo con su stock predeterminado:
+
+    cout << endl << "========================================" << endl;
+    cout << "   CARGANDO INVENTARIO DEL TORNEO" << endl;
+    cout << "========================================" << endl;
+
+   //Pociones de Vida - Mas comunes:
+    crearObjeto( new PocionVida(0), 5);
+
+
+    //Amuletos de Furia - moderadamente comunes:
+    crearObjeto( new AmuletoFuria(0), 3);
+
+    //Escudo Benditos - moderadamente comunes:
+    crearObjeto( new EscudoBendito(0), 3);
+
+    //Pactos Sangrientos - raros:
+    crearObjeto(new PactoSangriento(0), 2);
+
+    //Caballas Legendarias - muy raras:
+    crearObjeto( new CaballaLegendaria(0), 1);
+
+    //Pociones de Resurreccion - rara:
+    crearObjeto( new Revivir(0), 2 );
+
+    cout << endl << "Inventario cargado exitosamente !!!!" << endl;
+    cout << endl << "Total de tipos de objetos: " <<  this->catalogoObjetos.size() << endl;
+    cout << "========================================" << endl;
+
+
+
 }
 
 void Inventario::crearObjeto( ObjetoMagico* objeto, int stockInicial ) {

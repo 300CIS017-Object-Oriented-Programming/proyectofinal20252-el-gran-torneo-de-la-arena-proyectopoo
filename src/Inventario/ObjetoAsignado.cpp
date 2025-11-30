@@ -28,7 +28,7 @@ ObjetoAsignado::~ObjetoAsignado( ) {
 // Métodos públicos
 // =======================
 
-void ObjetoAsignado::aplicarEfecto( Personaje* personaje ) {
+void ObjetoAsignado::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
     // Verifica que haya un tipo de objeto asociado.
     if( this -> tipoObjeto == nullptr ) {
         cout << "No hay ningun objeto asignado para usar." << endl;
@@ -44,7 +44,8 @@ void ObjetoAsignado::aplicarEfecto( Personaje* personaje ) {
 
     // Aplica el efecto concreto (poción, amuleto, escudo, etc.).
     // La lógica específica vive en las clases hijas de ObjetoMagico.
-    this -> tipoObjeto -> aplicarEfecto( personaje );
+    // Cada objeto decide que hacer con los vectores de aliados y enemigos.
+    this -> tipoObjeto -> aplicarEfecto( usuario, aliados, enemigos );
 
     // Después de aplicarlo se marca como usado.
     marcarUsado( );

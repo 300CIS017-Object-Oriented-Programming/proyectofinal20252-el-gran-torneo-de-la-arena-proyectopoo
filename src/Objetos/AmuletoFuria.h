@@ -14,7 +14,7 @@ class AmuletoFuria : public ObjetoMagico {
     public:
         AmuletoFuria( int stock );
         virtual ~AmuletoFuria( ) = default;
-        void aplicarEfecto( Personaje* personaje ) override;
+        void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector <Personaje*> enemigos ) override;
         void mostrarInformacion( ) override;
 
         /* Getters y Setters */

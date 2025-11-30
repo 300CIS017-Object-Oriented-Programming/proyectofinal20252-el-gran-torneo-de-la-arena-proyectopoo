@@ -19,7 +19,7 @@ public:
     PactoSangriento( int stock );
     ~PactoSangriento( ) = default;
 
-    void aplicarEfecto( Personaje* personaje ) override;
+    void aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) override;
     void mostrarInformacion( ) override;
 
     int getAumentoAtaqueMin( );

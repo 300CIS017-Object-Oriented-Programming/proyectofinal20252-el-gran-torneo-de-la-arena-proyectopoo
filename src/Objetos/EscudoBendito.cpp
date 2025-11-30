@@ -17,9 +17,26 @@ int EscudoBendito::calcularEfecto( ) {
     return this -> aumentoDefensaMin + rand( ) % ( this -> aumentoDefensaMax - this -> aumentoDefensaMin + 1 );
 }
 
-void EscudoBendito::aplicarEfecto( Personaje* personaje ) {
-    int aumento = calcularEfecto( );
-    personaje -> setDefensa( personaje -> getDefensa( ) + aumento );
+void EscudoBendito::aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos ) {
+
+   //El escudo bendito solo afecta al usuario, ignora a aliados y enemigos.
+
+    int aumento = calcularEfecto();
+    int defensaAntes = usuario->getDefensa();
+
+    usuario -> setDefensa( defensaAntes + aumento);
+
+    cout << endl << "========================================" << endl;
+    cout << "         ESCUDO BENDITO" << endl;
+    cout << "========================================" << endl;
+    cout << usuario -> getNombre( ) << " activa el Escudo Bendito!" << endl;
+    cout << "Aumento de defensa: +" << aumento << " puntos." << endl;
+    cout << "Defensa: " << defensaAntes << " -> " << usuario -> getDefensa( ) << endl;
+    cout << "Duracion: " << this -> turnos << " turno(s)." << endl;
+    cout << "========================================" << endl;
+
+    pausar(1500);
+
 }
 
 void EscudoBendito::mostrarInformacion( ) {

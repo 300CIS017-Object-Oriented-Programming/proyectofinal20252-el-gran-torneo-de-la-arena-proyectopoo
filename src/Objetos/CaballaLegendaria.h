@@ -8,23 +8,28 @@
 
 #include "../Personajes/Personaje.h"
 #include "ObjetoMagico.h"
+#include <vector>
+
+using::std::vector;
 
 class CaballaLegendaria : public ObjetoMagico {
 private:
     double probabilidadExito;
-    Personaje* objetivoEnemigo;
 
+
+    //Metodo Auxiliar privado:
     bool calcularExito( );
 
 public:
     CaballaLegendaria( int stock );
     virtual ~CaballaLegendaria( ) = default;
 
-    void aplicarEfecto( Personaje* personaje ) override;
+    void aplicarEfecto( Personaje* usuario, vector <Personaje*> aliados, vector<Personaje*> enemigos ) override;
     void mostrarInformacion( ) override;
 
-    void setObjetivoEnemigo( Personaje* enemigo );
-    Personaje* getObjetivoEnemigo( );
+
+    //Getters:
+
     double getProbabilidadExito( );
 };
 

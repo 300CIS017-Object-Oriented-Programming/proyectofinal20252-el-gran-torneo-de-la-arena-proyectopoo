@@ -27,14 +27,17 @@ int PactoSangriento::calcularAumentoAtaque( ) {
 }
 
 // Metodo principal - aplica el efecto del objeto
-void PactoSangriento::aplicarEfecto( Personaje* personaje ) {
+void PactoSangriento::aplicarEfecto( Personaje* usuario, vector<Personaje*> aliados, vector<Personaje*> enemigos ) {
+
+    //El pacto sangriento solo afecta al usuario, ignora a aliados y enemigos.
+
     cout << endl << "============================================" << endl;
-    cout << "  " << personaje -> getNombre( ) << " invoca el PACTO SANGRIENTO DE LOS CAIDOS!" << endl;
+    cout << "  " << usuario -> getNombre( ) << " invoca el PACTO SANGRIENTO DE LOS CAIDOS!" << endl;
     cout << "============================================" << endl;
 
     // Calcular la vida a sacrificar (30% de vida maxima)
-    int vidaASacrificar = ( personaje -> getVidaMaxima( ) * this -> porcentajeVidaSacrificada ) / 100;
-    int vidaActual = personaje -> getVida( );
+    int vidaASacrificar = ( usuario-> getVidaMaxima( ) * this -> porcentajeVidaSacrificada ) / 100;
+    int vidaActual = usuario -> getVida( );
     int nuevaVida = vidaActual - vidaASacrificar;
 
     // El pacto no puede matarte, minimo quedas con 1 de vida
@@ -45,18 +48,18 @@ void PactoSangriento::aplicarEfecto( Personaje* personaje ) {
     }
 
     // Aplicar el sacrificio de vida
-    personaje -> setVida( nuevaVida );
+    usuario-> setVida( nuevaVida );
     cout << "  Sangre derramada: -" << vidaASacrificar << " puntos de vida" << endl;
-    cout << "  Vida restante: " << nuevaVida << "/" << personaje -> getVidaMaxima( ) << endl;
+    cout << "  Vida restante: " << nuevaVida << "/" << usuario -> getVidaMaxima( ) << endl;
 
     // Calcular y aplicar el aumento de ataque
     int aumento = calcularAumentoAtaque( );
-    int ataqueAnterior = personaje -> getAtaque( );
-    personaje -> setAtaque( ataqueAnterior + aumento );
+    int ataqueAnterior = usuario -> getAtaque( );
+    usuario -> setAtaque( ataqueAnterior + aumento );
 
     cout << endl << "  ¡El poder oscuro fluye por tus venas!" << endl;
     cout << "  Ataque aumentado: +" << aumento << " puntos" << endl;
-    cout << "  Ataque anterior: " << ataqueAnterior << " -> Ataque actual: " << personaje -> getAtaque( ) << endl;
+    cout << "  Ataque anterior: " << ataqueAnterior << " -> Ataque actual: " << usuario -> getAtaque( ) << endl;
     cout << "============================================" << endl;
 }
 
