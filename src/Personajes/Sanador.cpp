@@ -81,7 +81,9 @@ void Sanador::realizarAccion( Personaje* objetivo ) {
         cout << "Efectividad: " << efectividadPorcentaje << "%" << endl;
 
         pausar(1200); //Para que el usuario pueda leer el texto.
-
+        cout << endl << "╔════════════════════════════════════════╗" << endl;
+        cout << "║    HAZ DE SANACION                           ║" << endl;
+        cout << "╚════════════════════════════════════════╝" << endl;
         //Obtengo la vida actual y maxima del objetivo:
         int vidaActual = objetivo -> getVida( );
         int vidaMaxima = objetivo -> getVidaMaxima( );

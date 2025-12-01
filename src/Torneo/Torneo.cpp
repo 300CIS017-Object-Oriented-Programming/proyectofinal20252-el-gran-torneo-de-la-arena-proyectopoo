@@ -3,6 +3,7 @@
 //
 
 #include "Torneo.h"
+#include <fstream>
 
 // Constructores y destructores:
 
@@ -35,19 +36,19 @@ Torneo::~Torneo( ) {
 
     //Libera el inventario:
     if (this->inventario != nullptr) {
-        cout << "Liberando Inventario...." << endl;
+        cout << "Liberando Inventario." << endl;
         delete this->inventario;
         this->inventario = nullptr;
     }
 
     //Libera la guild del jugador:
     if (this->guildJugador != nullptr) {
-        cout << "Liberando la Guild del Jugador....." << endl;
+        cout << "Liberando la Guild del Jugador." << endl;
         delete this-> guildJugador;
         this->guildJugador = nullptr;
     }
 
-    cout << "Liberando la Arena del Torneo....." << endl;
+    cout << "Liberando la Arena del Torneo." << endl;
     delete this -> arena;
 
     cout << "Torneo finalizado." << endl;
@@ -58,7 +59,6 @@ Torneo::~Torneo( ) {
 
 void Torneo::inicializarTorneo( ) {
     //Configura todo el torneo: Guilds inventario (pendiente) y arena (pendiente).
-    // Nota: creo que cuando coloco, "Configura todo" automaticamente pone todas las letras en verde (ya lo confirme).
     cout << endl << "==========================================" << endl;
     cout << "   BIENVENIDO A: " << this -> nombreTorneo << endl;
     cout << "==========================================" << endl;
@@ -70,7 +70,7 @@ void Torneo::inicializarTorneo( ) {
     //Inicializa las Guilds
     inicializarGuilds( );
 
-    // Pendiente (Realizado): Inicializa la Guilds.
+    // Inicializa el inventario global
     inicializarInventario();
 
     cout << "El torneo esta listo para comenzar!!!!!" << endl;
@@ -82,14 +82,14 @@ void Torneo::inicializarGuilds( ) {
     //Crea la Guild del jugador y las Guilds enemigas:
     cout << endl << "=== Inicializando Guilds ===" << endl;
 
-   // Crea la Guild del jugador:
+    // Crea la Guild del jugador:
     guildJugador = new Guild( "Heroes de Lyrenhold" );
     guildJugador -> cargarPersonajesIniciales( );
 
     cout << endl << "Tu Guild ha sido creada." << endl;
-    cout << "Ahora creando rivales..." << endl << endl;
+    cout << "Ahora creando rivales." << endl << endl;
 
-    // Crea 2 Guilds enemigas con personajes:
+    // Crea 3 Guilds enemigas con personajes:
     Guild* enemiga1 = new Guild( "Mercenarios Oscuros" );
     Personaje* e1 = new Guerrero( "Dravos", "Enemigo" , 2, 140, 30,  12 );
     Personaje* e2 = new Mago( "Selene", "Enemigo", 1, 75, 40, 3 );
@@ -131,7 +131,7 @@ void Torneo::inicializarInventario() {
     //Crear el inventario :
     this->inventario = new Inventario();
 
-    //Usar el metodo de inicializacion de inventario. <- Pendiente de implementar:
+    //Usar el metodo de inicializacion de inventario.
     this->inventario-> cargarObjetosIniciales();
 
     cout << "=== Inventario inicializado ===" << endl;
@@ -271,7 +271,7 @@ void Torneo::crearNuevoHeroe( ) {
             break;
         }
         case 3: {
-            //Sanador:
+            //Sanador;
             cout << "Nivel: ";
             cin >> nivel;
 
@@ -302,7 +302,7 @@ void Torneo::crearNuevoHeroe( ) {
             break;
         }
         case 5: {
-            //Paladin;
+            //Hechicero Oscuro
             cout << "Nivel: ";
             cin >> nivel;
 
@@ -316,7 +316,6 @@ void Torneo::crearNuevoHeroe( ) {
             cin >> defensa;
 
             nuevoHeroe = new HechiceroOscuro( nombre, "Jugador",  nivel, vida, ataque,  defensa );
-            break;
             break;
         }
         default: {
@@ -384,7 +383,6 @@ void Torneo::retirarHeroeTorneo( ) {
 }
 
 
-
 void Torneo::mostrarGuildsRivales( ) {
     //Metodo auxiliar, permite ver a las guilds enemigas:
     //Permite reutilizar esta funcionalidad desde otros lugares de ser necesario.
@@ -410,15 +408,14 @@ void Torneo::mostrarGuildsRivales( ) {
         this -> guildsEnemigas[ i ] -> listarPersonajes( );
 
         //Mostramos estadisticas adiccionales:
-        personajesVivos = this -> guildsEnemigas[ i ] -> getPersonajesVivos( ).size( ); /*
-        Verificar esto cuando lo corran*/
+        personajesVivos = this -> guildsEnemigas[ i ] -> getPersonajesVivos( ).size( );
         personajesTotales = this -> guildsEnemigas[ i ] -> getCantidadPersonajes( );
         cout << " ##### Personajes activos: " << personajesVivos << "/" << personajesTotales << endl ;
 
         pausar(2000); //Para que el usuario pueda leer el texto.
     }
 
-       // Resumen al final:
+    // Resumen al final:
     cout << endl << "Total de Guilds Rivales : " << this -> guildsEnemigas.size( ) << "." <<endl;
 }
 
@@ -459,12 +456,12 @@ void Torneo::gestionarGuild( ) {
                 // Agregar un nuevo heroe:
                 break;
             }
-            case 4: { 
+            case 4: {
                 retirarHeroeTorneo( );
                 break;
             }
             case 5: {
-                cout << "Volviendo al menu principal..." << endl;
+                cout << "Volviendo al menu principal." << endl;
                 break;
             }
             default: {
@@ -487,6 +484,7 @@ void Torneo:: menuPrincipal() {
         cout << "2. Gestionar inventario . " << endl;
         cout << "3. Iniciar Arena (combates)." << endl;
         cout << "4. Ver Guilds enemigas." << endl;
+        cout << "5. Guardar heroes de la Guild en JSON." << endl;
         cout << "0. Salir del torneo." << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
@@ -509,9 +507,14 @@ void Torneo:: menuPrincipal() {
                 mostrarGuildsRivales( );
                 break;
             }
+            case 5: {
+                string nombreArchivo = "heroes.json";
+                guardarHeroesEnJSON( nombreArchivo );
+                break;
+            }
             case 0: {
                 cout << endl << "Saliendo del Torneo..." << endl;
-                cout << "¡Gracias por participar en " << this -> nombreTorneo << "!!!!!" <<endl;
+                cout << "¡Gracias por participar en " << this -> nombreTorneo << "!!!!!" << endl;
                 break;
             }
             default: {
@@ -663,8 +666,6 @@ void Torneo::gestionarInventario() {
         cin >> opcion;
         cin.ignore();
 
-
-
         switch (opcion) {
             case 1: {
                 listarInventarioDetallado();
@@ -693,4 +694,60 @@ void Torneo::gestionarInventario() {
         }
     }
     while (opcion!=0);
+}
+
+void Torneo::guardarHeroesEnJSON( const string& nombreArchivo ) {
+    if ( this->guildJugador == nullptr ) {
+        cout << "Error: no hay Guild del jugador inicializada. No se puede guardar." << endl;
+        return;
+    }
+
+    // Obtener héroes vivos de la guild del jugador
+    vector<Personaje*> heroesVivos = this->guildJugador->getPersonajesVivos( );
+
+    if ( heroesVivos.empty( ) ) {
+        cout << "No hay heroes vivos para guardar en el archivo JSON." << endl;
+        return;
+    }
+
+    std::ofstream archivo( nombreArchivo );
+    if ( !archivo.is_open( ) ) {
+        cout << "Error: no se pudo abrir el archivo '" << nombreArchivo << "' para escritura." << endl;
+        return;
+    }
+
+    archivo << "{\n";
+    archivo << "  \"guild\": \"" << this->guildJugador->getNombreGuild( ) << "\",\n";
+    archivo << "  \"heroes_vivos\": [\n";
+
+    for ( size_t i = 0; i < heroesVivos.size( ); ++i ) {
+        Personaje* h = heroesVivos[ i ];
+
+        archivo << "    {\n";
+        archivo << "      \"nombre\": \"" << h->getNombre( ) << "\",\n";
+        archivo << "      \"rol\": \"" << h->getRol( ) << "\",\n";
+        archivo << "      \"bando\": \"" << h->getBando( ) << "\",\n";
+        archivo << "      \"nivel\": " << h->getNivel( ) << ",\n";
+        archivo << "      \"vida\": " << h->getVida( ) << ",\n";
+        archivo << "      \"vidaMaxima\": " << h->getVidaMaxima( ) << ",\n";
+        archivo << "      \"ataque\": " << h->getAtaque( ) << ",\n";
+        archivo << "      \"defensa\": " << h->getDefensa( ) << "\n";
+        archivo << "    }";
+
+        if ( i + 1 < heroesVivos.size( ) ) {
+            archivo << ",";
+        }
+        archivo << "\n";
+    }
+
+    archivo << "  ]\n";
+    archivo << "}\n";
+
+    archivo.close( );
+
+    cout << endl;
+    cout << "========================================" << endl;
+    cout << "Heroes vivos de la Guild '" << this->guildJugador->getNombreGuild( )
+         << "' guardados en '" << nombreArchivo << "'." << endl;
+    cout << "========================================" << endl;
 }

@@ -12,14 +12,14 @@
 #include "../Inventario/Inventario.h" //<-Nota: Implementado (Por Angel).
 #include "../Arena/Arena.h"
 
-//Librearias:
+//Librerias:
 
 #include <vector>
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <thread> // <- Para pausas.
-#include <chrono> // <- Para medir los tiempos.
+#include <thread>  // <- Para pausas.
+#include <chrono>  // <- Para medir los tiempos.
 
 
 // Usings para hacer la codificacion mas fluida.
@@ -31,9 +31,8 @@ using std::endl;
 using std::setprecision;
 using std::fixed;
 using std::unordered_map;
-using std::cin;
 using std::getline;
-using std:: this_thread::sleep_for;
+using std::this_thread::sleep_for;
 using std::chrono::milliseconds;
 
 
@@ -41,55 +40,53 @@ class Torneo {
 
     private:
         string nombreTorneo;
-        Guild* guildJugador;// Guild controlada por el jugador.
-        vector<Guild*> guildsEnemigas; //Guilds enemigas (rivales).
+        Guild* guildJugador;             // Guild controlada por el jugador.
+        vector<Guild*> guildsEnemigas;   // Guilds enemigas (rivales).
 
-        //Pendiente: Cuando implementemos Inventario y Arena, descomentar:
-         Inventario * inventario; // Inventario global de objetos magicos.<-Nota: Implementado (Por Angel).
-        // Arena* arena //Sistema de combate.
+        // Inventario global de objetos mágicos. <- Nota: Implementado (Por Angel).
+        Inventario* inventario;
 
-        //Ya agregamos la Arena:
+        // Sistema de combate.
+        Arena* arena;
 
-        Arena * arena; //Seccion de combate.
+        // Metodos privados auxiliares para organizar el codigo:
+        void crearNuevoHeroe( );          // Logica para la creacion de heroes.
+        void consultarHeroeTorneo( );     // Logica para la consulta.
+        void retirarHeroeTorneo( );       // Logica de retiro.
+        void mostrarGuildsRivales( );     // Muestra a las Guilds Enemigas.
 
-
-        //Metodos privados auxiliares para organizar el codigo:
-        void crearNuevoHeroe( ); // Logica para la creacion de heroes.
-        void consultarHeroeTorneo( ); // Logica para la consulta.
-        void retirarHeroeTorneo( ); // Logica de retiro.
-        void mostrarGuildsRivales( ); //Muestra a las Guilds Enemigas.
-
-        void pausar(int milisegundos);
+        void pausar( int milisegundos );
 
         /* Nuevos metodos privados para el inventario: */
-        void listarInventarioDetallado();
-        void listarObjetosEquipadosHeroes();
-        void asignarObjetoHeroe();
-        void buscarObjetoEspecifico();
+        void listarInventarioDetallado( );
+        void listarObjetosEquipadosHeroes( );
+        void asignarObjetoHeroe( );
+        void buscarObjetoEspecifico( );
 
     public:
-        //Constructores y destructores:
+        // Constructores y destructores:
         Torneo( );
         Torneo( string nombre );
         virtual ~Torneo( );
 
         // Metodos de Inicializacion:
 
-        void inicializarTorneo( ); // Configura todo el torneo (Por alguna razon todo lo escribo aqui queda en verde)
-        void inicializarGuilds( ); // Crea la Guild del jugador y enemigas.
-        void inicializarInventario(); // Carga objetos magicos iniciales. (Nota: aun esta vacio.)
+        void inicializarTorneo( );     // Configura todo el torneo.
+        void inicializarGuilds( );     // Crea la Guild del jugador y enemigas.
+        void inicializarInventario( ); // Carga objetos magicos iniciales.
 
-        void iniciarArena();//Inicia el sistema de Combate.
+        void iniciarArena( );          // Inicia el sistema de combate.
 
 
         // Metodos de gestion (menus):
 
-        void gestionarGuild( ); // Menu para administrar la Guild del jugador.
-        void gestionarInventario(); // Menu para objetos magicos.
-        // Pendiente: void iniciarArena() // inicia el sistema de combate.
+        void gestionarGuild( );        // Menu para administrar la Guild del jugador.
+        void gestionarInventario( );   // Menu para objetos magicos.
 
-        void menuPrincipal( ); // Menu Principal del torneo.
+        void menuPrincipal( );         // Menu Principal del torneo.
 
+        // Persistencia de héroes en archivo JSON
+        void guardarHeroesEnJSON( const string& nombreArchivo );
 };
 
 
