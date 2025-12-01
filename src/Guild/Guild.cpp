@@ -55,19 +55,27 @@ void Guild::cargarPersonajesIniciales( ) {
     //Creamos 3 personajes iniciales: 1 de cada tipo:
 
     Personaje* heroe1= new Guerrero( "Stark", "Jugador", 2, 150, 35, 15 );
-    cout << "[1/3] Guerrero creado: Stark." << endl;
+    cout << "[1/5] Guerrero creado: Stark." << endl;
 
     Personaje* heroe2 = new Mago( "Fern", "Jugador", 1, 80, 45, 5 );
-    cout << "[2/3] Mago creado: Fern." << endl;
+    cout << "[2/5] Mago creado: Fern." << endl;
 
     Personaje* heroe3 = new Sanador( "Sein", "Jugador", 1, 90, 10 );
-    cout << "[3/3] Sanador creado: Sein." << endl;
+    cout << "[3/5] Sanador creado: Sein." << endl;
+
+    Personaje* heroe4= new Paladin( "Himmel", "Jugador", 50, 300, 80, 80 );
+    cout << "[4/5] Paladin creado: Himmel." << endl;
+
+    Personaje* heroe5= new HechiceroOscuro( "Ubel", "Jugador", 5, 100, 40, 10 );
+    cout << "[4/5] Hechicero Oscuro creado: Ubel." << endl;
 
     //Los agregamos al mapa de personajes:
     personajes[ heroe1 -> getNombre( ) ] = heroe1; //Usamos el get para esta seguros que estamos usando el nombre
     // verdadero del personaje.
     personajes[ heroe2 -> getNombre( ) ] = heroe2;
     personajes[ heroe3 -> getNombre( ) ] = heroe3;
+    personajes[ heroe4 -> getNombre( ) ] = heroe4;
+    personajes[ heroe5 -> getNombre( ) ] = heroe5;
 
     cout << "Personajes iniciales cargados exitosamente." << endl;
     cout << "===========================================" << endl;
@@ -429,4 +437,163 @@ void Guild:: mostrarObjetosEquipadosHeroes() {
         consultarPersonajeInteractivo();
     }
 
+}
+
+//Para la Carga y Descarga de Archivos JSON
+
+void Guild::guardarHeroesEnJSON( const string& nombreArchivo ) {
+    // Guarda los heroes vivos de la guild en formato JSON
+
+    vector<Personaje*> heroesVivos = getPersonajesVivos();
+
+    if ( heroesVivos.empty() ) {
+        cout << "No hay heroes vivos para guardar." << endl;
+        return;
+    }
+
+    std::ofstream archivo( nombreArchivo );
+
+    if ( !archivo.is_open() ) {
+        cout << "Error: No se pudo abrir el archivo '" << nombreArchivo << "'." << endl;
+        return;
+    }
+
+    archivo << "{\n";
+    archivo << "  \"guild\": \"" << this->nombreGuild << "\",\n";
+    archivo << "  \"heroes\": [\n";
+
+    for ( int i = 0; i < heroesVivos.size(); i++ ) {
+        Personaje* h = heroesVivos[i];
+
+        archivo << "    {\n";
+        archivo << "      \"nombre\": \"" << h->getNombre() << "\",\n";
+        archivo << "      \"rol\": \"" << h->getRol() << "\",\n";
+        archivo << "      \"nivel\": " << h->getNivel() << ",\n";
+        archivo << "      \"vida\": " << h->getVida() << ",\n";
+        archivo << "      \"vidaMaxima\": " << h->getVidaMaxima() << ",\n";
+        archivo << "      \"ataque\": " << h->getAtaque() << ",\n";
+        archivo << "      \"defensa\": " << h->getDefensa() << "\n";
+        archivo << "    }";
+
+        if ( i + 1 < heroesVivos.size() ) {
+            archivo << ",";
+        }
+        archivo << "\n";
+    }
+
+    archivo << "  ]\n";
+    archivo << "}\n";
+
+    archivo.close();
+
+    cout << endl << "========================================" << endl;
+    cout << "Heroes guardados en '" << nombreArchivo << "'." << endl;
+    cout << "Total: " << heroesVivos.size() << " heroes." << endl;
+    cout << "========================================" << endl;
+}
+
+void Guild::cargarHeroesDesdeJSON( const string& nombreArchivo ) {
+    // Carga heroes desde un archivo JSON
+
+    std::ifstream archivo( nombreArchivo );
+
+    if ( !archivo.is_open() ) {
+        cout << "Error: No se pudo abrir el archivo '" << nombreArchivo << "'." << endl;
+        return;
+    }
+
+    cout << endl << "========================================" << endl;
+    cout << "Cargando heroes desde '" << nombreArchivo << "'..." << endl;
+
+    // Leer todo el contenido del archivo (todo vuelve las letras verdes)
+    string contenido( ( std::istreambuf_iterator<char>( archivo ) ),
+                       std::istreambuf_iterator<char>() );
+    archivo.close();
+
+    // Parseo manual simple del JSON
+    int heroesActualizados = 0;
+    int heroesCreados = 0;
+
+    size_t pos = 0;
+    while ( ( pos = contenido.find( "\"nombre\":", pos ) ) != string::npos ) {
+        // Extraer nombre
+        size_t inicioNombre = contenido.find( "\"", pos + 9 ) + 1;
+        size_t finNombre = contenido.find( "\"", inicioNombre );
+        string nombre = contenido.substr( inicioNombre, finNombre - inicioNombre );
+
+        // Extraer rol
+        size_t posRol = contenido.find( "\"rol\":", finNombre );
+        size_t inicioRol = contenido.find( "\"", posRol + 6 ) + 1;
+        size_t finRol = contenido.find( "\"", inicioRol );
+        string rol = contenido.substr( inicioRol, finRol - inicioRol );
+
+        // Extraer nivel
+        size_t posNivel = contenido.find( "\"nivel\":", finRol );
+        size_t inicioNivel = posNivel + 8;
+        size_t finNivel = contenido.find_first_of( ",\n", inicioNivel );
+        int nivel = stoi( contenido.substr( inicioNivel, finNivel - inicioNivel ) );
+
+        // Extraer vida
+        size_t posVida = contenido.find( "\"vida\":", finNivel );
+        size_t inicioVida = posVida + 7;
+        size_t finVida = contenido.find_first_of( ",\n", inicioVida );
+        int vida = stoi( contenido.substr( inicioVida, finVida - inicioVida ) );
+
+        // Extraer ataque
+        size_t posAtaque = contenido.find( "\"ataque\":", finVida );
+        size_t inicioAtaque = posAtaque + 9;
+        size_t finAtaque = contenido.find_first_of( ",\n", inicioAtaque );
+        int ataque = stoi( contenido.substr( inicioAtaque, finAtaque - inicioAtaque ) );
+
+        // Extraer defensa
+        size_t posDefensa = contenido.find( "\"defensa\":", finAtaque );
+        size_t inicioDefensa = posDefensa + 10;
+        size_t finDefensa = contenido.find_first_of( ",\n }", inicioDefensa );
+        int defensa = stoi( contenido.substr( inicioDefensa, finDefensa - inicioDefensa ) );
+
+        // Verificar si el heroe ya existe
+        Personaje* existente = buscarPersonaje( nombre );
+
+        if ( existente != nullptr ) {
+            // Actualizar stats
+            existente->setVida( vida );
+            existente->setAtaque( ataque );
+            existente->setDefensa( defensa );
+            cout << "Actualizado: " << nombre << endl;
+            heroesActualizados++;
+        }
+        else {
+            // Crear nuevo heroe segun el rol
+            Personaje* nuevoHeroe = nullptr;
+
+            if ( rol == "Guerrero" ) {
+                nuevoHeroe = new Guerrero( nombre, "Jugador", nivel, vida, ataque, defensa );
+            }
+            else if ( rol == "Mago" ) {
+                nuevoHeroe = new Mago( nombre, "Jugador", nivel, vida, ataque, defensa );
+            }
+            else if ( rol == "Sanador" ) {
+                nuevoHeroe = new Sanador( nombre, "Jugador", nivel, vida, defensa );
+            }
+            else if ( rol == "Paladin" ) {
+                nuevoHeroe = new Paladin( nombre, "Jugador", nivel, vida, ataque, defensa );
+            }
+            else if ( rol == "Hechicero Oscuro" ) {
+                nuevoHeroe = new HechiceroOscuro( nombre, "Jugador", nivel, vida, ataque, defensa );
+            }
+
+            if ( nuevoHeroe != nullptr ) {
+                agregarPersonaje( nuevoHeroe );
+                cout << "Creado: " << nombre << " (" << rol << ")" << endl;
+                heroesCreados++;
+            }
+        }
+
+        pos = finDefensa;
+    }
+
+    cout << "========================================" << endl;
+    cout << "Heroes actualizados: " << heroesActualizados << endl;
+    cout << "Heroes nuevos: " << heroesCreados << endl;
+    cout << "========================================" << endl;
 }

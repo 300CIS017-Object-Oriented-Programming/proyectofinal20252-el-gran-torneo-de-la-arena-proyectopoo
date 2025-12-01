@@ -172,10 +172,24 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
 
     pausar(1500); //Para que el usuario pueda leer el texto.
 
+    //Verificar si ya tiene buff de defensa (el aliado o objetivo (puede ser el mismo):
+    if ( aliado ->tieneBuffDefensa() ) {
+        cout << aliado->getNombre() << " ya tiene un buff de defensa activo!!!!" << endl;
+        cout << "Debe de esperar a que termine." << endl;
+        cout << "═══════════════════════════════════════════" << endl;
+        return;
+    }
+
+
+
     // Aumentar defensa del aliado
-    int defensaAnterior = aliado -> getDefensa( );
+
     int aumentoDefensa = 15;
-    aliado -> setDefensa( defensaAnterior + aumentoDefensa );
+    int duracionTurnos = 2;
+    int defensaAnterior = aliado -> getDefensa( );
+
+    //Usar el sistema general de buffs de defensa:
+    aliado->aplicarBuffDefensa( aumentoDefensa, duracionTurnos);
 
     cout << "Una aura dorada envuelve a " << aliado -> getNombre( ) << "!" << endl;
     cout << "Defensa aumentada: +" << aumentoDefensa << " puntos" << endl;
@@ -270,7 +284,7 @@ bool Paladin::realizarAccionJugador(vector<Personaje*> aliados, vector<Personaje
     cout << "  El Paladin puede realizar diferentes acciones:" << endl;
     cout << "  1. Atacar a un enemigo (Justicia Divina)" << endl;
     cout << "  2. Otorgar Escudo Protector a un aliado (bloquea 1 ataque)" << endl;
-    cout << "  3. Bendicion Divina a un aliado (+15 defensa permanente)" << endl;
+    cout << "  3. Bendicion Divina a un aliado (+15 defensa por dos turnos)" << endl;
     cout << "  0. Cancelar" << endl;
     cout << "========================================" << endl;
     cout << "Seleccione: ";

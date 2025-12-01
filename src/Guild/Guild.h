@@ -6,7 +6,7 @@
 #define PROYECTOFINAL20252_EL_GRAN_TORNEO_DE_LA_ARENA_PROYECTOPOO_GUILD_H
 
 #include "../Inventario/Inventario.h"
-
+#include <fstream>  // Para ifstream y ofstream
 #include "../Personajes/Personaje.h" // Los puntos hacen que Guild.h suba a la cabecera (src)
 //y desde ahi entra al directorio Personajes.
 
@@ -69,6 +69,10 @@ class Guild {
         void listarPersonajes( ); // Lista a todos los personajes.
         void retirarPersonaje( string nombre ); // Elimina un personaje.
         Personaje* buscarPersonaje( string nombre ); // Busca y retorna un personaje.
+
+      // Persistencia JSON
+         void guardarHeroesEnJSON( const string& nombreArchivo );
+         void cargarHeroesDesdeJSON( const string& nombreArchivo );
 
         //Metodos auxiliares (metodos necesarios para la implementacion del codigo):
 

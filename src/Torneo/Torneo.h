@@ -37,29 +37,18 @@ using std::chrono::milliseconds;
 
 
 class Torneo {
-
     private:
         string nombreTorneo;
         Guild* guildJugador;             // Guild controlada por el jugador.
         vector<Guild*> guildsEnemigas;   // Guilds enemigas (rivales).
-
         // Inventario global de objetos mágicos. <- Nota: Implementado (Por Angel).
         Inventario* inventario;
-
         // Sistema de combate.
         Arena* arena;
 
         // Metodos privados auxiliares para organizar el codigo:
         void mostrarGuildsRivales( );     // Muestra a las Guilds Enemigas.
-
         void pausar( int milisegundos );
-
-        /* Nuevos metodos privados para el inventario: */
-
-
-
-
-
     public:
         // Constructores y destructores:
         Torneo( );
@@ -77,8 +66,7 @@ class Torneo {
         void gestionarGuild( );        // Menu para administrar la Guild del jugador.
         void gestionarInventario( );   // Menu para objetos magicos.
         void menuPrincipal( );         // Menu Principal del torneo.
-        // Persistencia de héroes en archivo JSON
-        void guardarHeroesEnJSON( const string& nombreArchivo );
+
 };
 
 

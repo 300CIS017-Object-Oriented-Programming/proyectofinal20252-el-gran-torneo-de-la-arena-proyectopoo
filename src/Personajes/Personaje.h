@@ -50,6 +50,19 @@ class Personaje {
         int ataque;
         int defensa;
 
+    /* Sistema de buffs temporales (para habilidades como Bendicion Divina), no para los efectos de los
+     * objetos:
+     */
+       int bonusAtaqueTemporal;
+       int turnosBuffAtaque;
+       int bonusDefensaTemporal;
+       int turnosBuffDefensa;
+       int bonusVidaTemporal;
+       int turnosBuffVida;
+
+        //Atibutos para efectos Temporales:
+
+
         //Estados y obejtos magicos asignados:
         vector<ObjetoAsignado*> objetosEquipados;
         bool isEstaVivo; // True mientrar vida > 0.
@@ -122,6 +135,17 @@ class Personaje {
 
         /*Metodo Para mostrar la informacion de los objetos equipado por el personaje. (Pipe)*/
         void mostrarObjetosEquipados();
+
+
+    // Metodos para buffs temporales
+        void aplicarBuffAtaque( int valor, int turnos );
+        void aplicarBuffDefensa( int valor, int turnos );
+        void aplicarBuffVida( int valor, int turnos );
+        void procesarBuffs();
+        bool tieneBuffDefensa();
+        bool tieneBuffAtaque();
+        bool tieneBuffVida();
+
 
 
 };

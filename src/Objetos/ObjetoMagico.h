@@ -36,21 +36,16 @@ class ObjetoMagico {
         las clases hijas.  */
         virtual void mostrarInformacion( ) = 0; /*Igualamos a 0 ya que el comportamiento lo definen
                                                 las clases hijas.  */
-
         //Metodos para efectos temporales ( los objetos con efecto temporal lo sobreescriben).
-
         virtual int getTurnosEfecto();
         virtual void revertirEfecto( Personaje* personaje, ObjetoAsignado* instancia);
 
-
         void decrementarStock( );
         void incrementarStock( );
-        
         // Getters.
         string getNombre( );
         string getDescription( );
         int getStock( );
-
         /* Se agrega Set Stock para manejarlo de manera mas eficiente en Inventario */
         void setStock( int stock );
 

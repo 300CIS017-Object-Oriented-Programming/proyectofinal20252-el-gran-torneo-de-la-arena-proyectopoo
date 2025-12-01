@@ -99,6 +99,24 @@ void Arena::procesarEfectosTemporales() {
         }
     }
 
+    //Procesar efectos temporales (que algun Personaje haya hecho sobre otro:
+
+    //En ambos se procesan los efectos temporales:
+
+    //Primero los heroes:
+    for (int i = 0; i < this->heroes.size(); i++) {
+        if ( this->heroes[i]->getIsEstaVivo() ) {
+            this->heroes[i]->procesarBuffs();
+        }
+    }
+
+    //Luego los enemigos:
+    for ( int i = 0; i < this->enemigos.size(); i++) {
+        if ( this->enemigos[i]-> getIsEstaVivo() ) {
+            this-> enemigos[i]-> procesarBuffs();
+        }
+    }
+
 }
 
 Personaje *Arena::seleccionarObjetivoAleatorio(vector<Personaje*> equipo) {
@@ -205,13 +223,14 @@ void Arena::ejecutarAccionEnemigo(Personaje* enemigo) {
 void Arena::mostrarMenuAcciones(Personaje * heroe) {
     //Muestra las opciones disponibles para el heroe (El jugador):
 
-    cout << endl << "=== Turno de " << heroe->getNombre() << " (" << heroe->getRol() << ") ===" << endl;
+    cout << endl << "====== Turno de " << heroe->getNombre() << " (" << heroe->getRol() << ") ======" << endl;
     cout << "Vida: " << heroe->getVida() << "/" << heroe -> getVidaMaxima() <<
         " -- Defensa: " << heroe->getDefensa() << " -- Ataque: " << heroe->getAtaque() << endl;
     cout << "1. Realizar accion principal (atacar/curar segun rol)." << endl;
     cout << "2. Usar objeto equipado." << endl;
     cout << "3. Ver estado del combate." << endl;
     cout << "4. Saltar turno." << endl;  // <- Nuevo, por si el jugador quiere saltarse un turno.
+    cout << "========================================" << endl;
     cout << "Selecciones una opcion: ";
 
 }
@@ -332,19 +351,25 @@ void Arena::iniciarCombate( vector <Personaje*> equipoHeroes, vector<Personaje*>
     this->  objetosUsados = 0;
     this->  combateActivo = true;
 
-    cout << endl << "Equipo del Jugador (" << this->heroes.size() << " heroes):" << endl;
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+
+    cout << endl << "================= Equipo del Jugador (" << this->heroes.size() << " heroes): ===============" << endl;
     for (int i = 0; i < this-> heroes.size(); i++) {
+        cout << "-------------------------------------------------------" << endl;
         cout << " -"  << this->heroes[i]->getNombre() << " (" << this->heroes[i] -> getRol() << ")" << endl;
     }
 
-    pausar(800);  // Pausa
+    pausar(2000);  // Pausa
+    cout << endl << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-    cout << endl << "Equipo Enemigo (" << this->enemigos.size() << " Oponentes):" << endl;
+    cout << endl << "============= Equipo Enemigo (" << this->enemigos.size() << " Oponentes): ================" << endl;
     for (int i = 0; i < this-> enemigos.size(); i++) {
+        cout << "-------------------------------------------------------" << endl;
         cout << " -"  << this->enemigos[i]->getNombre() << " (" << this->enemigos[i] -> getRol() << ")" << endl;
     }
 
-    pausar(1000);  // Pausa antes del combate
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+    pausar(2000);  // Pausa antes del combate
 
     cout << endl << "===============================================" << endl;
     cout << "          QUE COMIENCE EL COMBATE!" << endl;

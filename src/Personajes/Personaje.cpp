@@ -19,6 +19,15 @@ Personaje::Personaje( ) {
     this -> defensa = 5;
     this -> isEstaVivo = true;
     this-> isTieneEscudoProtector = false; //Por defecto no tiene escudo.
+    //Nuevos atributos (para los efectos temporales), de personajes:
+    // Inicializar buffs temporales en cero
+    this->bonusAtaqueTemporal = 0;
+    this->turnosBuffAtaque = 0;
+    this->bonusDefensaTemporal = 0;
+    this->turnosBuffDefensa = 0;
+    this->bonusVidaTemporal = 0;
+    this->turnosBuffVida = 0;
+
 }
 
 Personaje::Personaje( string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa ) {
@@ -33,6 +42,16 @@ Personaje::Personaje( string nombre, string rol, string bando, int nivel, int vi
     this -> defensa = defensa;
     this -> isEstaVivo = true; // Todos los personaje inician vivos.
     this-> isTieneEscudoProtector = false; //Por defecto no tiene escudo.
+
+    //Nuevos atributos (para los efectos temporales):
+    // Inicializar buffs temporales en cero
+    this->bonusAtaqueTemporal = 0;
+    this->turnosBuffAtaque = 0;
+    this->bonusDefensaTemporal = 0;
+    this->turnosBuffDefensa = 0;
+    this->bonusVidaTemporal = 0;
+    this->turnosBuffVida = 0;
+
 }
 
 Personaje::~Personaje( ) {
@@ -141,21 +160,23 @@ Personaje* Personaje::seleccionarObjetivo( vector<Personaje*> objetivos, string 
      */
 
     cout << endl << mensaje << endl;
-    cout << "----------------------------------------" << endl;
+    cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     int contador = 1;
 
     for (int i = 0; i < objetivos.size(); i++) {
 
         if ( objetivos[i]->getIsEstaVivo() ) {
-
+            cout << "--------------------------------------------------------------------------" << endl;
             cout << " " << contador << ". " << objetivos[i]-> getNombre()
             << " (" << objetivos[ i ] -> getRol() << ") "
             << "-- Vida: " << objetivos[ i ]->getVida() << "/" << objetivos[ i ]->getVidaMaxima()
-            << " -- Defensa: " << objetivos[ i ]->getDefensa()
+            << " -- Defensa: " << objetivos[ i ]->getDefensa() << " -- Ataque: " << objetivos[ i ]->getAtaque()
             << endl;
+
             contador++;
         }
     }
+    cout << "---------------------------------------------------------------------------------" << endl;
 
     if (contador == 1) {
         cout << "No hay objetivos disponibles." << endl;
@@ -163,7 +184,7 @@ Personaje* Personaje::seleccionarObjetivo( vector<Personaje*> objetivos, string 
     }
 
     cout << " 0. Cancelar." << endl;
-    cout << "----------------------------------------" << endl;
+    cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
     cout << "Opcion: " ;
 
     int seleccion;
@@ -305,5 +326,136 @@ void Personaje::mostrarObjetosEquipados() {
 
         cout << endl;
     }
+}
+
+//Metodos para los Buffs temporales:
+
+void Personaje::aplicarBuffAtaque(int valor, int turnos) {
+    //Aplica un buff temporal de ataque:
+
+    if ( this->turnosBuffAtaque > 0 ) {
+        cout << this->nombre << " ya tiene un buff de ataque activo." << endl;
+        cout << "Turnos restantes: " << this->turnosBuffAtaque << endl;
+        return;
+    }
+
+    this-> bonusAtaqueTemporal = valor;
+    this-> turnosBuffAtaque = turnos;
+    this-> ataque += valor;
+
+    cout << this->nombre << " recibe +" << valor << " ataque por " << turnos << " turnos." << endl;
+    pausar(800);
 
 }
+
+void Personaje::aplicarBuffDefensa( int valor, int turnos) {
+    //Aplica un buff temporal a la defensa:
+
+    if ( this->turnosBuffDefensa > 0) {
+        cout << this-> nombre << " ya tiene un buff de defensa activo." << endl;
+        cout << "Turnos restantes: " << this->turnosBuffDefensa << endl;
+        return;
+    }
+
+    this->bonusDefensaTemporal = valor;
+    this->turnosBuffDefensa = turnos;
+    this->defensa += valor;
+
+    cout << this->nombre << " recibe +" << valor << " defensa por " << turnos << " turnos." << endl;
+    pausar(800);
+}
+
+void Personaje::aplicarBuffVida( int valor, int turnos) {
+    //Aplica un buff temporal a la vida:
+
+    if (this->turnosBuffVida > 0 ) {
+        cout << this-> nombre << " ya tiene un buff de vida activo." << endl;
+        cout << "Turnos restantes: " << this->turnosBuffVida << endl;
+        return;
+    }
+
+    this->bonusVidaTemporal = valor;
+    this->turnosBuffVida = turnos;
+    this->vida += valor;
+
+    cout << this-> nombre << " recibe +" << valor << " vida por " << turnos << " turnos." << endl;
+    pausar(800);
+}
+
+
+void Personaje:: procesarBuffs() {
+    //Se llama al final de cada turno para decrementar todos los Buff (que tenga):
+
+
+
+    //Procesar buff de ataque:
+
+    if ( this-> turnosBuffAtaque > 0 ) {
+        this->turnosBuffAtaque--;
+
+        if (this->turnosBuffAtaque <= 0) {
+            this-> ataque -= this->bonusAtaqueTemporal;
+            cout << this-> nombre << ": El buff de ataque ha terminado."
+            << " Ataque vuelve a " << this->ataque << "." << endl;
+            this->bonusAtaqueTemporal = 0;
+        }
+
+        else {
+            cout << this->nombre << " : Buff de ataque activo (" << this->turnosBuffAtaque
+            << " turnos restantes)." << endl;
+        }
+
+        pausar(800);
+    }
+
+    //Procesar buff de defensa:
+
+    if ( this-> turnosBuffDefensa > 0 ) {
+        this->turnosBuffDefensa--;
+
+        if (this->turnosBuffDefensa <= 0) {
+            this-> defensa -= this->bonusDefensaTemporal;
+            cout << this-> nombre << ": El buff de defensa ha terminado."
+            << " Defensa vuelve a " << this->defensa  << "." << endl;
+            this->bonusDefensaTemporal = 0;
+        }
+
+        else {
+            cout << this->nombre << " : Buff de defensa activo (" << this->turnosBuffDefensa
+            << " turnos restantes)." << endl;
+        }
+
+        pausar(800);
+    }
+
+    //Procesar buff de vida:
+    if ( this-> turnosBuffVida > 0 ) {
+        this->turnosBuffVida--;
+
+        if (this->turnosBuffVida<= 0) {
+            this-> vida -= this->bonusVidaTemporal;
+            cout << this-> nombre << ": El buff de vida ha terminado."
+            << " Vida vuelve a " << this->vida << "." << endl;
+            this->bonusVidaTemporal = 0;
+        }
+
+        else {
+            cout << this->nombre << " : Buff de vida activo (" << this->turnosBuffVida
+            << " turnos restantes)." << endl;
+        }
+        pausar(800);
+    }
+
+}
+
+bool Personaje:: tieneBuffAtaque() {
+    return this->turnosBuffAtaque > 0;
+}
+
+bool Personaje:: tieneBuffDefensa() {
+    return this->turnosBuffDefensa > 0;
+}
+bool Personaje:: tieneBuffVida() {
+    return this->turnosBuffVida > 0;
+}
+

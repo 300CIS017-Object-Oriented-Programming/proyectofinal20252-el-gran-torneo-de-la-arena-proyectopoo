@@ -134,16 +134,23 @@ void Inventario::retirarObjetoDePersonaje( Personaje* personaje, int indice ) {
     }
 
     //Si el objeto no fue usado, devolver el stock al inventario
+
+    // Despues de verificar que el objeto no fue usado
     if (!objeto->estaUsado()) {
         string nombreObjeto = objeto->getNombre();
-        ObjetoMagico * tipoObjeto = buscarObjeto(nombreObjeto);
+        ObjetoMagico* tipoObjeto = buscarObjeto(nombreObjeto);
 
-        //Otra validacion:
         if (tipoObjeto != nullptr) {
             tipoObjeto->incrementarStock();
-            cout << "Stock de '" << nombreObjeto <<"' devuelto al inventario." << endl;
+            cout << "Stock de '" << nombreObjeto << "' devuelto al inventario." << endl;
+        }
+        else {
+            // El tipo de objeto fue eliminado del inventario
+            cout << "Advertencia: El tipo '" << nombreObjeto << "' ya no existe en el inventario." << endl;
+            cout << "El objeto se retira pero no se puede devolver al stock." << endl;
         }
     }
+
     else {
         // El objeto ya fue usado, no devolver stock
         cout << "EL objeto ya fue usado y no puede devolverse al Stock. " << endl;
@@ -364,6 +371,10 @@ void Inventario::eliminarObjetoInteractivo() {
         cout << "Stock actual de '" << nombreObjeto << "': " << objeto->getStock() << endl;
         return;
     }
+
+    cout << "ADVERTENCIA: Si eliminar este objeto, cualquier Personaje "
+            "que lo tenga no lo podra devolver al Stock"<< endl;
+
 
     char confirmacion;
 

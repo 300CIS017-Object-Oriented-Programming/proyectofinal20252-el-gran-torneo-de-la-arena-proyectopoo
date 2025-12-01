@@ -220,6 +220,7 @@ void Torneo::mostrarGuildsRivales() {
 
 // <--Hasta aqui
 
+
 //Metodos de gestion (Menus):
 
 void Torneo::gestionarGuild( ) {
@@ -227,13 +228,14 @@ void Torneo::gestionarGuild( ) {
     int opcion;
    if (this->guildJugador != nullptr) {
        do {
-           cout << endl << "=== GESTION DE GUILD ===" << endl;
+           cout << endl << "===========[-_-] GESTION DE GUILD [-_-]============" << endl;
            cout << "Guild: " << this -> guildJugador -> getNombreGuild( ) << endl;
-           cout << "1. Listar heroes." << endl;
-           cout << "2. Consultar heroe." << endl;
-           cout << "3. Agregar heroe." << endl;
-           cout << "4. Retirar heroe." << endl;
-           cout << "5. Volver al menu principal" << endl;
+           cout << "1) Listar heroes." << endl;
+           cout << "2) Consultar heroe." << endl;
+           cout << "3) Agregar heroe." << endl;
+           cout << "4) Retirar heroe." << endl;
+           cout << "5) Volver al menu principal" << endl;
+           cout << "========================================" << endl;
            cout << "Seleccione una opcion: ";
            cin >> opcion;
 
@@ -286,12 +288,14 @@ void Torneo:: menuPrincipal() {
         cout << endl << "========================================" << endl;
         cout << "     " << this -> nombreTorneo << endl;
         cout << "========================================" << endl;
-        cout << "1, Gestionar Guild." << endl;
-        cout << "2. Gestionar inventario . " << endl;
-        cout << "3. Iniciar Arena (combates)." << endl;
-        cout << "4. Ver Guilds enemigas." << endl;
-        cout << "5. Guardar heroes de la Guild en JSON." << endl;
-        cout << "0. Salir del torneo." << endl;
+        cout << "1) Gestionar Guild." << endl;
+        cout << "2) Gestionar inventario . " << endl;
+        cout << "3) Iniciar Arena (combates)." << endl;
+        cout << "4) Ver Guilds enemigas." << endl;
+        cout << "5) Guardar heroes de la Guild en JSON." << endl;
+        cout << "6) Cargar heroes desde JSON." << endl;
+        cout << "0) Salir del torneo." << endl;
+        cout << "========================================" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
         cin.ignore( );
@@ -315,7 +319,12 @@ void Torneo:: menuPrincipal() {
             }
             case 5: {
                 string nombreArchivo = "heroes.json";
-                guardarHeroesEnJSON( nombreArchivo );
+                this->guildJugador->guardarHeroesEnJSON( nombreArchivo );
+                break;
+            }
+            case 6: {
+                string nombreArchivo = "heroes.json";
+                this->guildJugador->cargarHeroesDesdeJSON( nombreArchivo );
                 break;
             }
             case 0: {
@@ -340,17 +349,19 @@ void Torneo::gestionarInventario() {
 
     if (this->inventario != nullptr) {
         do {
-            cout << endl << "=== GESTION DE INVENTARIO ===" << endl;
+            cout << endl << "=======$ GESTION DE INVENTARIO $======== " << endl;
             cout << "Stock total: " << this->inventario->getStockTotal() << " objetos." << endl;
-            cout << "1. Crear objeto magico." << endl;
-            cout << "2. Listar objetos disponibles." << endl;
-            cout << "3. Consultar objeto especifico." << endl;
-            cout << "4. Actualizar stock de objeto." << endl;
-            cout << "5. Eliminar objeto (si stock = 0)." << endl;
-            cout << "6. Asignar objeto a heroe." << endl;
-            cout << "7. Retirar objeto de heroe." << endl;
-            cout << "8. Ver objetos equipados por heroes." << endl;
-            cout << "0. Volver al menu principal." << endl;
+            cout << "1) Crear objeto magico." << endl;
+            cout << "2) Listar objetos disponibles." << endl;
+            cout << "3) Consultar objeto especifico." << endl;
+            cout << "4) Actualizar stock de objeto." << endl;
+            cout << "5) Eliminar objeto (si stock = 0)." << endl;
+            cout << "========== ~~~~~~~~~~~~~~~~~~~~~~~~ ======== " << endl;
+            cout << "6) Asignar objeto a heroe." << endl;
+            cout << "7) Retirar objeto de heroe." << endl;
+            cout << "8) Ver objetos equipados por heroes." << endl;
+            cout << "0) Volver al menu principal." << endl;
+            cout << "========================================" << endl;
             cout << "Seleccione una opcion: ";
             cin >> opcion;
             cin.ignore();
@@ -413,58 +424,3 @@ void Torneo::gestionarInventario() {
     }
 }
 
-void Torneo::guardarHeroesEnJSON( const string& nombreArchivo ) {
-    if ( this->guildJugador == nullptr ) {
-        cout << "Error: no hay Guild del jugador inicializada. No se puede guardar." << endl;
-        return;
-    }
-
-    // Obtener héroes vivos de la guild del jugador
-    vector<Personaje*> heroesVivos = this->guildJugador->getPersonajesVivos( );
-
-    if ( heroesVivos.empty( ) ) {
-        cout << "No hay heroes vivos para guardar en el archivo JSON." << endl;
-        return;
-    }
-
-    std::ofstream archivo( nombreArchivo );
-    if ( !archivo.is_open( ) ) {
-        cout << "Error: no se pudo abrir el archivo '" << nombreArchivo << "' para escritura." << endl;
-        return;
-    }
-
-    archivo << "{\n";
-    archivo << "  \"guild\": \"" << this->guildJugador->getNombreGuild( ) << "\",\n";
-    archivo << "  \"heroes_vivos\": [\n";
-
-    for ( size_t i = 0; i < heroesVivos.size( ); ++i ) {
-        Personaje* h = heroesVivos[ i ];
-
-        archivo << "    {\n";
-        archivo << "      \"nombre\": \"" << h->getNombre( ) << "\",\n";
-        archivo << "      \"rol\": \"" << h->getRol( ) << "\",\n";
-        archivo << "      \"bando\": \"" << h->getBando( ) << "\",\n";
-        archivo << "      \"nivel\": " << h->getNivel( ) << ",\n";
-        archivo << "      \"vida\": " << h->getVida( ) << ",\n";
-        archivo << "      \"vidaMaxima\": " << h->getVidaMaxima( ) << ",\n";
-        archivo << "      \"ataque\": " << h->getAtaque( ) << ",\n";
-        archivo << "      \"defensa\": " << h->getDefensa( ) << "\n";
-        archivo << "    }";
-
-        if ( i + 1 < heroesVivos.size( ) ) {
-            archivo << ",";
-        }
-        archivo << "\n";
-    }
-
-    archivo << "  ]\n";
-    archivo << "}\n";
-
-    archivo.close( );
-
-    cout << endl;
-    cout << "========================================" << endl;
-    cout << "Heroes vivos de la Guild '" << this->guildJugador->getNombreGuild( )
-         << "' guardados en '" << nombreArchivo << "'." << endl;
-    cout << "========================================" << endl;
-}
