@@ -101,6 +101,7 @@ class Personaje {
         void setVida( int vida );
         void setAtaque( int ataque );
         void setDefensa( int defensa );
+        void setVidaMaxima( int vidaMaxima );
         /* Agregado para cuando sea revivido */
         void setEstaVivo( bool estado);
         void setEscudoProtector( bool estado);

@@ -125,6 +125,10 @@ void Personaje::setVida( int vida ) {
     }
 }
 
+void Personaje::setVidaMaxima( int vidaMaxima ) {
+    this->vidaMaxima = vidaMaxima;
+}
+
 void Personaje::setAtaque( int ataque ) {
     //Modifica el ataque, util cuando se usan objetos magicos.
     this -> ataque = ataque;

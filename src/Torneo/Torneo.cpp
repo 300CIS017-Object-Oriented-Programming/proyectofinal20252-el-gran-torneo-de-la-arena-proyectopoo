@@ -318,12 +318,12 @@ void Torneo:: menuPrincipal() {
                 break;
             }
             case 5: {
-                string nombreArchivo = "heroes.json";
+                string nombreArchivo = "../src/ArchivosJson/heroes.json";
                 this->guildJugador->guardarHeroesEnJSON( nombreArchivo );
                 break;
             }
             case 6: {
-                string nombreArchivo = "heroes.json";
+                string nombreArchivo = "../src/ArchivosJson/heroes.json";
                 this->guildJugador->cargarHeroesDesdeJSON( nombreArchivo );
                 break;
             }

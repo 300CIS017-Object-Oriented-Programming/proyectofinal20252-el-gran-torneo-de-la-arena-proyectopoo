@@ -442,11 +442,17 @@ void Guild:: mostrarObjetosEquipadosHeroes() {
 //Para la Carga y Descarga de Archivos JSON
 
 void Guild::guardarHeroesEnJSON( const string& nombreArchivo ) {
-    // Guarda los heroes vivos de la guild en formato JSON
+    // Guarda los heroes vivos de la guild en formato JSON compacto
 
-    vector<Personaje*> heroesVivos = getPersonajesVivos();
+    vector<Personaje*> todosLosHeroes = getPersonajesVivos();
+    vector<Personaje*> muertos = getPersonajesMuertos();
 
-    if ( heroesVivos.empty() ) {
+    // Agregar los muertos al vector
+    for ( int i = 0; i < muertos.size(); i++ ) {
+        todosLosHeroes.push_back( muertos[i] );
+    }
+
+    if ( todosLosHeroes.empty() ) {
         cout << "No hay heroes vivos para guardar." << endl;
         return;
     }
@@ -458,42 +464,30 @@ void Guild::guardarHeroesEnJSON( const string& nombreArchivo ) {
         return;
     }
 
-    archivo << "{\n";
-    archivo << "  \"guild\": \"" << this->nombreGuild << "\",\n";
-    archivo << "  \"heroes\": [\n";
+    // Guardar cada heroe en una linea, formato JSON compacto
+    for ( int i = 0; i < todosLosHeroes.size(); i++ ) {
+        Personaje* h = todosLosHeroes[i];
 
-    for ( int i = 0; i < heroesVivos.size(); i++ ) {
-        Personaje* h = heroesVivos[i];
-
-        archivo << "    {\n";
-        archivo << "      \"nombre\": \"" << h->getNombre() << "\",\n";
-        archivo << "      \"rol\": \"" << h->getRol() << "\",\n";
-        archivo << "      \"nivel\": " << h->getNivel() << ",\n";
-        archivo << "      \"vida\": " << h->getVida() << ",\n";
-        archivo << "      \"vidaMaxima\": " << h->getVidaMaxima() << ",\n";
-        archivo << "      \"ataque\": " << h->getAtaque() << ",\n";
-        archivo << "      \"defensa\": " << h->getDefensa() << "\n";
-        archivo << "    }";
-
-        if ( i + 1 < heroesVivos.size() ) {
-            archivo << ",";
-        }
-        archivo << "\n";
+        archivo << "{\"nombre\":\"" << h->getNombre() << "\","
+                << "\"rol\":\"" << h->getRol() << "\","
+                << "\"nivel\":" << h->getNivel() << ","
+                << "\"vida\":" << h->getVida() << ","
+                << "\"vidaMaxima\":" << h->getVidaMaxima() << ","
+                << "\"ataque\":" << h->getAtaque() << ","
+                << "\"defensa\":" << h->getDefensa() << "}" << endl;
     }
-
-    archivo << "  ]\n";
-    archivo << "}\n";
 
     archivo.close();
 
     cout << endl << "========================================" << endl;
     cout << "Heroes guardados en '" << nombreArchivo << "'." << endl;
-    cout << "Total: " << heroesVivos.size() << " heroes." << endl;
+    cout << "Total: " << todosLosHeroes.size() << " heroes." << endl;
     cout << "========================================" << endl;
 }
 
+
 void Guild::cargarHeroesDesdeJSON( const string& nombreArchivo ) {
-    // Carga heroes desde un archivo JSON
+    // Carga heroes desde un archivo JSON compacto (una linea por heroe)
 
     std::ifstream archivo( nombreArchivo );
 
@@ -505,57 +499,65 @@ void Guild::cargarHeroesDesdeJSON( const string& nombreArchivo ) {
     cout << endl << "========================================" << endl;
     cout << "Cargando heroes desde '" << nombreArchivo << "'..." << endl;
 
-    // Leer todo el contenido del archivo (todo vuelve las letras verdes)
-    string contenido( ( std::istreambuf_iterator<char>( archivo ) ),
-                       std::istreambuf_iterator<char>() );
-    archivo.close();
-
-    // Parseo manual simple del JSON
     int heroesActualizados = 0;
     int heroesCreados = 0;
+    string linea;
 
-    size_t pos = 0;
-    while ( ( pos = contenido.find( "\"nombre\":", pos ) ) != string::npos ) {
+    // Leer linea por linea
+    while ( getline( archivo, linea ) ) {
+
+        // Ignorar lineas vacias
+        if ( linea.empty() ) {
+            continue;
+        }
+
         // Extraer nombre
-        size_t inicioNombre = contenido.find( "\"", pos + 9 ) + 1;
-        size_t finNombre = contenido.find( "\"", inicioNombre );
-        string nombre = contenido.substr( inicioNombre, finNombre - inicioNombre );
+        size_t posNombre = linea.find( "\"nombre\":\"" );
+        size_t inicioNombre = posNombre + 10;
+        size_t finNombre = linea.find( "\"", inicioNombre );
+        string nombre = linea.substr( inicioNombre, finNombre - inicioNombre );
 
         // Extraer rol
-        size_t posRol = contenido.find( "\"rol\":", finNombre );
-        size_t inicioRol = contenido.find( "\"", posRol + 6 ) + 1;
-        size_t finRol = contenido.find( "\"", inicioRol );
-        string rol = contenido.substr( inicioRol, finRol - inicioRol );
+        size_t posRol = linea.find( "\"rol\":\"" );
+        size_t inicioRol = posRol + 7;
+        size_t finRol = linea.find( "\"", inicioRol );
+        string rol = linea.substr( inicioRol, finRol - inicioRol );
 
         // Extraer nivel
-        size_t posNivel = contenido.find( "\"nivel\":", finRol );
+        size_t posNivel = linea.find( "\"nivel\":" );
         size_t inicioNivel = posNivel + 8;
-        size_t finNivel = contenido.find_first_of( ",\n", inicioNivel );
-        int nivel = stoi( contenido.substr( inicioNivel, finNivel - inicioNivel ) );
+        size_t finNivel = linea.find( ",", inicioNivel );
+        int nivel = stoi( linea.substr( inicioNivel, finNivel - inicioNivel ) );
 
         // Extraer vida
-        size_t posVida = contenido.find( "\"vida\":", finNivel );
+        size_t posVida = linea.find( "\"vida\":" );
         size_t inicioVida = posVida + 7;
-        size_t finVida = contenido.find_first_of( ",\n", inicioVida );
-        int vida = stoi( contenido.substr( inicioVida, finVida - inicioVida ) );
+        size_t finVida = linea.find( ",", inicioVida );
+        int vida = stoi( linea.substr( inicioVida, finVida - inicioVida ) );
+
+        // Extraer vidaMaxima
+        size_t posVidaMax = linea.find( "\"vidaMaxima\":" );
+        size_t inicioVidaMax = posVidaMax + 13;
+        size_t finVidaMax = linea.find( ",", inicioVidaMax );
+        int vidaMaxima = stoi( linea.substr( inicioVidaMax, finVidaMax - inicioVidaMax ) );
 
         // Extraer ataque
-        size_t posAtaque = contenido.find( "\"ataque\":", finVida );
+        size_t posAtaque = linea.find( "\"ataque\":" );
         size_t inicioAtaque = posAtaque + 9;
-        size_t finAtaque = contenido.find_first_of( ",\n", inicioAtaque );
-        int ataque = stoi( contenido.substr( inicioAtaque, finAtaque - inicioAtaque ) );
+        size_t finAtaque = linea.find( ",", inicioAtaque );
+        int ataque = stoi( linea.substr( inicioAtaque, finAtaque - inicioAtaque ) );
 
         // Extraer defensa
-        size_t posDefensa = contenido.find( "\"defensa\":", finAtaque );
+        size_t posDefensa = linea.find( "\"defensa\":" );
         size_t inicioDefensa = posDefensa + 10;
-        size_t finDefensa = contenido.find_first_of( ",\n }", inicioDefensa );
-        int defensa = stoi( contenido.substr( inicioDefensa, finDefensa - inicioDefensa ) );
+        size_t finDefensa = linea.find( "}", inicioDefensa );
+        int defensa = stoi( linea.substr( inicioDefensa, finDefensa - inicioDefensa ) );
 
         // Verificar si el heroe ya existe
         Personaje* existente = buscarPersonaje( nombre );
 
         if ( existente != nullptr ) {
-            // Actualizar stats
+            existente->setVidaMaxima( vidaMaxima );
             existente->setVida( vida );
             existente->setAtaque( ataque );
             existente->setDefensa( defensa );
@@ -563,7 +565,6 @@ void Guild::cargarHeroesDesdeJSON( const string& nombreArchivo ) {
             heroesActualizados++;
         }
         else {
-            // Crear nuevo heroe segun el rol
             Personaje* nuevoHeroe = nullptr;
 
             if ( rol == "Guerrero" ) {
@@ -588,9 +589,9 @@ void Guild::cargarHeroesDesdeJSON( const string& nombreArchivo ) {
                 heroesCreados++;
             }
         }
-
-        pos = finDefensa;
     }
+
+    archivo.close();
 
     cout << "========================================" << endl;
     cout << "Heroes actualizados: " << heroesActualizados << endl;

@@ -45,6 +45,11 @@ class Guild {
         /* Mapa para guardar los personajes que han ido muriendo en la batalla */
         unordered_map<string, Personaje*> muertos;
 
+       //funcion auxiliar para el json:
+    // Funcion auxiliar para limpiar espacios de un string
+
+
+
     public:
         //Contructores y destructores:
         Guild( );

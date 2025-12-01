@@ -198,13 +198,13 @@ void Paladin::bendiccionDivina( Personaje* aliado ) {
     pausar(1200); //Para que el usuario pueda leer el texto.
 }
 
-void Paladin::realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+void Paladin::realizarAccionIA(vector<Personaje*> aliados, vector<Personaje*> enemigos) {
 
     /*IA del Paladin: ataca al enemigos, pero si un aliado esta muy herido, lo protege
-     * Estrategia: Balance entre ataque y proteccion.
-     * - Si un aliado tiene menos del 30% de vida y no tiene escudo, lo protege.
-     * - Si un aliado tiene menos del 50% de vida, usa bendicion.
-     * - Si no, ataca al enemigo con mas vida.
+     * Estrategia: Balance entre ataque y proteccion con variabilidad.
+     * - Si un aliado tiene menos del 30% de vida y no tiene escudo, tiene 70% de probabilidad de protegerlo.
+     * - Si un aliado tiene menos del 50% de vida, tiene 60% de probabilidad de usar bendicion.
+     * - Si no, ataca al enemigo con mas vida (o aleatoriamente si hay varios).
      */
 
     if (!this->isEstaVivo) {
@@ -214,59 +214,101 @@ void Paladin::realizarAccionIA( vector<Personaje*> aliados, vector<Personaje*> e
     cout << endl << ">> " << this->nombre << " (Paladin) evalua el campo de batalla..." << endl;
     pausar(2000);  //  Pausa para crear tensión
 
-    //Primero verificamos si algun aliado (o el mismo) necesita escudo (vida < 30% y sin escudo):
-
+    // Primero verificamos si algun aliado (o el mismo) necesita escudo (vida < 30% y sin escudo):
     for (int i = 0; i < aliados.size(); i++) {
-        if ( aliados[i] -> getIsEstaVivo() ) {
-            double porcentajeVida = (double) aliados[i]->getVida() / aliados[i]->getVidaMaxima();
+        if (aliados[i]->getIsEstaVivo()) {
+            double porcentajeVida = (double)aliados[i]->getVida() / aliados[i]->getVidaMaxima();
 
-            if ( porcentajeVida < 0.30 && !aliados[i]->getEscudoProtector() ) {
-                if( aliados[ i ] == this ) {
-                    cout << this -> nombre << " se prepara para protegerse a si mismo!!!" << endl;
+            if (porcentajeVida < 0.30 && !aliados[i]->getEscudoProtector()) {
+                // 70% de probabilidad de proteger en situación crítica
+                int probabilidad = rand() % 100;
+                if (probabilidad < 70) {
+                    if (aliados[i] == this) {
+                        cout << this->nombre << " se prepara para protegerse a si mismo!!!" << endl;
+                    } else {
+                        cout << this->nombre << " decide proteger a su aliado en peligro!!!" << endl;
+                    }
+                    pausar(1500);
+                    protegerAliado(aliados[i]);
+                    return;
                 } else {
-                    cout << this -> nombre << " decide proteger a su aliado en peligro!!!" << endl;
+                    cout << this->nombre << " duda por un momento..." << endl;
+                    pausar(1500);
+                    cout << "Decide mantener la presion ofensiva en su lugar!" << endl;
+                    pausar(1500);
+                    // Continua para atacar
+                    break;
                 }
-                protegerAliado( aliados[ i ] );
-                return;
             }
         }
     }
 
-    //Si no hay aliados en peligro Critico, verificar si alguien necesita bendicion (vida < 50%):
-
+    // Si no hay aliados en peligro Critico, verificar si alguien necesita bendicion (vida < 50%):
     for (int i = 0; i < aliados.size(); i++) {
-
-        if (aliados[i]->getIsEstaVivo() ) {
-            double porcentajeVida = (double) aliados[i]->getVida() / aliados[i]->getVidaMaxima();
-            if (porcentajeVida < 0.5 ) {
-                if (aliados[i] == this) {
-                    cout << this->nombre << " decide protegerse a si bendecirse a si mismo!!!!!" << endl;
+        if (aliados[i]->getIsEstaVivo()) {
+            double porcentajeVida = (double)aliados[i]->getVida() / aliados[i]->getVidaMaxima();
+            if (porcentajeVida < 0.5) {
+                // 60% de probabilidad de bendecir
+                int probabilidad = rand() % 100;
+                if (probabilidad < 60) {
+                    if (aliados[i] == this) {
+                        cout << this->nombre << " decide bendecirse a si mismo!!!!!" << endl;
+                    } else {
+                        cout << this->nombre << " decide bendecir a su aliado herido!!!!" << endl;
+                    }
+                    pausar(1500);
+                    bendiccionDivina(aliados[i]);
+                    return;
+                } else {
+                    cout << this->nombre << " considera curar a sus aliados..." << endl;
+                    pausar(1500);
+                    cout << "Pero prefiere seguir atacando!" << endl;
+                    pausar(1500);
+                    // Continúa para atacar
+                    break;
                 }
-                else {
-                    cout << this->nombre << " decide bendecir a su aliado herido!!!!" << endl;
-                }
-                bendiccionDivina(aliados[i]) ;
-                return;
             }
         }
     }
 
-    //Si no hay aliados que necesiten ayuda, atacar al enemigo con mas vida:
-    Personaje* objetivo = nullptr;
-    int mayorVida = -1;
+    // Si no hay aliados que necesiten ayuda, atacar a un enemigo
+    vector<Personaje*> enemigosVivos;
 
+    // Recopilar enemigos vivos
     for (int i = 0; i < enemigos.size(); i++) {
-        if (enemigos[i] ->getIsEstaVivo() && enemigos[i]-> getVida() > mayorVida) {
-            mayorVida = enemigos[ i ]->getVida();
-            objetivo = enemigos[i];
+        if (enemigos[i]->getIsEstaVivo()) {
+            enemigosVivos.push_back(enemigos[i]);
         }
     }
 
-    if (objetivo != nullptr) {
+    if (!enemigosVivos.empty()) {
+        // 50% de probabilidad de atacar al de mas vida, 50% a uno aleatorio
+        Personaje* objetivo = nullptr;
+        int probabilidad = rand() % 100;
+
+        if (probabilidad < 50) {
+            // Atacar al enemigo con más vida
+            int mayorVida = -1;
+            for (int i = 0; i < enemigosVivos.size(); i++) {
+                if (enemigosVivos[i]->getVida() > mayorVida) {
+                    mayorVida = enemigosVivos[i]->getVida();
+                    objetivo = enemigosVivos[i];
+                }
+            }
+            cout << this->nombre << " se enfoca en el enemigo mas fuerte!" << endl;
+            pausar(1500);
+        } else {
+            // Atacar a un enemigo aleatorio
+            int indiceAleatorio = rand() % enemigosVivos.size();
+            objetivo = enemigosVivos[indiceAleatorio];
+            cout << this->nombre << " elige un objetivo estrategico!" << endl;
+            pausar(1500);
+        }
+
         realizarAccion(objetivo);
-    }
-    else {
-        cout << this-> nombre << " no encuentra objetivos." << endl;
+    } else {
+        cout << this->nombre << " no encuentra objetivos." << endl;
+        pausar(1500);
     }
 }
 
