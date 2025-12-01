@@ -530,7 +530,9 @@ void Arena::procesarObjetosPostCombate() {
      * Ahora debemos descontar el stock del inventario global.
      */
 
-    cout << endl << "Procesando objetos post-combate..." << endl;
+    cout << endl << "-------Procesando objetos post-combate..." << endl;
+
+    pausar(1000);
 
     if (this->inventario == nullptr) {
         cout << "Advertencia: No hay inventario asignado a la Arena." << endl;
@@ -539,31 +541,39 @@ void Arena::procesarObjetosPostCombate() {
 
     //Recorremos los heroes para verificar sus objetos equipados:
 
-    for ( int i = 0; i < this->heroes.size(); i++ ) {
-        Personaje * heroe = this->heroes[i];
+    int objetosConsumidos = 0;
 
-        //Verificamos los 2 slots de obejtos:
+    //Recorremos los heroes para verificar sus objetos equipados:
 
-        for (int slot = 0; slot < 2; slot ++) {
-            ObjetoAsignado* objeto = heroe -> getObjetoEquipado(slot);
+    for( int i = 0; i < heroes.size(); i++){
+        Personaje * heroe = this -> heroes[i];
 
-            if ( objeto != nullptr && objeto -> estaUsado()) {
-                //El objeto fue usado, descontamos del stock global:
+        //Verificamos los 2 slots de objetos (de atras hacia adelante para no afectar indices)
+        for(int slot = 1; slot >= 0 ; slot--){
+            ObjetoAsignado * objeto = heroe->getObjetoEquipado(slot);
+
+            if ( objeto != nullptr && objeto->estaUsado() ){
+                //Objeto fue usado, eliminarlo del heroe
                 string nombreObjeto = objeto->getNombre();
-                ObjetoMagico * tipoObjeto = this-> inventario->buscarObjeto(nombreObjeto);
-
-                if (tipoObjeto != nullptr) {
-                    tipoObjeto->decrementarStock();
-                    cout << " -- " << nombreObjeto << " consumido (Stock restante: " <<
-                        tipoObjeto->getStock() <<") " << endl;
-                }
+                cout << " -- " << heroe->getNombre() << ": " << nombreObjeto
+                << " consumido y retirado." << endl;
+                //Eliminar el objeto del heroe (libera memoria del ObjetoAsignado);
+                heroe->retirarObjeto(slot);
+                objetosConsumidos++;
+                pausar(500);
             }
         }
     }
 
-    cout << "Total de Objetos consumidos en este combate: " << this->objetosUsados << endl;
-}
+    if (objetosConsumidos == 0){
+       cout << "Ningun objeto fue consumido en este combate." << endl;
+    }
+    else{
+        cout << "Total de objetos consumidos: "<< objetosConsumidos << endl;
+    }
 
+
+}
 //Getters:
 
 int Arena::getTurnoActual() {

@@ -157,7 +157,7 @@ void Guerrero::mostrarInformacion( ) {
     cout << "Probabilidad Critico: " << ( this -> probabilidadCritico * 100 ) << "%" << endl;
     cout << "Estado: " << ( this->isEstaVivo ? "Vivo" : "Derrotado (Con su creador)" ) << endl; //
     // Se coloca un condicional en el cout de arriba para que de el estado real del Guerrero.
-
+    cout << "Objetos equipados: " << this -> objetosEquipados.size( ) << "/2" << endl;
     /*Pendiente realizado: Aplicamos el metodo para mostrar los objetos equipados. */
     mostrarObjetosEquipados();
 

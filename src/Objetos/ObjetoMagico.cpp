@@ -32,7 +32,10 @@ void ObjetoMagico::pausar(int milisegundos) {
 
 
 void ObjetoMagico::decrementarStock( ) {
-    this -> stockDisponible--;
+    //Solo decrementar si hau StockDisponible
+    if ( this-> stockDisponible >0) {
+        this -> stockDisponible--;
+    }
 }
 
 void ObjetoMagico::incrementarStock( ) {

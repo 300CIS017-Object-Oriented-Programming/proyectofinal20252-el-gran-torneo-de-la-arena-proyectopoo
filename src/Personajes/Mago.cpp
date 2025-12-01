@@ -156,6 +156,7 @@ void Mago::mostrarInformacion( ) { // Muestra los detalles del mago:
     cout << "Estado: " << ( this -> isEstaVivo ? "Vivo (vivito y coleando)" : "Derrotado" ) << endl;
     // Se coloca un condicional en el cout de arriba para que de el estado real del Mago.
 
+    cout << "Objetos equipados: " << this -> objetosEquipados.size( ) << "/2" << endl;
     /*Pendiente realizado: Aplicamos el metodo para mostrar los objetos equipados. */
     mostrarObjetosEquipados();
 

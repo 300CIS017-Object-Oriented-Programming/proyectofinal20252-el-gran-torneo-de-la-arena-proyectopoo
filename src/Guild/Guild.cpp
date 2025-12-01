@@ -41,6 +41,8 @@ string Guild:: getNombreGuild( ) {
     return this -> nombreGuild;
 }
 
+
+
 // Metodos para la gestion de personajes:
 
 void Guild::cargarPersonajesIniciales( ) {
@@ -217,4 +219,214 @@ vector<Personaje * > Guild::getPersonajesMuertos() {
         fallecidos.push_back(par.second); /* Hacemos push_back al vector de perosnajes muertos.*/
     }
     return fallecidos;
+}
+
+//Metodos de gestion para mejora r el encapsulamiento:
+
+void Guild::crearNuevoPersonaje() {
+    // Metodo que encapsula toda la lógica de creación de personajes (SIgue en verde)
+
+    string nombre;
+    int tipoRol, nivel, vida, ataque, defensa;
+
+    cout << endl << "=== Crear nuevo héroe ===" << endl;
+    cout << "Nombre: ";
+    getline(cin, nombre);
+
+    // Validar nombre no vacío
+    if (nombre.empty()) {
+        cout << "Error: el nombre no puede estar vacío." << endl;
+        return;
+    }
+
+    // Verificar que no exista
+    if (buscarPersonaje(nombre) != nullptr) {
+        cout << "Error: ya existe un heroe llamado " << nombre << "." << endl;
+        return;
+    }
+
+    cout << "Tipo de rol:" << endl;
+    cout << "1. Guerrero" << endl;
+    cout << "2. Mago" << endl;
+    cout << "3. Sanador" << endl;
+    cout << "4. Paladin" << endl;
+    cout << "5. Hechicero Oscuro" << endl;
+    cout << "Seleccione: ";
+    cin >> tipoRol;
+
+    Personaje* nuevoHeroe = nullptr;
+
+    switch(tipoRol) {
+        case 1: {
+            cout << "Nivel: "; cin >> nivel;
+            cout << "Vida: "; cin >> vida;
+            cout << "Ataque: "; cin >> ataque;
+            cout << "Defensa: "; cin >> defensa;
+            nuevoHeroe = new Guerrero(nombre, "Jugador", nivel, vida, ataque, defensa);
+            break;
+        }
+        case 2: {
+            cout << "Nivel: "; cin >> nivel;
+            cout << "Vida: "; cin >> vida;
+            cout << "Ataque: "; cin >> ataque;
+            cout << "Defensa: "; cin >> defensa;
+            nuevoHeroe = new Mago(nombre, "Jugador", nivel, vida, ataque, defensa);
+            break;
+        }
+        case 3: {
+            cout << "Nivel: "; cin >> nivel;
+            cout << "Vida: "; cin >> vida;
+            cout << "Defensa: "; cin >> defensa;
+            nuevoHeroe = new Sanador(nombre, "Jugador", nivel, vida, defensa);
+            break;
+        }
+        case 4: {
+            cout << "Nivel: "; cin >> nivel;
+            cout << "Vida: "; cin >> vida;
+            cout << "Ataque: "; cin >> ataque;
+            cout << "Defensa: "; cin >> defensa;
+            nuevoHeroe = new Paladin(nombre, "Jugador", nivel, vida, ataque, defensa);
+            break;
+        }
+        case 5: {
+            cout << "Nivel: "; cin >> nivel;
+            cout << "Vida: "; cin >> vida;
+            cout << "Ataque: "; cin >> ataque;
+            cout << "Defensa: "; cin >> defensa;
+            nuevoHeroe = new HechiceroOscuro(nombre, "Jugador", nivel, vida, ataque, defensa);
+            break;
+        }
+        default: {
+            cout << "Opcion invalida. Heroe no creado." << endl;
+            return;
+        }
+    }
+
+    if (nuevoHeroe != nullptr) {
+        agregarPersonaje(nuevoHeroe);
+    }
+}
+
+void Guild::consultarPersonajeInteractivo() {
+    // Método que encapsula la consulta interactiva (Verde)
+
+    string nombre;
+    cout << "Ingrese el nombre del heroe: ";
+    getline(cin, nombre);
+
+    if (nombre.empty()) {
+        cout << "Error: Debe ingresar un nombre." << endl;
+        return;
+    }
+
+    consultarPersonaje(nombre);
+}
+
+void Guild::retirarPersonajeInteractivo(Inventario* inventario) {
+    // Metodo que encapsula el retiro con devolucion de objetos (No entiendo por que me sale en verde).
+
+    listarPersonajes();
+
+    string nombre;
+    cout << "Ingrese el nombre del heroe a retirar: ";
+    getline(cin, nombre);
+
+    if (nombre.empty()) {
+        cout << "Error: Debe ingresar un nombre." << endl;
+        return;
+    }
+
+    Personaje* heroe = buscarPersonaje(nombre);
+
+    if (heroe == nullptr) {
+        cout << "No se encontro ningun heroe con ese nombre." << endl;
+        return;
+    }
+
+    // Mostrar objetos equipados
+    bool tieneObjetos = false;
+    cout << endl << "=== Objetos Equipados por " << nombre << " ===" << endl;
+
+    for (int slot = 0; slot < 2; slot++) {
+        ObjetoAsignado* objeto = heroe->getObjetoEquipado(slot);
+        if (objeto != nullptr) {
+            tieneObjetos = true;
+            cout << "  [" << (slot + 1) << "] " << objeto->getNombre();
+            if (objeto->estaUsado()) {
+                cout << " (Usado - Se perdera)";
+            } else {
+                cout << " (No usado - Volvera al inventario)";
+            }
+            cout << endl;
+        }
+    }
+
+    if (!tieneObjetos) {
+        cout << " [Ningún Objeto equipado]" << endl;
+    }
+
+    // Pedir confirmación
+    char confirmacion;
+    cout << "Estas seguro de retirar a " << nombre << "? (s/n): ";
+    cin >> confirmacion;
+    cin.ignore();
+
+    if (confirmacion == 's' || confirmacion == 'S') {
+        // Devolver objetos no usados al inventario
+        if (inventario != nullptr) {
+            for (int slot = 1; slot >= 0; slot--) {
+                ObjetoAsignado* objeto = heroe->getObjetoEquipado(slot);
+                if (objeto != nullptr) {
+                    if (!objeto->estaUsado()) {
+                        string nombreObjeto = objeto->getNombre();
+                        ObjetoMagico* tipoObjeto = inventario->buscarObjeto(nombreObjeto);
+
+                        if (tipoObjeto != nullptr) {
+                            tipoObjeto->incrementarStock();
+                            cout << "'" << nombreObjeto << "' devuelto al inventario." << endl;
+                        }
+                    } else {
+                        cout << "'" << objeto->getNombre() << "' fue usado y se pierde." << endl;
+                    }
+                    heroe->retirarObjeto(slot);
+                }
+            }
+        }
+
+        // Retirar el heroe
+        retirarPersonaje(nombre);
+    } else {
+        cout << "Operación cancelada." << endl;
+    }
+}
+
+void Guild::mostrarDetallesGuild() {
+    // Método que encapsula la visualización completa de la guild (otra vez sale verde).
+
+    int personajesVivos = getPersonajesVivos().size();
+    int personajesTotales = getCantidadPersonajes();
+
+    cout << endl << "=== " << nombreGuild << " ===" << endl;
+    listarPersonajes();
+    cout << " ##### Personajes activos: " << personajesVivos << "/"
+         << personajesTotales << endl;
+}
+
+void Guild:: mostrarObjetosEquipadosHeroes() {
+    //Muestra los objetos Equipados por todos los heroes (movido de Torneo)
+
+    cout << endl << " ===== Objetos Equipados por heroes ===== " << endl;
+
+    listarPersonajes();
+
+    char respuesta;
+
+    cout << "Desea ver los detalles de un heroe? (S/N): ";
+    cin >> respuesta;
+    cin.ignore();
+
+    if ( respuesta == 's' || respuesta == 'S') {
+        consultarPersonajeInteractivo();
+    }
+
 }

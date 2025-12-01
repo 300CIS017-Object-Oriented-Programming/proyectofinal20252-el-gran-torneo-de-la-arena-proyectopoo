@@ -50,18 +50,15 @@ class Torneo {
         Arena* arena;
 
         // Metodos privados auxiliares para organizar el codigo:
-        void crearNuevoHeroe( );          // Logica para la creacion de heroes.
-        void consultarHeroeTorneo( );     // Logica para la consulta.
-        void retirarHeroeTorneo( );       // Logica de retiro.
         void mostrarGuildsRivales( );     // Muestra a las Guilds Enemigas.
 
         void pausar( int milisegundos );
 
         /* Nuevos metodos privados para el inventario: */
-        void listarInventarioDetallado( );
-        void listarObjetosEquipadosHeroes( );
-        void asignarObjetoHeroe( );
-        void buscarObjetoEspecifico( );
+
+
+
+
 
     public:
         // Constructores y destructores:
@@ -74,17 +71,12 @@ class Torneo {
         void inicializarTorneo( );     // Configura todo el torneo.
         void inicializarGuilds( );     // Crea la Guild del jugador y enemigas.
         void inicializarInventario( ); // Carga objetos magicos iniciales.
-
         void iniciarArena( );          // Inicia el sistema de combate.
 
-
         // Metodos de gestion (menus):
-
         void gestionarGuild( );        // Menu para administrar la Guild del jugador.
         void gestionarInventario( );   // Menu para objetos magicos.
-
         void menuPrincipal( );         // Menu Principal del torneo.
-
         // Persistencia de héroes en archivo JSON
         void guardarHeroesEnJSON( const string& nombreArchivo );
 };

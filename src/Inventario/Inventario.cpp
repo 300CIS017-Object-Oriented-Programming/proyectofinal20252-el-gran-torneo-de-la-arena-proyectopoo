@@ -170,7 +170,7 @@ int Inventario::getStock( string objeto ) {
         return iter -> second -> getStock( );
     }
 
-    return NULL;
+    return 0;
 }
 
 int Inventario::getStockTotal( ) {
@@ -180,4 +180,365 @@ int Inventario::getStockTotal( ) {
     }
 
     return total;
+}
+
+/*Nuevo Metodo de Gestion, para mejorar el encapsulamiento (los estoy dejando al final por si no funciona
+ * asi puedo saber facilmente que eliminar):*/
+
+void Inventario::asignarObjetoInteractivo(Guild* guildJugador) {
+    // Metodo que encapsula toda la logica de asignacion de objetos:
+
+    if (guildJugador == nullptr) {
+        cout << "Error: No hay guild del jugador." << endl;
+        return;
+    }
+
+    string nombreHeroe;
+    string nombreObjeto;
+
+    cout << endl << "=== Asignar objeto a heroe ===" << endl;
+
+    // Mostrar inventario disponible
+    listarObjetos();
+
+    cout << endl << "Ingrese el nombre del objeto: ";
+    getline(cin, nombreObjeto);
+
+    if (nombreObjeto.empty()) {
+        cout << "Error: Debe ingresar un nombre de objeto." << endl;
+        return;
+    }
+
+    // Verificar que el objeto exista
+    ObjetoMagico* objeto = buscarObjeto(nombreObjeto);
+
+    if (objeto == nullptr) {
+        cout << "Error: El objeto '" << nombreObjeto << "' no existe." << endl;
+        return;
+    }
+
+    // Verificar stock
+    if (objeto->getStock() <= 0) {
+        cout << "Error: No hay stock disponible de '" << nombreObjeto << "'." << endl;
+        return;
+    }
+
+    // Mostrar héroes disponibles
+    cout << endl << "Heroes Disponibles:" << endl;
+    guildJugador->listarPersonajes();
+
+    cout << endl << "Ingrese el nombre del heroe: ";
+    getline(cin, nombreHeroe);
+
+    if (nombreHeroe.empty()) {
+        cout << "Error: Debe ingresar un nombre de heroe." << endl;
+        return;
+    }
+
+    // Buscar el heroe
+    Personaje* heroe = guildJugador->buscarPersonaje(nombreHeroe);
+
+    if (heroe == nullptr) {
+        cout << "Error: No se encontro ningún heroe con el nombre '" << nombreHeroe << "'." << endl;
+        return;
+    }
+
+    // Verificar que el heroe pueda equipar más objetos
+    if (!heroe->isPuedeEquiparObjeto()) {
+        cout << "Error: " << nombreHeroe << " ya tiene el maximo de objetos equipados (2/2)." << endl;
+        return;
+    }
+
+    // Asignar el objeto
+    asignarObjetoAPersonaje(nombreObjeto, heroe);
+
+    // Decrementar stock
+    objeto->decrementarStock();
+
+    cout << "Objeto asignado exitosamente!!!!" << endl;
+    cout << "Stock restante de '" << nombreObjeto << "': " << objeto->getStock() << endl;
+}
+
+void Inventario::mostrarInventarioDetallado() {
+    //Muestra el inventario con detalles (movido de Torneo)
+
+    cout << endl << "===== Inventario de Objetos Magicos ===" << endl;
+
+    if (this->getStockTotal() == 0) {
+        cout << "El inventario esta vacio." << endl;
+        return;
+    }
+
+    listarObjetos();
+
+    cout << "Stock total Disponible: " << this->getStockTotal() << endl;
+    cout << "=====================================" << endl;
+
+
+}
+
+void Inventario::consultarObjetoInteractivo() {
+    //Consulta un objeto en especifico con interaccion (movido de Torneo):
+
+    string nombreObjeto;
+
+    cout << endl << "==== Consultar Objeto Especifico ===" << endl;
+    listarObjetos();
+
+    cout << "Ingrese el nombre del objeto: " ;
+    getline(cin, nombreObjeto);
+
+    if (nombreObjeto.empty()) {
+        cout << "Error: Debe ingresar el nombre de un objeto." << endl;
+        return;
+    }
+
+    consultarObjeto( nombreObjeto);
+
+}
+
+void Inventario::actualizarStockInteractivo() {
+    //Actualiza el stock de un objeto con interaccion:
+
+    string nombreObjeto;
+    int nuevoStock;
+
+    cout << endl << "===== Actualizar Stock de Objeto =====" << endl;
+    listarObjetos();
+
+    cout << "Ingrese el nombre del objeto: " << endl;
+    getline(cin ,nombreObjeto);
+
+    if  ( nombreObjeto.empty() ) {
+        cout << "Error: Debe ingresar un nombre." << endl;
+        return;
+    }
+
+    ObjetoMagico * objeto = buscarObjeto( nombreObjeto);
+
+    if ( objeto == nullptr) {
+        cout << "Error: El objeto '" << nombreObjeto << "' no existe." << endl;
+        return;
+    }
+
+    cout << "Stock actual: " << objeto->getStock() << endl;
+    cout << "Ingrese el nuevo stock: ";
+    cin >> nuevoStock;
+    cin.ignore();
+
+    if ( nuevoStock < 0 ) {
+        cout << "Error: El stock no puede ser negativo." << endl;
+        return;
+    }
+
+    actualizarStock(nombreObjeto , nuevoStock);
+
+}
+
+
+void Inventario::eliminarObjetoInteractivo() {
+    //Elimina un objeto del inventario con interaccion (movido de Torneo):
+
+    string nombreObjeto;
+
+    cout << endl << "===== Eliminar Objeto del Inventario =====" << endl;
+    listarObjetos();
+
+    cout << "Ingrese el nombre de los objetos a eliminar: " ;
+    getline(cin, nombreObjeto);
+
+    if ( nombreObjeto.empty() ) {
+        cout << "Error: Debe ingresar un nombre." << endl;
+        return;
+    }
+
+    ObjetoMagico * objeto = buscarObjeto( nombreObjeto );
+
+    if ( objeto == nullptr) {
+        cout << "Error: El objeto '" << nombreObjeto << "' No existe." << endl;
+        return;
+    }
+
+    if ( objeto->getStock() > 0 ) {
+        cout << "Error: Solo se pueden eliminar objetos con Stock = 0." << endl;
+        cout << "Stock actual de '" << nombreObjeto << "': " << objeto->getStock() << endl;
+        return;
+    }
+
+    char confirmacion;
+
+    cout << "Seguro que desea eliminar '" << nombreObjeto << "' ? (s/n)" << endl;
+    cin >> confirmacion;
+    cin.ignore();
+
+    if (confirmacion == 's' || confirmacion == 'S') {
+        eliminarObjeto(nombreObjeto);
+    }
+    else {
+        cout << "Operacion Cancelada." << endl;
+    }
+}
+
+void Inventario:: retirarObjetoInteractivo( Guild * guildJugador) {
+    //Retira un objeto de un heroe con interaccion (movido de Torno):
+
+    if ( guildJugador == nullptr) {
+        cout << "Error: No hay Guild del jugador." << endl;
+        return;
+    }
+
+    string nombreHeroe;
+
+    cout << endl << "======= Retirar Objeto del Heroe ====== " << endl;
+    guildJugador -> listarPersonajes();
+
+    cout << "Ingrese el nombre del Heroe: " << endl;
+    getline(cin , nombreHeroe);
+
+    if ( nombreHeroe.empty() ) {
+        cout << "Error: Debe ingresar un nombre." << endl;
+        return;
+    }
+
+    Personaje * heroe = guildJugador->buscarPersonaje( nombreHeroe);
+
+
+    if ( heroe == nullptr) {
+        cout << "Error: No se encontro al Heroe '" << nombreHeroe << "'." << endl;
+        return;
+    }
+
+    cout << endl << "Objetos equipado por " << nombreHeroe << ": " << endl;
+    heroe-> mostrarObjetosEquipados();
+
+    cout << "Seleccione el slot a retirar ( 1 o 2 ), 0 para cancelar: " ;
+    int slot;
+    cin >> slot;
+    cin.ignore();
+
+    if (slot == 0) {
+        cout << "Operacion Cancelada." << endl;
+        return;
+    }
+
+    if ( slot < 1 || slot > 2 ) {
+        cout << "Error: Slot invalido." << endl;
+        return;
+    }
+
+    retirarObjetoDePersonaje( heroe, slot-1);
+
+}
+
+void Inventario::crearObjetoDesdeMenu() {
+    //Crea el tipo de objeto que no existe actualmente
+
+    cout << endl << "=== CREAR OBJETO MAGICO ===" << endl;
+    cout << "NOTA: Los efectos son aleatorios segun el tipo." << endl;
+    cout << "Solo puedes elegir el stock inicial." << endl;
+    cout << endl;
+
+    //Lista de tipos disponibles;
+
+    vector<string> tiposDisponibles;
+    tiposDisponibles.push_back("Pocion de Vida");
+    tiposDisponibles.push_back("Amuleto de Furia");
+    tiposDisponibles.push_back("Escudo Bendito");
+    tiposDisponibles.push_back("Pacto Sangriento de los Caidos");
+    tiposDisponibles.push_back("Caballa Legendaria del Destino");
+    tiposDisponibles.push_back("Pocion de Resurrecion");
+
+
+    //filtrar solo los que NO  existen en el inventario:
+
+
+    vector <string> tiposFaltantes;
+
+    for (int i = 0; i < tiposDisponibles.size(); i++) {
+        if ( buscarObjeto( tiposDisponibles[i]) == nullptr ) {
+            tiposFaltantes.push_back( tiposDisponibles[i] );
+        }
+    }
+
+    if ( tiposFaltantes.empty() ){
+        cout << "Todos los tipos de objeto ya existen en el inventario." << endl;
+        cout << "Si deseas mas unidades, usa 'Actualizar Stock'." << endl;
+        return;
+    }
+
+
+    cout << "Tipos Disponibles para crear: " << endl;
+    cout << "----------------------------------------" << endl;
+
+    for ( int i = 0; i < tiposFaltantes.size(); i++ ) {
+        cout << " " << (i+1) << ". " << tiposFaltantes[i] << endl;
+
+    }
+
+
+    cout << " 0. Cancelar." << endl;
+    cout << "----------------------------------------" << endl;
+    cout << "Seleccione el tipo: " ;
+
+    int seleccion;
+    cin >> seleccion;
+    cin.ignore();
+
+    if ( seleccion == 0) {
+        cout << "Operacion cancelada." << endl;
+        return;
+    }
+
+    if (seleccion < 1 || seleccion > tiposFaltantes.size() ) {
+        cout << "Error: Seleccion invalida." << endl;
+        return;
+    }
+
+
+    string tipoSeleccionado= tiposFaltantes[ seleccion -1 ];
+
+
+    cout << "Ingrese el stock inicial para '" << tipoSeleccionado << "': ";
+
+    int stockInicial;
+    cin >>stockInicial;
+    cin.ignore();
+
+    if ( stockInicial <= 0) {
+        cout << "Error: El stock debe ser mayor a 0. " << endl;
+        return;
+    }
+
+
+    //Crear el objeto segun el tipo
+
+    ObjetoMagico* nuevoObjeto = nullptr;
+
+    if ( tipoSeleccionado == "Pocion de Vida") {
+        nuevoObjeto = new PocionVida(0);
+    }
+
+    else if (tipoSeleccionado == "Amuleto de Furia" ) {
+        nuevoObjeto = new AmuletoFuria(0);
+    }
+    else if (tipoSeleccionado == "Escudo Bendito" ) {
+        nuevoObjeto = new EscudoBendito(0);
+    }
+    else if (tipoSeleccionado == "Pacto Sangriento de los Caidos" ) {
+        nuevoObjeto = new PactoSangriento(0);
+    }
+    else if (tipoSeleccionado == "Caballa Legendaria del Destino" ) {
+        nuevoObjeto = new CaballaLegendaria(0);
+    }
+    else if (tipoSeleccionado == "Pocion de Resurrecion" ) {
+        nuevoObjeto = new AmuletoFuria(0);
+    }
+
+
+    if ( nuevoObjeto != nullptr) {
+        crearObjeto( nuevoObjeto, stockInicial);
+        cout << endl << "Objeto '" << tipoSeleccionado << "' creado con "
+        << stockInicial << " unidades!!!!" << endl;
+    }
+
 }

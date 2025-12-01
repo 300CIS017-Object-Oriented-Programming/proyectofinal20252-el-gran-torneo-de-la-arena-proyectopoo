@@ -197,280 +197,86 @@ void Torneo::pausar(int milisegundos) {
     sleep_for( milliseconds( milisegundos ) );
 }
 
+//Nuevos (Pipe): -->
 
-void Torneo::crearNuevoHeroe( ) {
-    // Metodo auxiliar que encapsula toda la logica de creacion de heroes.
-    // Hace que el menu de gestionarGuild sea mas limpio.
-
-    string nombre;
-    int tipoRol, nivel, vida, ataque, defensa;
-    cout << endl << "=== Crear nuevo heroe ===" << endl;
-    cout << "Nombre: " ;
-    getline( cin, nombre );
-
-    //Verificamos que el nombre no este vacio
-    if( nombre.empty( ) ) {
-        cout << "Error: el nombre no puede esta vacio." << endl;
-        return;
-    }
-
-    //Verificamos que no exista ya un heroe con ese nombre:
-
-    if( guildJugador -> buscarPersonaje( nombre ) != nullptr ) {
-        cout << "Error: ya existe un heroe llamado " << nombre << "." << endl;
-        return;
-    }
-
-    cout << "Tipo de rol:" << endl;
-    cout << "1. Guerrero." << endl;
-    cout << "2. Mago." << endl;
-    cout << "3. Sanador" << endl;
-    cout << "4. Paladin" << endl;
-    cout << "5. Hechicero Oscuro" << endl;
-    cout << "Seleccione: ";
-    cin >> tipoRol;
-
-    // Crea el personaje segun el tipo Seleccionado
-    Personaje* nuevoHeroe = nullptr;
-
-    switch( tipoRol ) {
-
-        case 1: {
-            //Guerrero:
-            cout << "Nivel: ";
-            cin >> nivel;
-
-            cout <<  "Vida: ";
-            cin >> vida;
-
-            cout << "Ataque: ";
-            cin >> ataque;
-
-            cout << "Defensa: ";
-            cin >> defensa;
-
-
-            nuevoHeroe = new Guerrero ( nombre, "Jugador", nivel, vida , ataque, defensa );
-            break;
-        }
-        case 2: {
-            //Mago;
-            cout << "Nivel: ";
-            cin >> nivel;
-
-            cout <<  "Vida: ";
-            cin >> vida;
-
-            cout << "Ataque: ";
-            cin >> ataque;
-
-            cout << "Defensa: ";
-            cin >> defensa;
-
-            nuevoHeroe = new Mago ( nombre, "Jugador", nivel, vida, ataque, defensa );
-            break;
-        }
-        case 3: {
-            //Sanador;
-            cout << "Nivel: ";
-            cin >> nivel;
-
-            cout <<  "Vida: ";
-            cin >> vida;
-
-            cout << "Defensa: ";
-            cin >> defensa;
-            nuevoHeroe = new Sanador ( nombre, "Jugador", nivel, vida, defensa);
-            break;
-        }
-
-        case 4: {
-            //Paladin;
-            cout << "Nivel: ";
-            cin >> nivel;
-
-            cout <<  "Vida: ";
-            cin >> vida;
-
-            cout << "Ataque: ";
-            cin >> ataque;
-
-            cout << "Defensa: ";
-            cin >> defensa;
-
-            nuevoHeroe = new Paladin (  nombre, "Jugador", nivel,  vida,  ataque, defensa );
-            break;
-        }
-        case 5: {
-            //Hechicero Oscuro
-            cout << "Nivel: ";
-            cin >> nivel;
-
-            cout <<  "Vida: ";
-            cin >> vida;
-
-            cout << "Ataque: ";
-            cin >> ataque;
-
-            cout << "Defensa: ";
-            cin >> defensa;
-
-            nuevoHeroe = new HechiceroOscuro( nombre, "Jugador",  nivel, vida, ataque,  defensa );
-            break;
-        }
-        default: {
-            cout << "Opcion invalida. Heroe no creado." << endl;
-            return;
-        }
-    }
-
-    //Si se creo exitosamente se agrega a la Guild:
-
-    if( nuevoHeroe != nullptr ) {
-        this -> guildJugador -> agregarPersonaje( nuevoHeroe );
-    }
-}
-
-void Torneo::consultarHeroeTorneo( ) {
-    //Metodos auxiliar para consultar un heroe.
-    //Separa la logica con la interaccion con el usuario.
-
-    string nombre;
-    cout << "Ingrese el nombre del heroe: " ;
-    getline( cin, nombre );
-    if( nombre.empty( ) ) {
-        cout << "Error: Debe ingresar un nombre." << endl;
-        return;
-    }
-    this -> guildJugador -> consultarPersonaje( nombre );
-}
-
-
-void Torneo::retirarHeroeTorneo( ) {
-    // Metodo auxiliar para retirar un heroe.
-    // Encapsula la logica del retiro con confirmacion.
-
-    string nombre;
-    cout << "Ingrese el nombre del heroe a retirar: ";
-    getline( cin, nombre );
-
-    if( nombre.empty( ) ) {
-        cout << "Error: Debe ingresar un nombre." << endl;
-        return;
-    }
-
-    //Verifica que el heroe existe antes de retirar:
-
-    if( this -> guildJugador -> buscarPersonaje( nombre ) != nullptr ) {
-        //Pedir confirmacion:
-        char confirmacion;
-
-        cout << "Estas Seguro de retirar a " << nombre << "? (s/n): ";
-        cin >> confirmacion;
-        cin.ignore( );
-
-        if( confirmacion == 's' || confirmacion == 'S' ) {
-            guildJugador -> retirarPersonaje( nombre );
-        }
-        else {
-            cout << "Operacion cancelada." << endl;
-        }
-    }
-    else {
-        cout << "No se encontro ningun heroe con ese nombre." << endl;
-    }
-
-}
-
-
-void Torneo::mostrarGuildsRivales( ) {
-    //Metodo auxiliar, permite ver a las guilds enemigas:
-    //Permite reutilizar esta funcionalidad desde otros lugares de ser necesario.
-    int personajesVivos;
-    int personajesTotales;
+void Torneo::mostrarGuildsRivales() {
+    // Metodo simpiflicado, usando el nuevo metodo de guild.
 
     cout << endl << "=== GUILDS RIVALES ===" << endl;
 
-    //Validacion: Verifica si hay Guilds enemigas registradas.
-    if( this -> guildsEnemigas.empty( ) ) {
-        cout << "No hay Guilds enemigas registradas."<< endl;
+    if (this->guildsEnemigas.empty()) {
+        cout << "No hay Guilds enemigas registradas." << endl;
         return;
     }
 
-    //Itera sobre todas la Guilds enemigas.
-    for( int i = 0; i < this -> guildsEnemigas.size( ); i++ ) {
-        //Muestra el numero y nombre de cada Guild
-
-        cout << endl << "Guild " << ( i + 1 ) << ": "
-        << this -> guildsEnemigas[ i ] -> getNombreGuild( ) << endl;
-
-        //delegar a la Guild el mostrar sus propios personajes:
-        this -> guildsEnemigas[ i ] -> listarPersonajes( );
-
-        //Mostramos estadisticas adiccionales:
-        personajesVivos = this -> guildsEnemigas[ i ] -> getPersonajesVivos( ).size( );
-        personajesTotales = this -> guildsEnemigas[ i ] -> getCantidadPersonajes( );
-        cout << " ##### Personajes activos: " << personajesVivos << "/" << personajesTotales << endl ;
-
-        pausar(2000); //Para que el usuario pueda leer el texto.
+    for (int i = 0; i < this->guildsEnemigas.size(); i++) {
+        cout << endl << "Guild " << (i + 1) << ": ";
+        this->guildsEnemigas[i]->mostrarDetallesGuild();
+        pausar(2000);
     }
 
-    // Resumen al final:
-    cout << endl << "Total de Guilds Rivales : " << this -> guildsEnemigas.size( ) << "." <<endl;
+    cout << endl << "Total de Guilds Rivales: " << this->guildsEnemigas.size() << "." << endl;
 }
+
+// <--Hasta aqui
 
 //Metodos de gestion (Menus):
 
 void Torneo::gestionarGuild( ) {
     //Menu para gestionar la Guild del jugador :
     int opcion;
+   if (this->guildJugador != nullptr) {
+       do {
+           cout << endl << "=== GESTION DE GUILD ===" << endl;
+           cout << "Guild: " << this -> guildJugador -> getNombreGuild( ) << endl;
+           cout << "1. Listar heroes." << endl;
+           cout << "2. Consultar heroe." << endl;
+           cout << "3. Agregar heroe." << endl;
+           cout << "4. Retirar heroe." << endl;
+           cout << "5. Volver al menu principal" << endl;
+           cout << "Seleccione una opcion: ";
+           cin >> opcion;
 
-    do {
-        cout << endl << "=== GESTION DE GUILD ===" << endl;
-        cout << "Guild: " << this -> guildJugador -> getNombreGuild( ) << endl;
-        cout << "1. Listar heroes." << endl;
-        cout << "2. Consultar heroe." << endl;
-        cout << "3. Agregar heroe." << endl;
-        cout << "4. Retirar heroe." << endl;
-        cout << "5. Volver al menu principal" << endl;
-        cout << "Seleccione una opcion: ";
-        cin >> opcion;
+           cin.ignore( );
 
-        cin.ignore( );
+           switch( opcion ) {
 
-        switch( opcion ) {
+               case 1: {
+                   //Listar todos los heroes:
+                   this -> guildJugador -> listarPersonajes( );
+                   break;
+               }
 
-            case 1: {
-                //Listar todos los heroes:
-                this -> guildJugador -> listarPersonajes( );
-                break;
-            }
-
-            case 2: {
-                //Consultar un heroe especifico:
-                consultarHeroeTorneo( );
-                break;
-            }
-            case 3: {
-                crearNuevoHeroe( );
-                // Agregar un nuevo heroe:
-                break;
-            }
-            case 4: {
-                retirarHeroeTorneo( );
-                break;
-            }
-            case 5: {
-                cout << "Volviendo al menu principal." << endl;
-                break;
-            }
-            default: {
-                cout << "Opcion invalida. Intente de nuevo." << endl;
-                break;
-            }
-        }
+               case 2: {
+                   //Consultar un heroe especifico:
+                   this->guildJugador->consultarPersonajeInteractivo();
+                   break;
+               }
+               case 3: {
+                   this->guildJugador->crearNuevoPersonaje();
+                   // Agregar un nuevo heroe:
+                   break;
+               }
+               case 4: {
+                   this->guildJugador->retirarPersonajeInteractivo(this->inventario);
+                   break;
+               }
+               case 5: {
+                   cout << "Volviendo al menu principal." << endl;
+                   break;
+               }
+               default: {
+                   cout << "Opcion invalida. Intente de nuevo." << endl;
+                   break;
+               }
+           }
+       }
+       while( opcion != 5 );
+   }
+    else {
+        cout << "Error: No se ha inicializado la Guild del jugador." << endl;
     }
-    while( opcion != 5 );
+
 }
 
 void Torneo:: menuPrincipal() {
@@ -504,7 +310,7 @@ void Torneo:: menuPrincipal() {
                 break;
             }
             case 4: {
-                mostrarGuildsRivales( );
+                mostrarGuildsRivales( ); //<-- A esta no le vi la necesidad de encapsular.
                 break;
             }
             case 5: {
@@ -527,173 +333,84 @@ void Torneo:: menuPrincipal() {
     while( opcion != 0 );
 }
 
-//Metodo de Gestion del inventario:
-
-void Torneo::listarInventarioDetallado() {
-
-    //Para mostrar los detalles del inventario:
-
-    cout << endl << "=== INVENTARIO DE OBJETOS MAGICOS ===" << endl;
-
-    if ( this->inventario->getStockTotal( )  == 0) {
-        cout << "El inventario esta vacio. " << endl;
-        return;
-    }
-
-    this -> inventario -> listarObjetos();
-
-    cout << "Stock total disponible: " << this -> inventario -> getStockTotal( ) << endl;
-    cout << "=====================================" << endl;
-
-}
-
-void Torneo:: asignarObjetoHeroe() {
-    //Metodo que contiene la logica para asignar los objetos a los heroes:
-
-    string nombreHeroe;
-    string nombreObjeto;
-
-    cout << endl << "=== Asignar objeto a heroe ===" << endl;
-
-    //Mostrar el inventario disponible:
-
-    this -> inventario->listarObjetos();
-
-    cout << endl << "Ingrese el nombre del objeto: ";
-    getline( cin, nombreObjeto);
-
-    if (nombreObjeto.empty()) {
-        cout << " Error: Debe ingresar un nombre de objeto." << endl;
-        return;
-    }
-
-    //Verificamos que el objeto exista:
-
-    ObjetoMagico * objeto = this -> inventario -> buscarObjeto( nombreObjeto);
-
-    if ( objeto == nullptr) {
-        cout << "Error: No hay stock disponible de '" << nombreObjeto << "'. " <<endl;
-        return;
-    }
-
-    //Mostrar heroes disponibles:
-    cout << endl << "Heroes Disponibles: " << endl;
-    this-> guildJugador -> listarPersonajes();
-
-    cout << endl << "Ingrese el nombre del heroe: " ;
-    getline(cin, nombreHeroe);
-
-    if (nombreHeroe.empty()) {
-        cout << "Error: Debe ingresar un nombre de heroe." << endl;
-        return;
-    }
-
-    //Buscar el heroe:
-
-    Personaje * heroe = this -> guildJugador -> buscarPersonaje(nombreHeroe);
-
-    if ( heroe == nullptr) {
-        cout << "Error: No se encontro ningun heroe con el nombre '" << nombreHeroe << "'.";
-        return;
-    }
-
-    //Verificar que el Heroe puede equipar mas objetos:
-
-    if ( !heroe -> isPuedeEquiparObjeto( ) ) {
-        cout << "Error: " << nombreHeroe << " ya tiene el maximo de objetos equipados (2/2). " << endl;
-        return;
-    }
-
-    //Asignar el objeto:
-
-    this -> inventario ->asignarObjetoAPersonaje( nombreObjeto, heroe);
-
-    //Decrementar stock:
-    objeto->decrementarStock();
-
-    cout << "Objeto aignado exitosamente!!!!!!!!" << endl;
-    cout << "Stock restante de '" << nombreObjeto << "': " << objeto ->getStock() << endl;
-
-}
-
-void Torneo::buscarObjetoEspecifico() {
-    //Metodo auxiliar para buscar un objeto especifico.
-    string nombreObjeto;
-
-    cout << "Ingrese el nombre del objeto: ";
-    getline(cin, nombreObjeto);
-
-    if (nombreObjeto.empty()) {
-        cout << "Error: Debe de ingresar el nombre de un objeto." << endl;
-        return;
-    }
-
-    this-> inventario -> consultarObjeto(nombreObjeto);
-}
-
-void Torneo::listarObjetosEquipadosHeroes() {
-    //Metodo para ver los objetos equipados por los heroes:
-
-    char respuesta;
-
-    cout << endl << "=== Objetos equipados por heroes ===" << endl;
-    this -> guildJugador -> listarPersonajes( );
-    cout << "Desea ver los detalles de un heroe? (S/N)" << endl;
-
-    cin >> respuesta;
-    cin.ignore();
-
-    if ( respuesta == 's' || respuesta == 'S' ) {
-        consultarHeroeTorneo();
-    }
-
-}
-
 //Metodo de gestionar inventario:
 
 void Torneo::gestionarInventario() {
     int opcion;
 
-    do {
-        cout << endl << "=== GESTION DE INVENTARIO ===" << endl;
-        cout << "Stock total: " << this->inventario->getStockTotal() << " Objetos." << endl;
-        cout << "1. Listar objetos disponible." << endl;
-        cout << "2. Consultar objeto especifico." << endl;
-        cout << "3. Asignar objeto a heroe." << endl;
-        cout << "4. Ver objetos equipado por heroes. " << endl;
-        cout << "0. Volvel al menu principal." << endl;
-        cout << "Selecciones una opcion: ";
-        cin >> opcion;
-        cin.ignore();
+    if (this->inventario != nullptr) {
+        do {
+            cout << endl << "=== GESTION DE INVENTARIO ===" << endl;
+            cout << "Stock total: " << this->inventario->getStockTotal() << " objetos." << endl;
+            cout << "1. Crear objeto magico." << endl;
+            cout << "2. Listar objetos disponibles." << endl;
+            cout << "3. Consultar objeto especifico." << endl;
+            cout << "4. Actualizar stock de objeto." << endl;
+            cout << "5. Eliminar objeto (si stock = 0)." << endl;
+            cout << "6. Asignar objeto a heroe." << endl;
+            cout << "7. Retirar objeto de heroe." << endl;
+            cout << "8. Ver objetos equipados por heroes." << endl;
+            cout << "0. Volver al menu principal." << endl;
+            cout << "Seleccione una opcion: ";
+            cin >> opcion;
+            cin.ignore();
 
-        switch (opcion) {
-            case 1: {
-                listarInventarioDetallado();
-                break;
-            }
-            case 2: {
-                buscarObjetoEspecifico();
-                break;
-            }
-            case 3: {
-                asignarObjetoHeroe();
-                break;
-            }
-            case 4: {
-                listarObjetosEquipadosHeroes();
-                break;
-            }
-            case 0: {
-                cout << "Volviendo al menu principal......" << endl;
-                break;
-            }
-            default: {
-                cout << "Error: opcion invalida, intente de nuevo." << endl;
-                break;
+            switch ( opcion ) {
+                case 1: {
+                        this->inventario->crearObjetoDesdeMenu();
+                    break;
+                }
+                case 2: {
+
+                        this->inventario->mostrarInventarioDetallado();
+
+                    break;
+                }
+                case 3: {
+                        this->inventario->consultarObjetoInteractivo();
+                    break;
+                }
+                case 4: {
+                        this->inventario->actualizarStockInteractivo();
+                    break;
+                }
+                case 5: {
+                        this->inventario->eliminarObjetoInteractivo();
+                    break;
+                }
+                case 6: {
+                        this->inventario->asignarObjetoInteractivo( this->guildJugador );
+                    break;
+                }
+                case 7: {
+                        this->inventario->retirarObjetoInteractivo( this->guildJugador );
+                    break;
+                }
+                case 8: {
+                    if (this->guildJugador != nullptr) {
+                        this->guildJugador->mostrarObjetosEquipadosHeroes();
+                    }
+                    else {
+                        cout << "Error: No hay Guild del jugador Inicializada." << endl;
+                    }
+
+                    break;
+                }
+                case 0: {
+                    cout << "Volviendo al menu principal..." << endl;
+                    break;
+                }
+                default: {
+                    cout << "Error: opcion invalida." << endl;
+                    break;
+                }
             }
         }
+        while ( opcion != 0 );
     }
-    while (opcion!=0);
+    else {
+        cout << "Error: Inventario del Torneo no ha sido inicializado." << endl;
+    }
 }
 
 void Torneo::guardarHeroesEnJSON( const string& nombreArchivo ) {

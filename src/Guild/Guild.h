@@ -5,6 +5,8 @@
 #ifndef PROYECTOFINAL20252_EL_GRAN_TORNEO_DE_LA_ARENA_PROYECTOPOO_GUILD_H
 #define PROYECTOFINAL20252_EL_GRAN_TORNEO_DE_LA_ARENA_PROYECTOPOO_GUILD_H
 
+#include "../Inventario/Inventario.h"
+
 #include "../Personajes/Personaje.h" // Los puntos hacen que Guild.h suba a la cabecera (src)
 //y desde ahi entra al directorio Personajes.
 
@@ -32,6 +34,7 @@ using std::fixed;
 using std::unordered_map;
 using std::pair;
 
+class Inventario;
 
 class Guild {
     private:
@@ -47,6 +50,15 @@ class Guild {
         Guild( );
         Guild( string nombre );
         virtual ~Guild( );
+
+        //Metodos:
+        // Métodos de gestion delegada (mejora de encapsulamiento para depesjar el cpp de Torneo):
+
+        void crearNuevoPersonaje();  // Maneja toda la logica de creacion
+        void consultarPersonajeInteractivo();  // Maneja la consulta con interaccion
+        void retirarPersonajeInteractivo(Inventario* inventario);  // Maneja el retiro con devolucion de objetos
+        void mostrarDetallesGuild();  // Muestra informacion completa de la guild
+        void mostrarObjetosEquipadosHeroes();
 
         // Metodos para controlar los personajes:
 
