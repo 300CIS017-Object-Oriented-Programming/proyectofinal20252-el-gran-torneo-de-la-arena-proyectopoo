@@ -39,4 +39,5 @@ add_executable(proyectofinal20252_el_gran_torneo_de_la_arena_proyectopoo src/mai
         src/Personajes/Paladin.h
         src/Personajes/Paladin.cpp
         src/Arena/Arena.cpp
-        src/Arena/Arena.h)
+        src/Arena/Arena.h
+)

@@ -42,7 +42,7 @@ void Inventario::cargarObjetosIniciales( ) {
     cout << "========================================" << endl;
 
    //Pociones de Vida - Mas comunes:
-    crearObjeto( new PocionVida(0), 5);
+    crearObjeto( new PocionVida(0), 20);
 
 
     //Amuletos de Furia - moderadamente comunes:
@@ -228,6 +228,12 @@ void Inventario::asignarObjetoInteractivo(Guild* guildJugador) {
     if (objeto->getStock() <= 0) {
         cout << "Error: No hay stock disponible de '" << nombreObjeto << "'." << endl;
         return;
+    }
+    if (nombreObjeto == "Pocion Vida"){
+        if (objeto -> getStock() >= 5)
+        {
+
+        }
     }
 
     // Mostrar héroes disponibles
