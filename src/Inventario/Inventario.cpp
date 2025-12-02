@@ -343,7 +343,7 @@ void Inventario::actualizarStockInteractivo() {
 }
 
 
-void Inventario::eliminarObjetoInteractivo() {
+void Inventario::eliminarObjetoInteractivo( Guild* guildJugador, vector<Guild*> guildsEnemigas ) {
     //Elimina un objeto del inventario con interaccion (movido de Torneo):
 
     string nombreObjeto;
@@ -372,13 +372,91 @@ void Inventario::eliminarObjetoInteractivo() {
         return;
     }
 
-    cout << "ADVERTENCIA: Si eliminar este objeto, cualquier Personaje "
-            "que lo tenga no lo podra devolver al Stock"<< endl;
+    // Nueva validacion: Verificar si algun personaje tiene este objeto equipado
+    cout << endl << "Verificando si algun personaje tiene este objeto equipado..." << endl;
+    pausar( 800 );
 
+    vector<string> personajesConObjeto;
+
+    // Verificar heroes de la guild del jugador
+    if ( guildJugador != nullptr ) {
+        vector<Personaje*> heroes = guildJugador->getPersonajesVivos();
+        vector<Personaje*> muertos = guildJugador->getPersonajesMuertos();
+
+        // Agregar muertos al vector para revisarlos tambien
+        for ( int i = 0; i < muertos.size(); i++ ) {
+            heroes.push_back( muertos[i] );
+        }
+
+        // Revisar cada heroe
+        for ( int i = 0; i < heroes.size(); i++ ) {
+            Personaje* heroe = heroes[i];
+
+            // Revisar ambos slots
+            for ( int slot = 0; slot < 2; slot++ ) {
+                ObjetoAsignado* objAsignado = heroe->getObjetoEquipado( slot );
+
+                if ( objAsignado != nullptr && objAsignado->getNombre() == nombreObjeto ) {
+                    personajesConObjeto.push_back( heroe->getNombre() + " (Jugador)" );
+                    break; // No revisar el otro slot de este heroe
+                }
+            }
+        }
+    }
+
+    // Verificar enemigos de todas las guilds enemigas
+    for ( int g = 0; g < guildsEnemigas.size(); g++ ) {
+        Guild* guildEnemiga = guildsEnemigas[g];
+
+        if ( guildEnemiga != nullptr ) {
+            vector<Personaje*> enemigos = guildEnemiga->getPersonajesVivos();
+            vector<Personaje*> muertosEnemigos = guildEnemiga->getPersonajesMuertos();
+
+            // Agregar muertos
+            for ( int i = 0; i < muertosEnemigos.size(); i++ ) {
+                enemigos.push_back( muertosEnemigos[i] );
+            }
+
+            // Revisar cada enemigo
+            for ( int i = 0; i < enemigos.size(); i++ ) {
+                Personaje* enemigo = enemigos[i];
+
+                // Revisar ambos slots
+                for ( int slot = 0; slot < 2; slot++ ) {
+                    ObjetoAsignado* objAsignado = enemigo->getObjetoEquipado( slot );
+
+                    if ( objAsignado != nullptr && objAsignado->getNombre() == nombreObjeto ) {
+                        personajesConObjeto.push_back( enemigo->getNombre() + " (" + guildEnemiga->getNombreGuild() + ")" );
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Si hay personajes con el objeto, NO permitir eliminarlo (es un parche, pero sirve para evitar errores.
+    if ( !personajesConObjeto.empty() ) {
+        cout << endl << "ERROR: No se puede eliminar '" << nombreObjeto << "'" << endl;
+        cout << "Los siguientes personajes tienen este objeto equipado:" << endl;
+
+        for ( int i = 0; i < personajesConObjeto.size(); i++ ) {
+            cout << "  - " << personajesConObjeto[i] << endl;
+        }
+
+        cout << endl << "Debes retirar el objeto de estos personajes antes de eliminarlo." << endl;
+        cout << "Usa 'Retirar objeto de heroe' o espera a que se use en combate." << endl;
+        return;
+    }
+
+    cout << "Ningun personaje tiene este objeto equipado." << endl;
+    pausar( 500 );
+
+    cout << endl << "ADVERTENCIA: Si eliminas este objeto, el tipo sera" << endl;
+    cout << "removido permanentemente del inventario." << endl;
 
     char confirmacion;
 
-    cout << "Seguro que desea eliminar '" << nombreObjeto << "' ? (s/n)" << endl;
+    cout << "Seguro que desea eliminar '" << nombreObjeto << "' ? (s/n): ";
     cin >> confirmacion;
     cin.ignore();
 
@@ -552,4 +630,10 @@ void Inventario::crearObjetoDesdeMenu() {
         << stockInicial << " unidades!!!!" << endl;
     }
 
+}
+
+//Metodo auxiliar para parar el tiempo.
+
+void Inventario::pausar( int milisegundos ) {
+    sleep_for( milliseconds( milisegundos ) );
 }

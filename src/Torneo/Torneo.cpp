@@ -386,7 +386,7 @@ void Torneo::gestionarInventario() {
                     break;
                 }
                 case 5: {
-                        this->inventario->eliminarObjetoInteractivo();
+                        this->inventario->eliminarObjetoInteractivo( this->guildJugador, this->guildsEnemigas );
                     break;
                 }
                 case 6: {

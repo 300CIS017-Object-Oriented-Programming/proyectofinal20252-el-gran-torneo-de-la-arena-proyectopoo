@@ -318,6 +318,8 @@ void Guild::crearNuevoPersonaje() {
 void Guild::consultarPersonajeInteractivo() {
     // Método que encapsula la consulta interactiva (Verde)
 
+    listarPersonajes(); // <--- Para que sepa que los nombre de todos los heroes.
+
     string nombre;
     cout << "Ingrese el nombre del heroe: ";
     getline(cin, nombre);

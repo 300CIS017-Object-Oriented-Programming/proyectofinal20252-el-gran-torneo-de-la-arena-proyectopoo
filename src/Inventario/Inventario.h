@@ -19,6 +19,8 @@
 
 #include <string>
 #include <unordered_map>
+#include <thread> // <- Para pausas.
+#include <chrono> // <- Para medir los tiempos.
 
 /* Forward Declarations */
 //class ObjetoMagico;
@@ -29,11 +31,17 @@ class Guild; //<-- Para mejorar el encapsulamiento.
 
 using std::string;
 using std::unordered_map;
+using std:: this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 class Inventario {
     private:
         unordered_map<string, ObjetoMagico*> catalogoObjetos;
-    
+
+    //Metodo auxiliar para pausar el tiempo:
+
+    // Metodo auxiliar para pausar
+    void pausar( int milisegundos );
     public:
         Inventario( );
         virtual ~Inventario( );
@@ -43,7 +51,9 @@ class Inventario {
         void retirarObjetoInteractivo( Guild* guildJugador );  // Nuevo
         void consultarObjetoInteractivo();                      // Nuevo
         void actualizarStockInteractivo();                      // Nuevo
-        void eliminarObjetoInteractivo();                       // Nuevo
+
+        void eliminarObjetoInteractivo( Guild* guildJugador, vector<Guild*> guildsEnemigas);                       // Nuevo
+
         void crearObjetoDesdeMenu();                            // Nuevo
         void mostrarInventarioDetallado();                      // Nuevo
 

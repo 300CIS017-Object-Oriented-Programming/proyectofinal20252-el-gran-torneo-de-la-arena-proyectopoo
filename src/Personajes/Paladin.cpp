@@ -11,7 +11,7 @@ Paladin::Paladin( ) : Personaje( ) {
     // Constructor por defecto
     this -> rol = "Paladin";
     this -> poderDivino = 25;
-    this -> probabilidadEscudoSagrado = 0.30;  // 30% de probabilidad de bloqueo total
+    this -> probabilidadEscudoSagrado = 0.50;  // 50% de probabilidad de bloqueo total
     this -> escudoActivado = false;
     this -> contadorTurnos = 0;
 
@@ -26,7 +26,7 @@ Paladin::Paladin( string nombre, string bando, int nivel, int vida, int ataque, 
     : Personaje( nombre, "Paladin", bando, nivel, vida, ataque, defensa ) {
     // Constructor parametrizado
     this -> poderDivino = 25;
-    this -> probabilidadEscudoSagrado = 0.30;
+    this -> probabilidadEscudoSagrado = 0.50;// 50% de probabilidad de bloqueo total
     this -> escudoActivado = false;
     this -> contadorTurnos = 0;
 }
@@ -123,22 +123,37 @@ void Paladin::protegerAliado( Personaje* aliado ) {
         return;
     }
 
-    cout << endl << "╔════════════════════════════════════════╗" << endl;
+    cout << endl << "╔═══════════════════════════════════════╗" << endl;
     cout << "║   ESCUDO PROTECTOR                ║" << endl;
-    cout << "╚════════════════════════════════════════╝" << endl;
+    cout << "╚═══════════════════════════════════════╝" << endl;
     cout << this -> nombre << " se interpone para proteger a "
          << aliado -> getNombre( ) << "!!!!" << endl;
 
-    pausar(1500); //Para que el usuario pueda leer el texto.
+    pausar(1500);
 
-    //Activar el escudo sagrado en el aliado:
+    // Nuevo: Verificar si el Escudo Sagrado se activa (probabilidad de éxito)
+    cout << endl << "Invocando el poder del Escudo Sagrado..." << endl;
+    pausar(1000);
 
-    aliado->setEscudoProtector(true);
+    if ( activarEscudoSagrado() ) {
+        // Exito: El escudo se activa
+        aliado->setEscudoProtector(true);
 
-    cout << "Una barrera de luz divina envueve a " << aliado->getNombre() << "!!!" << endl;
-    cout << "El proximo ataque sera completamente bloqueado!!!" << endl;
+        cout << endl << "*** EXITO!!!!! ***" << endl;
+        cout << "Una barrera de luz divina envuelve a " << aliado->getNombre() << "!!!" << endl;
+        cout << "El proximo ataque sera completamente bloqueado!!!" << endl;
+        cout << "Probabilidad de activacion: " << (this->probabilidadEscudoSagrado * 100) << "%" << endl;
+    }
+    else {
+        // Fracaso: El escudo no se activa
+        cout << endl << "*** FRACASO!!!!!! ***" << endl;
+        cout << "La luz divina vacila y no logra manifestarse..." << endl;
+        cout << this->nombre << " no pudo invocar el Escudo Sagrado esta vez." << endl;
+        cout << aliado->getNombre() << " permanece desprotegido." << endl;
+    }
+
     cout << "═══════════════════════════════════════════" << endl;
-    pausar(1200); //Para que el usuario pueda leer el texto.
+    pausar(1200);
 }
 
 void Paladin::bendiccionDivina( Personaje* aliado ) {
@@ -229,6 +244,7 @@ void Paladin::realizarAccionIA(vector<Personaje*> aliados, vector<Personaje*> en
                         cout << this->nombre << " decide proteger a su aliado en peligro!!!" << endl;
                     }
                     pausar(1500);
+                    // Nota: protegerAliado() ahora tiene probabilidad de fallo interna
                     protegerAliado(aliados[i]);
                     return;
                 } else {
@@ -398,20 +414,18 @@ void Paladin::mostrarInformacion( ) {
     cout << "Ataque: " << this -> ataque << " (Moderado)" << endl;
     cout << "Poder Divino: " << this -> poderDivino << endl;
     cout << "Defensa: " << this -> defensa << " (Elevada)" << endl;
-    cout << "Escudo Sagrado: " << ( this -> probabilidadEscudoSagrado * 100 )
-         << "% de bloqueo total" << endl;
-    cout << "Estado del Escudo: " << ( this -> escudoActivado ? "Activado" : "Desactivado" ) << endl;
     cout << "Estado: " << ( this -> isEstaVivo ? "Vivo" : "Derrotado" ) << endl;
 
     // Mostrar objetos equipados
     cout << endl << "Objetos equipados (" << this -> objetosEquipados.size( ) << "/2):" << endl;
     mostrarObjetosEquipados( );
 
-    cout << endl << "️ Habilidades Especiales:" << endl;
-    cout << "  • Proteger Aliado: Intercepta ataques" << endl;
-    cout << "  • Bendición Divina: Aumenta defensa aliada" << endl;
-    cout << "  • Escudo Sagrado: Probabilidad de bloqueo total" << endl;
-    cout << "════════════════════════════════════════════" << endl;
+    cout << endl << "* Habilidades Especiales:" << endl;
+    cout << "  • Proteger Aliado: Escudo Protector (bloquea 1 ataque)" << endl;
+    cout << "    Probabilidad de exito: " << (this->probabilidadEscudoSagrado * 100) << "%" << endl;
+    cout << "  • Bendicion Divina: Aumenta defensa aliada (+15 por 2 turnos)" << endl;
+    cout << "  • Justicia Divina: Ataque con poder sagrado" << endl;
+    cout << "═══════════════════════════════════════════" << endl;
 }
 
 // Getters

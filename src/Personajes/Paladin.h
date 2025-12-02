@@ -19,7 +19,7 @@ class Paladin : public Personaje {
 
         // Métodos auxiliares privados
         int calcularDanioDivino( );
-        bool activarEscudoSagrado( );
+
 
     public:
         // Constructores y destructores
@@ -40,6 +40,7 @@ class Paladin : public Personaje {
         // Método especial del Paladín
         void protegerAliado( Personaje* aliado );
         void bendiccionDivina( Personaje* aliado );  // Aumenta defensa temporalmente
+        bool activarEscudoSagrado( ); //<-- Lo ponemos aqui.
 
         // Getters
         int getPoderDivino( );
