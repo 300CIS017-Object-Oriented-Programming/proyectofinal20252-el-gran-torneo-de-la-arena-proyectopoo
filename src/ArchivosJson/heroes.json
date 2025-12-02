@@ -1,0 +1,5 @@
+{"nombre":"Ubel","rol":"Hechicero Oscuro","nivel":5,"vida":100,"vidaMaxima":100,"ataque":40,"defensa":10}
+{"nombre":"Sein","rol":"Sanador","nivel":1,"vida":90,"vidaMaxima":90,"ataque":0,"defensa":10}
+{"nombre":"Fern","rol":"Mago","nivel":1,"vida":80,"vidaMaxima":80,"ataque":45,"defensa":5}
+{"nombre":"Himmel","rol":"Paladin","nivel":50,"vida":300,"vidaMaxima":300,"ataque":80,"defensa":80}
+{"nombre":"Stark","rol":"Guerrero","nivel":2,"vida":150,"vidaMaxima":150,"ataque":35,"defensa":15}

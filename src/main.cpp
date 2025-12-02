@@ -1,0 +1,85 @@
+#include <iostream>
+#include <ctime>
+#include "Torneo/Torneo.h" //Para poder acceder al directorio donde estan los archivos.
+#include <thread> // <- Para pausas.
+#include <chrono> // <- Para medir los tiempos.
+
+
+#include <windows.h> // Error en Linux/Mac
+
+using std::cout;
+using std::cin;
+using std:: this_thread::sleep_for;
+using std::chrono::milliseconds;
+
+void pausar(int milisegundos) {
+    sleep_for( milliseconds( milisegundos ) );
+}
+
+int main( ) {
+    //Inicializa la semilla aleatoria para los numero aleatorios .
+    //Es necesario para los golpes criticos, curaciones variables, etc.
+    // Configurar consola para UTF-8 (solo Windows)
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+    srand( time( 0 ) );
+
+    cout << "========================================" << endl;
+    cout << "   PROYECTO LYRENHOLD - TORNEO" << endl;
+    cout << "========================================" << endl;
+
+    //Crea el Torneo
+    Torneo torneo ( "Gran Torneo de la Arena de Lyrenhold" );
+
+    //Inicializa todo el sistema (otra vez se puso en verde)
+    torneo.inicializarTorneo( );
+
+    //Nota: cuando implementen el pacto sangriento verifiquen que esto compile.
+    cout << endl;
+    cout << "╔══════════════════════════════════════════════════════════════════╗" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "║    ██╗  ██╗   ██╗██████╗ ███████╗███╗   ██╗██╗  ██╗ ██████╗      ║" << endl;
+    cout << "║    ██║  ╚██╗ ██╔╝██╔══██╗██╔════╝████╗  ██║██║  ██║██╔═══██╗     ║" << endl;
+    cout << "║    ██║   ╚████╔╝ ██████╔╝█████╗  ██╔██╗ ██║███████║██║   ██║     ║" << endl;
+    cout << "║    ██║    ╚██╔╝  ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║   ██║     ║" << endl;
+    cout << "║    ███████╗██║   ██║  ██║███████╗██║ ╚████║██║  ██║╚██████╔╝     ║" << endl;
+    cout << "║    ╚══════╝╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝      ║" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "║              ⚔  EL GRAN TORNEO DE LA ARENA  ⚔                    ║" << endl;
+    cout << "║         En Lyrenhold, donde los heroes escriben leyendas         ║" << endl;
+    cout << "║                                                                  ║" << endl;
+    cout << "╚══════════════════════════════════════════════════════════════════╝" << endl;
+    cout << endl;
+    //Ejecuta el menu principal:
+
+    pausar(5000); //Pausa
+
+    torneo.menuPrincipal( );
+
+
+    cout << endl << endl;
+    cout << "╔═════════════════════════════════════════════════════════════════════╗" << endl;
+    cout << "║                                                                     ║" << endl;
+    cout << "║   ██████╗ ██████╗  █████╗  ██████╗██╗ █████╗ ███████╗               ║" << endl;
+    cout << "║  ██╔════╝ ██╔══██╗██╔══██╗██╔════╝██║██╔══██╗██╔════╝               ║" << endl;
+    cout << "║  ██║  ███╗██████╔╝███████║██║     ██║███████║███████╗               ║" << endl;
+    cout << "║  ██║   ██║██╔══██╗██╔══██║██║     ██║██╔══██║╚════██║               ║" << endl;
+    cout << "║  ╚██████╔╝██║  ██║██║  ██║╚██████╗██║██║  ██║███████║               ║" << endl;
+    cout << "║   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝╚═╝  ╚═╝╚══════╝               ║" << endl;
+    cout << "║                                                                     ║" << endl;
+    cout << "║              POR JUGAR EL GRAN TORNEO DE LA ARENA                   ║" << endl;
+    cout << "║                                                                     ║" << endl;
+    cout << "║        ⚔️  Que los dioses te acompañen, guerrero  ⚔️               ║" << endl;
+    cout << "║                                                                     ║" << endl;
+    cout << "║            Tu leyenda quedará grabada en Lyrenhold                  ║" << endl;
+    cout << "║                                                                     ║" << endl;
+    cout << "╚═════════════════════════════════════════════════════════════════════╝" << endl;
+    cout << endl;
+    pausar(5000); //Pausa
+
+    cout << endl << "=== Programa finalizado ===" << endl;
+
+    return 0;
+}
