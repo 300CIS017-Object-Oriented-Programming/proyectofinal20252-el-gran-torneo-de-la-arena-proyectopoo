@@ -80,7 +80,7 @@ classDiagram
     }
 
     class Personaje {
-        <<abstract>>
+        
         #nombre: string
         #rol: string
         #nivel: int
@@ -173,7 +173,7 @@ classDiagram
     }
 
     class ObjetoMagico {
-        <<abstract>>
+        
         #nombre: string
         #descripcion: string
         #stock: int

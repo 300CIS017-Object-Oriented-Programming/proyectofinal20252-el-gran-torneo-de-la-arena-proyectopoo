@@ -1,378 +1,513 @@
-# Lyrenhold - Sistema de Torneo de Guilds
+# Manual Técnico - El Gran Torneo de Lyrenhold
 
-Proyecto final de Programación Orientada a Objetos 2025-2
+Sistema de gestión de torneos de guilds con combate por turnos.
 
-## Descripción
-
-Sistema de gestión de torneos donde diferentes guilds (gremios) compiten entre sí. Cada guild tiene héroes con roles únicos (Guerrero, Mago, Sanador) que pelean en una arena por turnos.
+Proyecto Final - Programación Orientada a Objetos 2025-2
 
 ---
 
-## Funcionalidades Actuales
+## Descripción General
 
-**Implementación de Personajes y Guilds (Completada)**
-- Crear y gestionar tu guild de héroes
-- Agregar héroes nuevos de 3 tipos diferentes
-- Consultar información detallada de cada héroe
-- Ver las guilds enemigas y sus miembros
-- Retirar héroes de tu guild
+Este proyecto simula un torneo donde diferentes guilds (gremios) compiten entre sí. El jugador controla una guild de héroes que pueden combatir contra guilds enemigas en una arena por turnos. Cada héroe tiene un rol específico (Guerrero, Mago, Sanador, Paladín o Hechicero Oscuro) que determina cómo actúa en combate.
 
-**Pendientes de Implementar**
-- Gestionar inventario de objetos mágicos
-- Equipar objetos a los héroes
-- Combatir en la arena contra guilds enemigas
+El sistema incluye:
+- Gestión de personajes (crear, consultar, retirar)
+- Inventario de objetos mágicos
+- Sistema de combate por turnos
+- Guardado y carga de datos en JSON
 
 ---
 
 ## Estructura del Proyecto
+
 ```
 src/
-├── Personajes/
-│   ├── Personaje.h/cpp      Clase base abstracta
-│   ├── Guerrero.h/cpp       Ataca con golpes críticos
-│   ├── Mago.h/cpp           Ignora defensa enemiga
-│   └── Sanador.h/cpp        Cura aliados
-├── Guild/
-│   └── Guild.h/cpp          Gestiona personajes del equipo
+├── main.cpp                    Punto de entrada del programa
 ├── Torneo/
-│   └── Torneo.h/cpp         Controlador principal con menús
-└── main.cpp                 Punto de entrada
+│   ├── Torneo.h               Controlador principal
+│   └── Torneo.cpp
+├── Guild/
+│   ├── Guild.h                Gestiona los personajes de un equipo
+│   └── Guild.cpp
+├── Arena/
+│   ├── Arena.h                Sistema de combate por turnos
+│   └── Arena.cpp
+├── Personajes/
+│   ├── Personaje.h            Clase base de todos los personajes
+│   ├── Personaje.cpp
+│   ├── Guerrero.h/cpp         Especializado en ataques físicos
+│   ├── Mago.h/cpp             Especializado en magia
+│   ├── Sanador.h/cpp          Especializado en curación
+│   ├── Paladin.h/cpp          Defensa elevada y protección
+│   └── HechiceroOscuro.h/cpp  Magia oscura con daño de área
+├── Inventario/
+│   ├── Inventario.h           Gestiona objetos mágicos del torneo
+│   ├── Inventario.cpp
+│   ├── ObjetoAsignado.h       Representa un objeto equipado
+│   └── ObjetoAsignado.cpp
+├── Objetos/
+│   ├── ObjetoMagico.h         Clase base de objetos mágicos
+│   ├── ObjetoMagico.cpp
+│   ├── PocionVida.h/cpp       Restaura vida
+│   ├── AmuletoFuria.h/cpp     Aumenta ataque temporalmente
+│   ├── EscudoBendito.h/cpp    Aumenta defensa temporalmente
+│   ├── PactoSangriento.h/cpp  Sacrifica vida por poder
+│   ├── CaballaLegendaria.h/cpp 50% matar enemigo / 50% morir
+│   └── Revivir.h/cpp          Resucita aliados caídos
+└── ArchivosJson/
+    └── heroes.json            Archivo de guardado
 ```
 
 ---
 
 ## Clases Principales
 
-### Personaje (Clase Base)
-Clase abstracta que define las características comunes de todos los héroes.
+### Torneo
 
-**Atributos protegidos:**
-- nombre, rol, bando, nivel
-- vida, vidaMaxima, ataque, defensa
-- objetosEquipados, estaVivo
+Es el controlador principal del sistema. Se encarga de inicializar todo (guilds, inventario, arena) y de manejar los menús.
 
-**Métodos abstractos:**
-- `realizarAccion(Personaje* objetivo)` - Implementado por cada rol
-- `mostrarInformacion()` - Muestra detalles del personaje
+**Atributos importantes:**
+- `guildJugador`: Puntero a la guild que controla el jugador.
+- `guildsEnemigas`: Vector con las guilds rivales.
+- `inventario`: Puntero al inventario global de objetos.
+- `arena`: Puntero al sistema de combate.
 
-**Métodos de combate:**
-- `recibirDanio(int danio)` - Calcula daño real con defensa
-- `equiparObjeto(ObjetoAsignado* objeto)` - Equipa hasta 2 objetos
-- `usarObjeto(int indice)` - Usa objeto equipado
-
-### Guerrero
-Especializado en ataques físicos con probabilidad de golpe crítico.
-
-**Atributos privados:**
-- `probabilidadCritico` - 25% de chance de crítico
-
-**Implementación de realizarAccion():**
-- Golpe normal: daño = ataque
-- Golpe crítico: daño = ataque * 2
-- No puede atacar aliados
-
-### Mago
-Especializado en magia que ignora parte de la defensa enemiga.
-
-**Atributos privados:**
-- `poderMagico` - Daño mágico adicional (30)
-- `factorIgnorarDefensa` - Ignora 50% de defensa
-
-**Implementación de realizarAccion():**
-- Daño variable entre -5 y +15
-- Reduce temporalmente defensa del objetivo
-- Restaura defensa original después del ataque
-
-### Sanador
-Especializado en curación de aliados.
-
-**Atributos privados:**
-- `poderCuracion` - Poder de curación base (40)
-- `efectividadCuracion` - Efectividad base (0.8)
-
-**Implementación de realizarAccion():**
-- Solo cura aliados del mismo bando
-- Curación varía aleatoriamente (0-100% del poder)
-- No puede exceder vida máxima del objetivo
-- Puede fallar completamente (0%)
+**Menú principal:**
+```
+========================================
+     Gran Torneo de la Arena de Lyrenhold
+========================================
+1) Gestionar Guild.
+2) Gestionar inventario.
+3) Iniciar Arena (combates).
+4) Ver Guilds enemigas.
+5) Guardar heroes de la Guild en JSON.
+6) Cargar heroes desde JSON.
+0) Salir del torneo.
+========================================
+```
 
 ### Guild
-Gestiona una colección de personajes usando unordered_map.
 
-**Atributos privados:**
-- `nombreGuild` - Nombre del gremio
-- `personajes` - Mapa de nombre a puntero de Personaje
+Gestiona una colección de personajes usando `unordered_map`. La clave del mapa es el nombre del personaje, y el valor es un puntero al objeto Personaje.
 
-**Métodos públicos:**
-- `cargarPersonajesIniciales()` - Crea 3 héroes base
-- `agregarPersonaje(Personaje*)` - Agrega nuevo personaje (evita duplicados)
-- `consultarPersonaje(string)` - Muestra info de un personaje
-- `listarPersonajes()` - Lista todos los miembros
-- `retirarPersonaje(string)` - Elimina y libera memoria
-- `buscarPersonaje(string)` - Busca y retorna puntero
-- `getPersonajesVivos()` - Retorna vector con personajes vivos
-- `getCantidadPersonajes()` - Retorna total de personajes
+**Por qué usamos unordered_map:**
+- Búsqueda rápida por nombre.
+- Evita duplicados automáticamente (no puede haber dos personajes con el mismo nombre).
 
-### Torneo
-Controlador principal del sistema que coordina guilds y menús.
+**Métodos principales:**
+- `cargarPersonajesIniciales()`: Crea 5 héroes base al iniciar.
+- `agregarPersonaje()`: Añade un nuevo personaje verificando que no exista.
+- `retirarPersonaje()`: Elimina un personaje y libera su memoria.
+- `buscarPersonaje()`: Retorna el puntero al personaje o nullptr si no existe.
+- `getPersonajesVivos()`: Retorna un vector solo con los personajes vivos.
+- `guardarHeroesEnJSON()`: Guarda los héroes en un archivo.
+- `cargarHeroesDesdeJSON()`: Carga héroes desde un archivo.
 
-**Atributos privados:**
-- `nombreTorneo` - Nombre del torneo
-- `guildJugador` - Guild controlada por el jugador
-- `guildsEnemigas` - Vector de guilds rivales
+### Arena
 
-**Métodos públicos:**
-- `inicializarTorneo()` - Configura el sistema completo
-- `inicializarGuilds()` - Crea guild del jugador y 3 enemigas
-- `gestionarGuild()` - Menú de gestión de héroes
-- `menuPrincipal()` - Menú principal del programa
+Controla el sistema de combate por turnos. Recibe los personajes de ambos equipos y alterna sus turnos hasta que un equipo sea derrotado.
 
-**Métodos privados auxiliares:**
-- `crearNuevoHeroe()` - Lógica de creación de héroes
-- `consultarHeroeTorneo()` - Lógica de consulta interactiva
-- `retirarHeroeTorneo()` - Lógica de retiro con confirmación
-- `mostrarGuildsRivales()` - Muestra todas las guilds enemigas
+**Flujo del combate:**
+1. `iniciarCombate()`: Recibe los héroes y enemigos, muestra los equipos.
+2. `ejecutarTurno()`: Primero actúan todos los héroes, luego todos los enemigos.
+3. `verificarFinCombate()`: Verifica si algún equipo perdió.
+4. `mostrarResumenFinal()`: Muestra quién ganó y las estadísticas.
+5. `procesarObjetosPostCombate()`: Retira los objetos usados.
+
+**IA de los enemigos:**
+Cada tipo de personaje tiene su propia lógica de IA en el método `realizarAccionIA()`:
+- Guerrero: Ataca al enemigo con menos vida.
+- Mago: Ataca al enemigo con mayor defensa (aprovecha que ignora defensa).
+- Sanador: Cura al aliado más herido.
+- Paladín: Protege aliados en peligro o ataca.
+- Hechicero Oscuro: 40% usa AOE si hay 2+ enemigos, sino ataca al más fuerte.
+
+### Personaje (Clase Base)
+
+Es la clase abstracta de la que heredan todos los tipos de personajes. Define los atributos y métodos comunes.
+
+**Atributos protegidos:**
+- `nombre`, `rol`, `bando`: Identificación del personaje.
+- `nivel`, `vida`, `vidaMaxima`, `ataque`, `defensa`: Estadísticas de combate.
+- `isEstaVivo`: Si el personaje puede actuar.
+- `isTieneEscudoProtector`: Si tiene un escudo que bloquea el próximo ataque.
+- `objetosEquipados`: Vector de punteros a ObjetoAsignado (máximo 2).
+- Atributos de buffs temporales para efectos de habilidades.
+
+**Métodos abstractos (las clases hijas los implementan):**
+- `realizarAccion()`: La acción principal del personaje.
+- `realizarAccionIA()`: Cómo actúa cuando es controlado por la IA.
+- `realizarAccionJugador()`: Cómo actúa cuando es controlado por el jugador.
+- `mostrarInformacion()`: Muestra los detalles del personaje.
+
+**Método recibirDanio():**
+```cpp
+void Personaje::recibirDanio(int danio) {
+    // Si tiene escudo, bloquea completamente el ataque
+    if (this->isTieneEscudoProtector) {
+        cout << "¡¡¡ESCUDO PROTECTOR ACTIVADO!!!" << endl;
+        this->isTieneEscudoProtector = false;
+        return;
+    }
+    
+    // Calcula daño real considerando defensa
+    int danioReal = danio - this->defensa;
+    if (danioReal < 0) {
+        danioReal = 0;
+    }
+    
+    this->vida -= danioReal;
+    
+    // Verifica si murió
+    if (this->vida <= 0) {
+        this->vida = 0;
+        this->isEstaVivo = false;
+    }
+}
+```
+
+### Clases Hijas de Personaje
+
+**Guerrero:**
+- Tiene 25% de probabilidad de golpe crítico (doble daño).
+- Alta vida y defensa.
+- IA: Ataca al enemigo con menos vida para eliminarlo rápido.
+
+**Mago:**
+- Sus ataques ignoran el 50% de la defensa enemiga.
+- Daño variable con poder mágico adicional.
+- Poca defensa pero mucho daño.
+- IA: Ataca al enemigo con mayor defensa.
+
+**Sanador:**
+- No ataca, solo cura aliados.
+- La curación tiene efectividad variable (puede fallar).
+- IA: Cura al aliado más herido.
+
+**Paladín:**
+- Puede atacar, proteger aliados o dar bendición de defensa.
+- `protegerAliado()`: 50% de éxito para dar escudo que bloquea 1 ataque.
+- `bendiccionDivina()`: +15 defensa por 2 turnos.
+- IA: Si un aliado tiene menos del 30% de vida, intenta protegerlo.
+
+**Hechicero Oscuro:**
+- Ataque normal cuesta 10% de su vida máxima.
+- Puede atacar a aliados o enemigos.
+- `realizarAccionAOE()`: Ataque de área que daña a todos, cuesta 15% de vida.
+- IA: 40% de usar AOE si hay 2+ enemigos.
+
+### Inventario
+
+Gestiona el catálogo de objetos mágicos del torneo usando `unordered_map`. La clave es el nombre del objeto.
+
+**Objetos iniciales:**
+- 5 Pociones de Vida
+- 3 Amuletos de Furia
+- 3 Escudos Benditos
+- 2 Pactos Sangrientos
+- 1 Caballa Legendaria
+- 2 Pociones de Resurrección
+
+**Menú de inventario:**
+```
+=======$ GESTION DE INVENTARIO $========
+Stock total: X objetos.
+1) Crear objeto magico.
+2) Listar objetos disponibles.
+3) Consultar objeto especifico.
+4) Actualizar stock de objeto.
+5) Eliminar objeto (si stock = 0).
+========================================
+6) Asignar objeto a heroe.
+7) Retirar objeto de heroe.
+8) Ver objetos equipados por heroes.
+0) Volver al menu principal.
+========================================
+```
+
+### ObjetoMagico (Clase Base)
+
+Clase abstracta para todos los objetos mágicos. Define el stock y los métodos que deben implementar las clases hijas.
+
+**Métodos importantes:**
+- `aplicarEfecto()`: Método abstracto que define qué hace el objeto.
+- `getTurnosEfecto()`: Retorna cuántos turnos dura el efecto (0 si es instantáneo).
+- `revertirEfecto()`: Revierte el efecto cuando expira (para objetos temporales).
+- `incrementarStock()` / `decrementarStock()`: Maneja el stock disponible.
+
+### ObjetoAsignado
+
+Representa una instancia de un objeto equipado por un personaje. Guarda el puntero al tipo de objeto y si ya fue usado.
+
+**Atributos importantes:**
+- `tipoObjeto`: Puntero al ObjetoMagico del catálogo.
+- `usado`: Si el objeto ya fue consumido.
+- `personajeAfectado`: Para efectos temporales, quién recibió el efecto.
+- `turnosRestantes`: Turnos que quedan del efecto.
+- `ultimoAumento`: Guarda cuánto aumentó para poder revertirlo exactamente.
+
+**Patrón de diseño:**
+Esto funciona similar al patrón Flyweight. El catálogo (Inventario) tiene los tipos de objetos con su stock. Cuando se asigna un objeto a un personaje, se crea un ObjetoAsignado que apunta al tipo pero representa una instancia específica.
+
+### Clases Hijas de ObjetoMagico
+
+**PocionVida:**
+- Cura entre 20 y 40 puntos de vida.
+- Efecto instantáneo.
+
+**AmuletoFuria:**
+- Aumenta ataque entre 5 y 10 puntos.
+- Dura 2 turnos, luego se revierte.
+
+**EscudoBendito:**
+- Aumenta defensa entre 10 y 20 puntos.
+- Dura 1 turno, luego se revierte.
+
+**PactoSangriento:**
+- Sacrifica 30% de vida máxima.
+- Aumenta ataque entre 25 y 40 puntos (permanente).
+- No puede matarte, mínimo quedas con 1 de vida.
+
+**CaballaLegendaria:**
+- 50% de matar al enemigo seleccionado instantáneamente.
+- 50% de morir tú.
+- Permite seleccionar el objetivo.
+
+**Revivir:**
+- Permite seleccionar un aliado muerto.
+- Lo revive con 50% de su vida máxima.
 
 ---
 
-## Diagrama UML
+## Sistema de Combate
 
-**Nota:** Este es el diseño inicial antes de programar. Durante el desarrollo se agregaron métodos auxiliares privados no mostrados aquí.
-```mermaid
-classDiagram
-class Torneo{
-        -string nombreTorneo
-        -Guild* guildJugador
-        -vector< Guild* > guildsEnemigas  
-        -Inventario* inventario
-        -Arena* arena
-        
-        +Torneo(string nombre)
-        +~Torneo()
-        
-        +void inicializarTorneo()
-        +void inicializarGuilds()
-        +void inicializarInventario()
-        
-        +void gestionarGuild()
-        +void gestionarInventario()
-        +void iniciarArena()
-        
-        +void menuPrincipal()
-    }
+### Turno del Héroe (Jugador)
 
-    %% Gestiona personajes de un equipo
-    class Guild{
-        -string nombreGuild
-        -unordered_map< string, Personaje* > personajes
-        
-        +Guild(string nombre)
-        +~Guild()
-        
-        +void cargarPersonajesIniciales()
-        +void agregarPersonaje(Personaje* personaje)
-        +void consultarPersonaje(string nombre)
-        +void listarPersonajes()
-        +void retirarPersonaje(string nombre)
-        +Personaje* buscarPersonaje(string nombre)
-        
-        +vector<Personaje*> getPersonajesVivos()
-        +int getCantidadPersonajes()
-    }
+Cuando es el turno de un héroe del jugador, aparece este menú:
 
-    %% Clase base para personajes
-    class Personaje{
-        #string nombre
-        #string rol
-        #string bando
-        #int nivel
-        #int vida
-        #int vidaMaxima
-        #int ataque
-        #int defensa
-        #vector<ObjetoAsignado*> objetosEquipados
-        #bool estaVivo
-        
-        +Personaje(string nombre, string rol, string bando, int nivel, int vida, int ataque, int defensa)
-        +virtual ~Personaje()
-        
-        +virtual void realizarAccion(Personaje* objetivo) 
-        +virtual void mostrarInformacion()
-        
-        +void recibirDanio(int danio)
-        +void equiparObjeto(ObjetoAsignado* objeto)
-        +void usarObjeto(int indice)
-        +bool puedeEquiparObjeto()
-        +ObjetoAsignado* getObjetoEquipado(int indice)
-        +void retirarObjeto(int indice)
-        
-        +string getNombre()
-        +string getRol()
-        +string getBando()
-        +int getVida()
-        +int getAtaque()
-        +int getDefensa()
-        +bool getEstaVivo()
-        
-        +void setVida(int vida)
-        +void setAtaque(int ataque)
-        +void setDefensa(int defensa)
-    }
+```
+====== Turno de Stark (Guerrero) ======
+Vida: 150/150 -- Defensa: 15 -- Ataque: 35
+1. Realizar accion principal (atacar/curar segun rol).
+2. Usar objeto equipado.
+3. Ver estado del combate.
+4. Saltar turno.
+========================================
+Seleccione una opcion:
+```
 
-    %% Especializado en ataques físicos
-    class Guerrero{
-        -double probabilidadCritico
-        
-        +Guerrero(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
-        +~Guerrero()
-        
-        +void realizarAccion(Personaje* objetivo) override
-        +void mostrarInformacion() override
-        
-        -int calcularDanioCritico(int danioBase)
-        -bool esCritico()
-    }
+Si elige la opción 1, cada rol muestra sus opciones específicas. Por ejemplo, el Paladín:
 
-    %% Especializado en magia
-    class Mago{
-        -int poderMagico
-        -double factorIgnorarDefensa
-        
-        +Mago(string nombre, string bando, int nivel, int vida, int ataque, int defensa)
-        +~Mago()
-        
-        +void realizarAccion(Personaje* objetivo) override
-        +void mostrarInformacion() override
-        
-        -int calcularDanioMagico()
-    }
+```
+========================================
+  El Paladin puede realizar diferentes acciones:
+  1. Atacar a un enemigo (Justicia Divina)
+  2. Otorgar Escudo Protector a un aliado (bloquea 1 ataque)
+  3. Bendicion Divina a un aliado (+15 defensa por dos turnos)
+  0. Cancelar
+========================================
+```
 
-    %% Especializado en curación
-    class Sanador{
-        -int poderCuracion
-        -double efectividadCuracion
-        
-        +Sanador(string nombre, string bando, int nivel, int vida, int defensa)
-        +~Sanador()
-        
-        +void realizarAccion(Personaje* objetivo) override
-        +void mostrarInformacion() override
-        
-        -int calcularCuracion()
-    }
-    Main ..> Torneo : Usa
+### Turno del Enemigo (IA)
+
+Los enemigos actúan automáticamente según su rol. El método `realizarAccionIA()` de cada clase define el comportamiento:
+
+```cpp
+// Ejemplo: IA del Guerrero
+void Guerrero::realizarAccionIA(vector<Personaje*> aliados, vector<Personaje*> enemigos) {
+    // Busca al enemigo con menos vida
+    Personaje* objetivo = nullptr;
+    int menorVida = 9999;
     
-    Torneo --> Guild : Tiene
-    Torneo o--  Guild : guilds rivales
+    for (int i = 0; i < enemigos.size(); i++) {
+        if (enemigos[i]->getIsEstaVivo() && enemigos[i]->getVida() < menorVida) {
+            menorVida = enemigos[i]->getVida();
+            objetivo = enemigos[i];
+        }
+    }
     
-    Guild o-- Personaje : Tiene muchos
+    if (objetivo != nullptr) {
+        realizarAccion(objetivo);
+    }
+}
+```
+
+### Efectos Temporales
+
+Al final de cada turno, la Arena procesa los efectos temporales:
+
+1. Revisa los objetos equipados de todos los personajes.
+2. Si un objeto tiene efecto activo, decrementa los turnos restantes.
+3. Si los turnos llegan a 0, llama a `revertirEfecto()` del objeto.
+4. También procesa los buffs de habilidades (como Bendición Divina).
+
+```
+--- Procesando efectos temporales ---
+ >> El efecto del [Amuleto de Furia] ha expirado!!!!
+ Ataque de Stark restaurado: 45 --> 35
+```
+
+### Fin del Combate
+
+El combate termina cuando todos los miembros de un equipo mueren:
+
+```
+===============================================
+            FIN DEL COMBATE
+===============================================
+
+*** VICTORIA PARA LA GUILD DEL JUGADOR! ***
+Motivo: Todos los oponentes han sido derrotados.
+
+Heroes supervivientes: Stark, Fern
+Duracion del combate: 7 turnos
+Objetos magicos usados: 2
+===============================================
+```
+
+---
+
+## Persistencia en JSON
+
+### Formato del archivo
+
+Cada héroe se guarda en una línea con formato JSON:
+
+```json
+{"nombre":"Stark","rol":"Guerrero","nivel":2,"vida":150,"vidaMaxima":150,"ataque":35,"defensa":15}
+{"nombre":"Fern","rol":"Mago","nivel":1,"vida":80,"vidaMaxima":80,"ataque":45,"defensa":5}
+```
+
+### Guardar héroes
+
+El método `guardarHeroesEnJSON()` de Guild recorre todos los personajes y escribe cada uno en una línea:
+
+```cpp
+for (int i = 0; i < todosLosHeroes.size(); i++) {
+    Personaje* h = todosLosHeroes[i];
     
-    Personaje <|-- Guerrero : Es
-    Personaje <|-- Mago : Es
-    Personaje <|-- Sanador : Es
+    archivo << "{\"nombre\":\"" << h->getNombre() << "\","
+            << "\"rol\":\"" << h->getRol() << "\","
+            << "\"nivel\":" << h->getNivel() << ","
+            << "\"vida\":" << h->getVida() << ","
+            << "\"vidaMaxima\":" << h->getVidaMaxima() << ","
+            << "\"ataque\":" << h->getAtaque() << ","
+            << "\"defensa\":" << h->getDefensa() << "}" << endl;
+}
+```
+
+### Cargar héroes
+
+El método `cargarHeroesDesdeJSON()` lee línea por línea y extrae los valores buscando las claves:
+
+```cpp
+// Extraer nombre
+size_t posNombre = linea.find("\"nombre\":\"");
+size_t inicioNombre = posNombre + 10;
+size_t finNombre = linea.find("\"", inicioNombre);
+string nombre = linea.substr(inicioNombre, finNombre - inicioNombre);
+```
+
+Si el héroe ya existe, actualiza sus estadísticas. Si no existe, crea uno nuevo según el rol.
+
+---
+
+## Gestión de Memoria
+
+### Quién es dueño de qué
+
+- **Guild** es dueña de sus Personajes (los crea y destruye).
+- **Inventario** es dueño de los ObjetoMagico del catálogo.
+- **Personaje** es dueño de sus ObjetoAsignado equipados.
+- **Arena** NO es dueña de nada, solo usa punteros prestados.
+- **Torneo** es dueño de la Guild del jugador, las guilds enemigas, el Inventario y la Arena.
+
+### Destructores
+
+Cada clase libera lo que le pertenece:
+
+```cpp
+Guild::~Guild() {
+    // Libera todos los personajes
+    for (pair<string, Personaje*> par : this->personajes) {
+        delete par.second;
+    }
+    this->personajes.clear();
+}
+
+Personaje::~Personaje() {
+    // Libera los objetos equipados
+    for (int i = 0; i < this->objetosEquipados.size(); i++) {
+        delete objetosEquipados[i];
+    }
+    this->objetosEquipados.clear();
+}
+```
+
+### Validación antes de crear
+
+Cuando agregamos un personaje, primero verificamos que no exista para evitar crear memoria que luego se rechaza:
+
+```cpp
+void Guild::agregarPersonaje(Personaje* personaje) {
+    string nombre = personaje->getNombre();
+    
+    // Verifica primero
+    if (this->personajes.find(nombre) != this->personajes.end()) {
+        cout << "Error: Ya existe un personaje llamado " << nombre << endl;
+        return;  // No se agregó, el que llamó debe liberar la memoria
+    }
+    
+    personajes[nombre] = personaje;
+}
 ```
 
 ---
 
 ## Decisiones de Diseño
 
-### Uso de unordered_map en Guild
-La clase Guild usa un mapa desordenado para almacenar personajes:
-- Búsqueda por nombre muy rápida
-- Evita duplicados automáticamente
-- Más eficiente que buscar linealmente en un vector
+### Forward Declarations
 
-### Métodos auxiliares privados
-Se extrajeron métodos auxiliares para mantener el código organizado:
-- `crearNuevoHeroe()` encapsula toda la lógica de creación
-- `consultarHeroeTorneo()` maneja la consulta interactiva
-- `retirarHeroeTorneo()` gestiona el retiro con confirmación
+Para evitar dependencias circulares, usamos declaraciones adelantadas en los headers:
 
-Esto hace que los métodos de menú sean cortos y enfocados solo en navegación.
-
-### Validación antes de crear objetos
-Al agregar un héroe, primero se valida que el nombre no exista. Esto evita crear un objeto con `new` que luego se rechaza, previniendo memory leaks.
-
-### Forward declaration (Nombre del metodo para evita los problemas de la dependencia circular)
-Se usa `class ObjetoAsignado;` en Personaje.h para evitar dependencias circulares. El include completo va en Personaje.cpp donde realmente se usan los métodos. (por confirmar con la profesora)
-
----
-
-## Gestión de Memoria
-
-Todos los personajes y guilds se crean dinámicamente con `new`:
-- Guild libera todos sus personajes en el destructor
-- Torneo libera la guild del jugador y todas las enemigas
-- Se usa `nullptr` para verificar punteros válidos antes de usar
-
-Ejemplo del destructor de Guild:
 ```cpp
-Guild::~Guild() {
-    for (auto& par : personajes) {
-        delete par.second;  // Libera cada personaje
-    }
-    personajes.clear();
-}
+// En Personaje.h
+class ObjetoAsignado;  // Forward declaration
+
+// El include completo va en Personaje.cpp
+#include "../Inventario/ObjetoAsignado.h"
 ```
 
----
+### Métodos virtuales puros
 
-## Polimorfismo Usado
+Los métodos `realizarAccion()`, `realizarAccionIA()`, `realizarAccionJugador()` y `mostrarInformacion()` son virtuales puros en Personaje:
 
-Cada tipo de personaje implementa `realizarAccion()` de forma única:
+```cpp
+virtual void realizarAccion(Personaje* objetivo) = 0;
+```
+
+Esto obliga a cada clase hija a implementar su propia versión, y permite usar polimorfismo:
+
 ```cpp
 Personaje* heroe = new Guerrero("Stark", "Jugador", 2, 150, 35, 15);
 heroe->realizarAccion(enemigo);  // Llama a Guerrero::realizarAccion()
 ```
 
-El mismo código funciona con cualquier tipo de personaje gracias al polimorfismo.
+### Separación de IA y Jugador
+
+Cada personaje tiene dos métodos para actuar:
+- `realizarAccionIA()`: Para cuando la IA controla al personaje (enemigos).
+- `realizarAccionJugador()`: Para cuando el jugador controla al personaje.
+
+Ambos terminan llamando a `realizarAccion()` con el objetivo seleccionado.
 
 ---
 
-## Ejemplo de Uso
-```
-========================================
-     Gran Torneo de la Arena de Lyrenhold
-========================================
-1. Gestionar Guild
-2. Gestionar Inventario (PENDIENTE)
-3. Iniciar Arena (PENDIENTE)
-4. Ver Guilds Enemigas
-0. Salir del torneo
-Seleccione una opción: 1
-
-=== GESTIÓN DE GUILD ===
-Guild: Heroes de Lyrenhold
-1. Listar héroes
-2. Consultar héroe
-3. Agregar héroe
-4. Retirar héroe
-5. Volver al menú principal
-Seleccione una opción: 1
-
-======== Miembros de Heroes de Lyrenhold ========
-1. Guerrero - Stark (Nivel 2) - Vivo
-2. Mago - Fern (Nivel 1) - Vivo
-3. Sanador - Sein (Nivel 1) - Vivo
-Total de personajes: 3
-```
-
----
-
-## Próximas Implementaciones
-
-- Sistema de Inventario con objetos mágicos
-- Clases ObjetoMagico y ObjetoAsignado
-- Sistema de combate por turnos en Arena
-- Persistencia de datos en JSON
-- Efectos temporales de objetos (buffs/debuffs)
-
----
-
-## Equipo
+## Equipo de Desarrollo
 
 - Juan Felipe (Pipe)
 - Jose Andrade (Richi)
-- Angel Obando (Angel xd)
+- Angel Obando
 
 ---
